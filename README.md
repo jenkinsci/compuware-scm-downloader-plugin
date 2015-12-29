@@ -1,4 +1,3 @@
-# CPWR-Endevor-download
-Compuware Topaz (R) Interface to CA Endevor (R) for downloading files
-
+# compuware-scm-downloader
+Compuware Source Code Download for Endevor and PDS/ISPW
 Readme
