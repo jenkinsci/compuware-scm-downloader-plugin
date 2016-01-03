@@ -16,7 +16,7 @@
 
   <name>Compuware Source Code Download for Endevor and PDS/ISPW</name>
   <description>Compuware Source Code Download for Endevor and PDS/ISPW</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Compuware+Source+Code+Download+Plugin</url>
   <licenses>
     <license>
       <name>MIT License</name>
@@ -32,13 +32,12 @@
     </developer>
   </developers>
 
-  <!-- Assuming you want to host on @jenkinsci:
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
   </scm>
-   -->
+  
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
