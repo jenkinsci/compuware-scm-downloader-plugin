@@ -26,7 +26,7 @@ public class SCMGlobalConfiguration extends GlobalConfiguration{
 	 * 
 	 * @param req
 	 *            Stapler request
-	 * @param formData
+	 * @param json
 	 *            Form data
 	 * @return TRUE if able to configure and continue to next page
 	 * @throws FormException
