@@ -43,7 +43,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 	 * Gets the data from the configuration page. The parameter names must match the field names set by
 	 * <code>config.jelly</code>.
 	 * 
-	 * @param hostport
+	 * @param hostPort
 	 *            'Host':'Port'
 	 * @param filterPattern
 	 *            filter for the datasets to be retrieved from the mainframe
@@ -66,7 +66,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 	 * 
 	 * @param launcher
 	 *            The machine that the files will be checked out.
-	 * @param workspace
+	 * @param workspaceFilePath
 	 *            a directory to check out the source code.
 	 * @param listener
 	 *            Build listener
@@ -157,7 +157,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 	}
 
 	/**
-	 * Returns the ScmDescriptor<?> for the SCM object. The ScmDescriptor is used to create new instances of the SCM.
+	 * Returns the ScmDescriptor for the SCM object. The ScmDescriptor is used to create new instances of the SCM.
 	 */
 	@Override
 	public DescriptorImpl getDescriptor()
