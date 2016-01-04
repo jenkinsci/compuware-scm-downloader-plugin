@@ -13,9 +13,9 @@
   <version>1.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
-  <name>Compuware Source Code Download for Endevor and PDS/ISPW</name>
-  <description>Compuware Source Code Download for Endevor and PDS/ISPW</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Compuware+Source+Code+Download+Plugin</url>
+  <name>Compuware Source Code Download for Endevor, PDS, and ISPW</name>
+  <description>Compuware Source Code Download for Endevor, PDS, and ISPW</description>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Compuware+Source+Code+Download+for+Endevor%2C+PDS%2C+and+ISPW+Plugin</url>
   <licenses>
     <license>
       <name>MIT License</name>
