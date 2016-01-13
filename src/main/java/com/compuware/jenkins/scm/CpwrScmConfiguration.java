@@ -1,5 +1,24 @@
+/**
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2016 Compuware Corporation
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+ * and associated documentation files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions: The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+ * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 package com.compuware.jenkins.scm;
 
+import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
 import hudson.scm.ChangeLogParser;
@@ -21,7 +40,6 @@ public abstract class CpwrScmConfiguration extends SCM
 	private final String m_hostPort;
 	private final String m_filterPattern;
 	private final String m_fileExtension;
-	private String m_topazCLILocation;
 	private final String m_credentialsId;
 	private final String m_codePage;
 
@@ -113,16 +131,16 @@ public abstract class CpwrScmConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Topaz CLI Location'
+	 * Gets the value of the 'Topaz CLI Location' based on node
 	 * 
-	 * @return <code>String</code> value of m_topazCLILocation
+	 * @return <code>String</code> value of topazCLILocation
 	 */
-	public String getTopazCLILocation()
+	public String getTopazCLILocation(Launcher launcher)
 	{
 		SCMGlobalConfiguration globalConfig = SCMGlobalConfiguration.get();
-		m_topazCLILocation = globalConfig.getTopazCLILocation();
+		String topazCLILocation = globalConfig.getTopazCLILocation(launcher);
 
-		return m_topazCLILocation;
+		return topazCLILocation;
 	}
 
 	/**

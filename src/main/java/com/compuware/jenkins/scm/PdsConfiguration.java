@@ -1,3 +1,21 @@
+/**
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2016 Compuware Corporation
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+ * and associated documentation files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions: The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+ * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 package com.compuware.jenkins.scm;
 
 import hudson.Extension;
@@ -85,10 +103,10 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 		try
 		{
-			validateParameters(listener);
+			validateParameters(launcher, listener);
 
 			PdsDownloader downloader = new PdsDownloader(this);
-			rtnValue = downloader.getSource(listener, workspaceFilePath, getFilterPattern());
+			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -100,11 +118,12 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 	/**
 	 * Validates the configuration parameters.
-	 * 
+	 * @param launcher
+	 *            The machine that the files will be checked out.
 	 * @param listener
 	 *            Build listener
 	 */
-	public void validateParameters(BuildListener listener)
+	public void validateParameters(Launcher launcher, BuildListener listener)
 	{
 		if (getLoginInformation() != null)
 		{
@@ -145,7 +164,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
 		}
 
-		String cliLocation = getTopazCLILocation();
+		String cliLocation = getTopazCLILocation(launcher);
 		if ((cliLocation != null) && (cliLocation.isEmpty() == false))
 		{
 			listener.getLogger().println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$

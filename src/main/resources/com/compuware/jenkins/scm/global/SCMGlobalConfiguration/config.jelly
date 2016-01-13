@@ -1,7 +1,10 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:section title="${%topazWbCli}">
-    <f:entry title="${%topazWbCliDirectory}" field="topazCLILocation">
-      <f:textbox name="topazCLILocation"/>
+    <f:entry title="${%topazWbCliDirectoryWindows}" field="topazCLILocationWindows">
+      <f:textbox name="topazCLILocationWindows" default="C:\Program Files\Compuware\Topaz CLI"/>
+    </f:entry>
+    <f:entry title="${%topazWbCliDirectoryLinux}" field="topazCLILocationLinux">
+      <f:textbox name="topazCLILocationLinux" default="/opt/Compuware/TopazCLI"/>
     </f:entry>
   </f:section>
 </j:jelly>
