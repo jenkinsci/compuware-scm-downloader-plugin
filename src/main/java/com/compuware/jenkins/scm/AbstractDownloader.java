@@ -54,6 +54,23 @@ public abstract class AbstractDownloader
 
 		return convertedFilter;
 	}
+	
+	/**
+	 * Wrap a string in quotes.
+	 * 
+	 * @param text
+	 *            the string to wrap in quotes
+	 * @return the quoted string
+	 */
+	protected String wrapInQuotes(String text)
+	{
+		String quotedValue = text;
+		if (text != null)
+		{
+			quotedValue = String.format("\"%s\"", text); //$NON-NLS-1$
+		}
+		return quotedValue;
+	}
 
 	/**
 	 * Download the mainframe sources specified in the Jenkins configuration.

@@ -56,6 +56,7 @@ public class PdsDownloader extends AbstractDownloader
 			File changelogFile, String filterPattern) throws InterruptedException, IOException
 	{
 		String datasets = convertFilterPattern(filterPattern);
+		
 		listener.getLogger().println("Comma delimited datasets: " + datasets); //$NON-NLS-1$
 
         ArgumentListBuilder args = new ArgumentListBuilder();
@@ -83,8 +84,9 @@ public class PdsDownloader extends AbstractDownloader
 		args.add(Constants.HOST_PARM, m_pdsConfig.getHost());
 		args.add(Constants.PORT_PARM, m_pdsConfig.getPort());
 		args.add(Constants.USERID_PARM, m_pdsConfig.getLoginInformation().getUsername());
-		args.add(Constants.PASSWORD_PARM, m_pdsConfig.getLoginInformation().getPassword().getPlainText());
-		args.add(Constants.FILTER_PARM, datasets);
+		args.add(Constants.PASSWORD_PARM);
+		args.add(m_pdsConfig.getLoginInformation().getPassword().getPlainText(), true);
+		args.add(Constants.FILTER_PARM, wrapInQuotes(datasets));
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.PDS);
 		args.add(Constants.FILE_EXT_PARM, m_pdsConfig.getFileExtension());
