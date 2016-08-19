@@ -198,10 +198,7 @@ public abstract class CpwrScmConfiguration extends SCM
 		{
 			if (matcher.matches(c))
 			{
-				if (c instanceof StandardUsernamePasswordCredentials)
-				{
-					credential = (StandardUsernamePasswordCredentials) c;
-				}
+				credential = (StandardUsernamePasswordCredentials) c;
 			}
 		}
 
