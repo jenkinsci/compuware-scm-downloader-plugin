@@ -338,11 +338,13 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 */
 		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId) throws IOException, ServletException
 		{
+			/*
 			if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER))
 			{
 				// Prevents exposing credentials metadata to random web requests.
 				return new ListBoxModel();
 			}
+			*/
 
 			List<StandardUsernamePasswordCredentials> creds = CredentialsProvider
 					.lookupCredentials(StandardUsernamePasswordCredentials.class, context, ACL.SYSTEM,
