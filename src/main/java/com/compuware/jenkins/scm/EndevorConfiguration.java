@@ -399,7 +399,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 		/**
 		 * Comparator for comparing Strings numerically.
 		 */
-		private static class NumericStringComparator implements Comparator<String>
+		private static class NumericStringComparator implements Comparator<String>, Serializable
 		{
 			/*
 			 * (non-Javadoc)
