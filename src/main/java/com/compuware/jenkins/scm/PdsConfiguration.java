@@ -401,7 +401,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		/**
 		 * Comparator for comparing Strings numerically.
 		 */
-		private class NumericStringComparator implements Comparator<String>
+		private static class NumericStringComparator implements Comparator<String>
 		{
 			/*
 			 * (non-Javadoc)
