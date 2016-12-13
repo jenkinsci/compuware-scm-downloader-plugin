@@ -31,6 +31,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.cloudbees.plugins.credentials.matchers.IdMatcher;
 import com.compuware.jenkins.scm.global.SCMGlobalConfiguration;
+import hudson.model.Item;
 
 /**
  * 
@@ -184,13 +185,12 @@ public abstract class CpwrScmConfiguration extends SCM
 	 * 
 	 * @return a Jenkins credential with login information
 	 */
-	protected StandardUsernamePasswordCredentials getLoginInformation()
+	protected StandardUsernamePasswordCredentials getLoginInformation(Item project)
 	{
 		StandardUsernamePasswordCredentials credential = null;
 
-		AbstractProject<?, ?> nullProject = null;
 		List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
-				.lookupCredentials(StandardUsernamePasswordCredentials.class, nullProject, ACL.SYSTEM,
+				.lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
 						Collections.<DomainRequirement> emptyList());
 
 		IdMatcher matcher = new IdMatcher(getCredentialsId());

@@ -84,9 +84,9 @@ public class PdsDownloader extends AbstractDownloader
 		
 		args.add(Constants.HOST_PARM, m_pdsConfig.getHost());
 		args.add(Constants.PORT_PARM, m_pdsConfig.getPort());
-		args.add(Constants.USERID_PARM, m_pdsConfig.getLoginInformation().getUsername());
+		args.add(Constants.USERID_PARM, m_pdsConfig.getLoginInformation(build.getProject()).getUsername());
 		args.add(Constants.PASSWORD_PARM);
-		args.add(m_pdsConfig.getLoginInformation().getPassword().getPlainText(), true);
+		args.add(m_pdsConfig.getLoginInformation(build.getProject()).getPassword().getPlainText(), true);
 		args.add(Constants.FILTER_PARM, wrapInQuotes(datasets));
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.PDS);

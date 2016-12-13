@@ -51,6 +51,7 @@ public class EndevorDownloader extends AbstractDownloader
 			File changelogFile, String filterPattern) throws InterruptedException, IOException
 	{
 		String datasets = convertFilterPattern(filterPattern);
+
 		listener.getLogger().println("Comma delimited datasets: " + datasets); //$NON-NLS-1$
 
         ArgumentListBuilder args = new ArgumentListBuilder();
@@ -77,9 +78,9 @@ public class EndevorDownloader extends AbstractDownloader
 		
 		args.add(Constants.HOST_PARM, m_endevorConfig.getHost());
 		args.add(Constants.PORT_PARM, m_endevorConfig.getPort());
-		args.add(Constants.USERID_PARM, m_endevorConfig.getLoginInformation().getUsername());
+		args.add(Constants.USERID_PARM, m_endevorConfig.getLoginInformation(build.getProject()).getUsername());
 		args.add(Constants.PASSWORD_PARM);
-		args.add(m_endevorConfig.getLoginInformation().getPassword().getPlainText(), true);
+		args.add(m_endevorConfig.getLoginInformation(build.getProject()).getPassword().getPlainText(), true);
 		args.add(Constants.FILTER_PARM, wrapInQuotes(datasets));
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.ENDEVOR);

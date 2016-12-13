@@ -51,14 +51,15 @@ import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.compuware.jenkins.scm.utils.Constants;
+import hudson.ExtensionList;
+import hudson.model.Item;
+import com.cloudbees.hudson.plugins.folder.AbstractFolder;
 
 /**
  * Captures the configuration information for a PDS SCM.
  */
 public class PdsConfiguration extends CpwrScmConfiguration
 {
-
-
 	/**
 	 * Gets the data from the configuration page. The parameter names must match the field names set by
 	 * <code>config.jelly</code>.
@@ -104,7 +105,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 		try
 		{
-			validateParameters(launcher, listener);
+			validateParameters(launcher, listener, build.getProject());
 
 			PdsDownloader downloader = new PdsDownloader(this);
 			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
@@ -124,11 +125,11 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * @param listener
 	 *            Build listener
 	 */
-	public void validateParameters(Launcher launcher, BuildListener listener)
+	public void validateParameters(Launcher launcher, BuildListener listener, Item project)
 	{
-		if (getLoginInformation() != null)
+		if (getLoginInformation(project) != null)
 		{
-			listener.getLogger().println(Messages.username() + " = " + getLoginInformation().getUsername()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.username() + " = " + getLoginInformation(project).getUsername()); //$NON-NLS-1$
 		}
 		else
 		{
@@ -336,18 +337,10 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 * @throws IOException
 		 * @throws ServletException
 		 */
-		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId) throws IOException, ServletException
+		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId, @AncestorInPath Item project) throws IOException, ServletException
 		{
-			/*
-			if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER))
-			{
-				// Prevents exposing credentials metadata to random web requests.
-				return new ListBoxModel();
-			}
-			*/
-
 			List<StandardUsernamePasswordCredentials> creds = CredentialsProvider
-					.lookupCredentials(StandardUsernamePasswordCredentials.class, context, ACL.SYSTEM,
+					.lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
 							Collections.<DomainRequirement> emptyList());
 
 			StandardListBoxModel model = new StandardListBoxModel();
@@ -373,7 +366,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		
 		/**
 		 * Fills in the Code page selection box with code pages
-
+		 *
 		 * @return code page selections
 		 * @throws IOException
 		 * @throws ServletException
