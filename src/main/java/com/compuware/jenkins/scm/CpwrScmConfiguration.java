@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 Compuware Corporation
+ * Copyright (c) 2017 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -18,12 +18,6 @@
 */
 package com.compuware.jenkins.scm;
 
-import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractProject;
-import hudson.scm.ChangeLogParser;
-import hudson.scm.SCM;
-import hudson.security.ACL;
 import java.util.Collections;
 import java.util.List;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
@@ -31,7 +25,12 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.cloudbees.plugins.credentials.matchers.IdMatcher;
 import com.compuware.jenkins.scm.global.SCMGlobalConfiguration;
+import hudson.Launcher;
 import hudson.model.Item;
+import hudson.model.TaskListener;
+import hudson.scm.ChangeLogParser;
+import hudson.scm.SCM;
+import hudson.security.ACL;
 
 /**
  * 
@@ -134,6 +133,8 @@ public abstract class CpwrScmConfiguration extends SCM
 	/**
 	 * Gets the value of the 'Topaz CLI Location' based on node
 	 * 
+	 * @param launcher
+	 * 			the launcher associated with the current node
 	 * @return <code>String</code> value of topazCLILocation
 	 */
 	public String getTopazCLILocation(Launcher launcher)
@@ -183,6 +184,8 @@ public abstract class CpwrScmConfiguration extends SCM
 	/**
 	 * Retrieves login information given a credential ID
 	 * 
+	 * @param project
+	 *			the Jenkins project
 	 * @return a Jenkins credential with login information
 	 */
 	protected StandardUsernamePasswordCredentials getLoginInformation(Item project)
@@ -209,9 +212,9 @@ public abstract class CpwrScmConfiguration extends SCM
 	 * Validate that there is a host and port defined.
 	 * 
 	 * @param listener
-	 *            Build listener
+	 *            Task listener
 	 */
-	protected void validateHostPort(BuildListener listener)
+	protected void validateHostPort(TaskListener listener)
 	{
 		String hostPort = getHostPort();
 		if (hostPort.isEmpty() == false)

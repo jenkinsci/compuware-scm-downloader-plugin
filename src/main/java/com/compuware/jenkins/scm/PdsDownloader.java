@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 Compuware Corporation
+ * Copyright (c) 2017 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -22,8 +22,8 @@ package com.compuware.jenkins.scm;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.remoting.VirtualChannel;
 import hudson.util.ArgumentListBuilder;
 import java.io.File;
@@ -53,7 +53,7 @@ public class PdsDownloader extends AbstractDownloader
 	 * @see com.compuware.jenkins.scm.AbstractDownloader#getSource(hudson.model.AbstractBuild, hudson.Launcher, hudson.FilePath, hudson.model.BuildListener, java.io.File, java.lang.String)
 	 */
 	@Override
-	public boolean getSource(AbstractBuild<?, ?> build, Launcher launcher, FilePath workspaceFilePath, BuildListener listener,
+	public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
 			File changelogFile, String filterPattern) throws InterruptedException, IOException
 	{
 		String datasets = convertFilterPattern(filterPattern);
@@ -62,7 +62,6 @@ public class PdsDownloader extends AbstractDownloader
 
         ArgumentListBuilder args = new ArgumentListBuilder();
         EnvVars env = build.getEnvironment(listener);
-        env.overrideAll(build.getBuildVariables());
 
         VirtualChannel vChannel = launcher.getChannel();
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
@@ -84,9 +83,9 @@ public class PdsDownloader extends AbstractDownloader
 		
 		args.add(Constants.HOST_PARM, m_pdsConfig.getHost());
 		args.add(Constants.PORT_PARM, m_pdsConfig.getPort());
-		args.add(Constants.USERID_PARM, m_pdsConfig.getLoginInformation(build.getProject()).getUsername());
+		args.add(Constants.USERID_PARM, m_pdsConfig.getLoginInformation(build.getParent()).getUsername());
 		args.add(Constants.PASSWORD_PARM);
-		args.add(m_pdsConfig.getLoginInformation(build.getProject()).getPassword().getPlainText(), true);
+		args.add(m_pdsConfig.getLoginInformation(build.getParent()).getPassword().getPlainText(), true);
 		args.add(Constants.FILTER_PARM, wrapInQuotes(datasets));
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.PDS);
@@ -94,7 +93,8 @@ public class PdsDownloader extends AbstractDownloader
 		args.add(Constants.CODE_PAGE_PARM, m_pdsConfig.getCodePage());
 		args.add(Constants.DATA_PARM, topazCliWorkspace);
 		
-		FilePath workDir = build.getModuleRoot();
+		FilePath workDir = new FilePath (vChannel, workspaceFilePath.getRemote());
+		workDir.mkdirs();
 		int exitValue = launcher.launch().cmds(args).envs(env).stdout(listener.getLogger()).pwd(workDir).join();
 
 		listener.getLogger().println("Call " + osFile + " exited with exit value = " + exitValue); //$NON-NLS-1$ //$NON-NLS-2$

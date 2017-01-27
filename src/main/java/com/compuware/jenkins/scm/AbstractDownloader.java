@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 Compuware Corporation
+ * Copyright (c) 2017 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -21,8 +21,8 @@ package com.compuware.jenkins.scm;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import java.io.File;
 import java.io.IOException;
 import com.compuware.jenkins.scm.utils.Constants;
@@ -76,6 +76,8 @@ public abstract class AbstractDownloader
 	/**
 	 * Download the mainframe sources specified in the Jenkins configuration.
 	 * 
+	 * @param build
+	 *			  The current running Jenkins build
 	 * @param launcher
 	 *            The machine that the files will be checked out.
 	 * @param workspaceFilePath
@@ -91,7 +93,7 @@ public abstract class AbstractDownloader
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public abstract boolean getSource(AbstractBuild<?, ?> build, Launcher launcher, FilePath workspaceFilePath, BuildListener listener,
+	public abstract boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
 			File changelogFile, String filterPattern) throws InterruptedException, IOException;
 
 }

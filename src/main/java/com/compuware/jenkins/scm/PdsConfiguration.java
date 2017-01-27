@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 Compuware Corporation
+ * Copyright (c) 2017 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -18,17 +18,6 @@
 */
 package com.compuware.jenkins.scm;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
-import hudson.scm.SCMDescriptor;
-import hudson.security.ACL;
-import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
-import hudson.util.ListBoxModel.Option;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -40,8 +29,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javax.servlet.ServletException;
-import jenkins.model.Jenkins;
-import net.sf.json.JSONObject;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -51,9 +38,23 @@ import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.compuware.jenkins.scm.utils.Constants;
-import hudson.ExtensionList;
+import hudson.AbortException;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
 import hudson.model.Item;
-import com.cloudbees.hudson.plugins.folder.AbstractFolder;
+import hudson.model.Job;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.scm.SCMDescriptor;
+import hudson.scm.SCMRevisionState;
+import hudson.security.ACL;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
+import hudson.util.ListBoxModel.Option;
+import jenkins.model.Jenkins;
+import net.sf.json.JSONObject;
 
 /**
  * Captures the configuration information for a PDS SCM.
@@ -93,29 +94,33 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * @param changelogFile
 	 *            Upon a successful return, this file should capture the changelog. When there's no change, this file should
 	 *            contain an empty entry
-	 * @return <code>boolean</code> if the build was successful
+	 * @param baseline  used for polling - this parameter is not used           
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
 	@Override
-	public boolean checkout(AbstractBuild<?, ?> build, Launcher launcher, FilePath workspaceFilePath, BuildListener listener,
-			File changelogFile) throws IOException, InterruptedException
+	public void checkout(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
+			File changelogFile, SCMRevisionState baseline) throws IOException, InterruptedException
 	{
 		boolean rtnValue = false;
 
 		try
 		{
-			validateParameters(launcher, listener, build.getProject());
+			validateParameters(launcher, listener, build.getParent());
 
 			PdsDownloader downloader = new PdsDownloader(this);
 			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
+
+			if (rtnValue == false)
+			{
+				throw new AbortException();
+			}
 		}
 		catch (IllegalArgumentException e)
 		{
 			listener.getLogger().println(e.getMessage());
+			throw new AbortException();
 		}
-
-		return rtnValue;
 	}
 
 	/**
@@ -125,7 +130,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * @param listener
 	 *            Build listener
 	 */
-	public void validateParameters(Launcher launcher, BuildListener listener, Item project)
+	public void validateParameters(Launcher launcher, TaskListener listener, Item project)
 	{
 		if (getLoginInformation(project) != null)
 		{
@@ -178,6 +183,25 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	}
 
 	/**
+	 * Plugin does not support polling. We handle file changes in the CLI.
+	 */
+	@Override
+	public boolean supportsPolling()
+	{
+		return false;
+	}
+
+	/**
+     * Calculates any revisions from previous builds. Method required to support Pipeline. We handle file changes in the CLI.
+	 */
+	@Override
+	public SCMRevisionState calcRevisionsFromBuild(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
+            throws IOException, InterruptedException
+    {
+    	return null;
+    }      
+
+	/**
 	 * Returns the ScmDescriptor for the SCM object. The ScmDescriptor is used to create new instances of the SCM.
 	 */
 	@Override
@@ -200,6 +224,14 @@ public class PdsConfiguration extends CpwrScmConfiguration
 			super(PdsConfiguration.class, null);
 			load();
 		}
+
+		/**
+		 * Necessary to display UI in Jenkins Pipeline.
+		 */
+		@Override 
+		public boolean isApplicable(Job project) {
+            return true;
+        }
 
 		/**
 		 * Displays the name of the SCM, the name that appears when configuring a Jenkins job.
@@ -399,6 +431,8 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 */
 		private static class NumericStringComparator implements Comparator<String>, Serializable
 		{
+			private static final long serialVersionUID = 1L;
+
 			/*
 			 * (non-Javadoc)
 			 * 
