@@ -15,85 +15,119 @@
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
 */
 package com.compuware.jenkins.scm;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.model.Run;
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.lang.StringUtils;
 import com.compuware.jenkins.scm.utils.Constants;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 
 /**
- * Abstract source downloader
+ * Abstract source downloader.
  */
 public abstract class AbstractDownloader
 {
 	/**
-	 * Convert the filter pattern from a multi-line String to a comma delimited string.
+	 * Converts the given filter pattern from a multi-line String to a comma-delimited string.
 	 * 
-	 * @param filter
-	 *            the dataset filter
-	 * @return comma delimited list of dataset filters
+	 * @param filterPattern
+	 *            the <code>String</code> dataset filter
+	 * 
+	 * @return comma-delimited <code>String</code> of dataset filters
 	 */
-	protected String convertFilterPattern(String filter)
+	protected String convertFilterPattern(String filterPattern)
 	{
-		String convertedFilter = filter;
+		String cdDatasets = null;
 
-		if (convertedFilter != null)
+		if (filterPattern != null)
 		{
-			convertedFilter = convertedFilter.replace(Constants.LINE_RETURN, Constants.COMMA);
-			char lastChar = convertedFilter.charAt(convertedFilter.length() - 1);
-			if (lastChar == ',')
-			{
-				convertedFilter = convertedFilter.substring(0, (convertedFilter.length() - 1));
-			}
+			cdDatasets = StringUtils.removeEnd(filterPattern, Constants.LINE_RETURN);
+			cdDatasets = StringUtils.replace(cdDatasets, Constants.LINE_RETURN, Constants.COMMA);
+			cdDatasets = StringUtils.deleteWhitespace(cdDatasets);
 		}
 
-		return convertedFilter;
+		return cdDatasets;
 	}
 	
 	/**
-	 * Wrap a string in quotes.
+	 * Wraps the given input String in quotes for a Batch or Shell script.
 	 * 
-	 * @param text
-	 *            the string to wrap in quotes
-	 * @return the quoted string
+	 * @param input
+	 *            the <code>String</code> to wrap in quotes
+	 * @param isShell
+	 *            <code>true</code> if the script is a Shell script, <code>false</code> if it is a Batch script
+	 * 
+	 * @return the quoted <code>String</code>
 	 */
-	protected String wrapInQuotes(String text)
+	protected String wrapInQuotes(String input, boolean isShell)
 	{
-		String quotedValue = text;
-		if (text != null)
+		String output = null;
+
+		if (input != null)
 		{
-			quotedValue = String.format("\"%s\"", text); //$NON-NLS-1$
+			// shell scripts don't need args wrapped in quotes
+			if (isShell == false)
+			{
+				output = String.format("\"%s\"", input); //$NON-NLS-1$
+			}
 		}
-		return quotedValue;
+
+		return output;
+	}
+	
+	/**
+	 * Returns an escaped version of the given input String for a Batch or Shell script.
+	 * 
+	 * @param input
+	 *            the <code>String</code> to escape
+	 * @param isShell
+	 *            <code>true</code> if the script is a Shell script, <code>false</code> if it is a Batch script
+	 * 
+	 * @return the escaped <code>String</code>
+	 */
+	protected String escapeForScript(String input, boolean isShell)
+	{
+		String output = null;
+
+		if (input != null)
+		{
+			// escape any double quotes (") with another double quote (") for both batch and shell scripts
+			output = StringUtils.replace(input, Constants.DOUBLE_QUOTE, Constants.DOUBLE_QUOTE_ESCAPED);
+
+			// wrap the input in quotes
+			output = wrapInQuotes(output, isShell);
+		}
+
+		return output;
 	}
 
 	/**
 	 * Download the mainframe sources specified in the Jenkins configuration.
 	 * 
 	 * @param build
-	 *			  The current running Jenkins build
+	 *            the current running Jenkins build
 	 * @param launcher
-	 *            The machine that the files will be checked out.
+	 *            the machine that the files will be checked out.
 	 * @param workspaceFilePath
 	 *            a directory to check out the source code.
 	 * @param listener
-	 *            Build listener
+	 *            build listener
 	 * @param changelogFile
-	 *            Upon a successful return, this file should capture the changelog. When there's no change, this file should
+	 *            upon a successful return, this file should capture the changelog. When there's no change, this file should
 	 *            contain an empty entry
 	 * @param filterPattern
-	 *            Source filter pattern
+	 *            source filter pattern
+	 * 
 	 * @return <code>boolean</code> if the build was successful
-	 * @throws IOException
+	 * 
 	 * @throws InterruptedException
+	 * @throws IOException
 	 */
 	public abstract boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
 			File changelogFile, String filterPattern) throws InterruptedException, IOException;
-
 }

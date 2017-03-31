@@ -19,17 +19,18 @@
 */
 package com.compuware.jenkins.scm;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Properties;
+import com.compuware.jenkins.scm.utils.Constants;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
 import hudson.util.ArgumentListBuilder;
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-import com.compuware.jenkins.scm.utils.Constants;
 
 /**
  * Class used to download PDS members. This class will utilize the Topaz command line interface to do the download.
@@ -38,62 +39,69 @@ public class EndevorDownloader extends AbstractDownloader
 {
 	private EndevorConfiguration m_endevorConfig;
 
+	/**
+	 * Constructs an Endevor downloader for the given Endevor configuration.
+	 * 
+	 * @param config
+	 *            the Endevor configuration
+	 */
 	public EndevorDownloader(EndevorConfiguration config)
 	{
 		m_endevorConfig = config;
 	}
 
-	/* (non-Javadoc)
+	/* 
+	 * (non-Javadoc)
 	 * @see com.compuware.jenkins.scm.AbstractDownloader#getSource(hudson.model.AbstractBuild, hudson.Launcher, hudson.FilePath, hudson.model.BuildListener, java.io.File, java.lang.String)
 	 */
 	@Override
 	public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
 			File changelogFile, String filterPattern) throws InterruptedException, IOException
 	{
-		String datasets = convertFilterPattern(filterPattern);
-
-		listener.getLogger().println("Comma delimited datasets: " + datasets); //$NON-NLS-1$
+		PrintStream logger = listener.getLogger();
 
         ArgumentListBuilder args = new ArgumentListBuilder();
         EnvVars env = build.getEnvironment(listener);
-		
         VirtualChannel vChannel = launcher.getChannel();
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
         String remoteFileSeparator = remoteProperties.getProperty(Constants.FILE_SEPARATOR);
-        
-		String osFile = launcher.isUnix() ? Constants.TOPAZ_CLI_SH : Constants.TOPAZ_CLI_BAT;
-		String cliLocation = m_endevorConfig.getTopazCLILocation(launcher);
-        
-        String cliBatchFile = cliLocation + remoteFileSeparator + osFile;        
-		listener.getLogger().println("cliBatchFile path: " + cliBatchFile); //$NON-NLS-1$
-		
-		FilePath cliBatchFileRemote = new FilePath(vChannel, cliBatchFile);
-		listener.getLogger().println("cliBatchFile remote path: " + cliBatchFileRemote.getRemote()); //$NON-NLS-1$
-		
-		args.add(cliBatchFileRemote.getRemote());
-		
+        boolean isShell = launcher.isUnix();
+		String osFile = isShell ? Constants.TOPAZ_CLI_SH : Constants.TOPAZ_CLI_BAT;
+
+		String cliScriptFile = m_endevorConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
+		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
+		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
+		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
+		String host = escapeForScript(m_endevorConfig.getHost(), isShell);
+		String port = escapeForScript(m_endevorConfig.getPort(), isShell);
+		String userId = escapeForScript(m_endevorConfig.getLoginInformation(build.getParent()).getUsername(), isShell);
+		String password = escapeForScript(m_endevorConfig.getLoginInformation(build.getParent()).getPassword().getPlainText(),
+				isShell);
+		String cdDatasets = escapeForScript(convertFilterPattern(filterPattern), isShell);
+		String fileExtension = escapeForScript(m_endevorConfig.getFileExtension(), isShell);
+		String codePage = m_endevorConfig.getCodePage();
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;
-		listener.getLogger().println("TopazCLI workspace: " + topazCliWorkspace); //$NON-NLS-1$
-		
-		args.add(Constants.HOST_PARM, m_endevorConfig.getHost());
-		args.add(Constants.PORT_PARM, m_endevorConfig.getPort());
-		args.add(Constants.USERID_PARM, m_endevorConfig.getLoginInformation(build.getParent()).getUsername());
+		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
+
+		args.add(cliScriptFileRemote);
+		args.add(Constants.HOST_PARM, host);
+		args.add(Constants.PORT_PARM, port);
+		args.add(Constants.USERID_PARM, userId);
 		args.add(Constants.PASSWORD_PARM);
-		args.add(m_endevorConfig.getLoginInformation(build.getParent()).getPassword().getPlainText(), true);
-		args.add(Constants.FILTER_PARM, wrapInQuotes(datasets));
+		args.add(password, true);
+		args.add(Constants.FILTER_PARM, cdDatasets);
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.ENDEVOR);
-		args.add(Constants.FILE_EXT_PARM, m_endevorConfig.getFileExtension());
-		args.add(Constants.CODE_PAGE_PARM, m_endevorConfig.getCodePage());
+		args.add(Constants.FILE_EXT_PARM, fileExtension);
+		args.add(Constants.CODE_PAGE_PARM, codePage);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);
 		
-		FilePath workDir = new FilePath (vChannel, workspaceFilePath.getRemote());
+		FilePath workDir = new FilePath(vChannel, workspaceFilePath.getRemote());
 		workDir.mkdirs();
+
 		int exitValue = launcher.launch().cmds(args).envs(env).stdout(listener.getLogger()).pwd(workDir).join();
+		logger.println("Call " + osFile + " exited with value = " + exitValue); //$NON-NLS-1$ //$NON-NLS-2$
 
-		listener.getLogger().println("Call " + osFile + " exited with exit value = " + exitValue); //$NON-NLS-1$ //$NON-NLS-2$
-
-		return exitValue == 0;
+		return (exitValue == 0);
 	}
-	
 }

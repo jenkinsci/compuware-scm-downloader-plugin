@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javax.servlet.ServletException;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -86,15 +87,17 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * Method that is first called when a build is run. All dataset retrieval stems from here.
 	 * 
 	 * @param launcher
-	 *            The machine that the files will be checked out.
+	 *            the machine that the files will be checked out
 	 * @param workspaceFilePath
-	 *            a directory to check out the source code.
+	 *            a directory to check out the source code
 	 * @param listener
-	 *            Build listener
+	 *            build listener
 	 * @param changelogFile
-	 *            Upon a successful return, this file should capture the changelog. When there's no change, this file should
+	 *            upon a successful return, this file should capture the changelog. When there's no change, this file should
 	 *            contain an empty entry
-	 * @param baseline  used for polling - this parameter is not used           
+	 * @param baseline
+	 *            used for polling (this parameter is not used)
+	 * 
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
@@ -109,8 +112,8 @@ public class PdsConfiguration extends CpwrScmConfiguration
 			validateParameters(launcher, listener, build.getParent());
 
 			PdsDownloader downloader = new PdsDownloader(this);
-			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
 
+			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
 			if (rtnValue == false)
 			{
 				throw new AbortException();
@@ -120,65 +123,6 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		{
 			listener.getLogger().println(e.getMessage());
 			throw new AbortException();
-		}
-	}
-
-	/**
-	 * Validates the configuration parameters.
-	 * @param launcher
-	 *            The machine that the files will be checked out.
-	 * @param listener
-	 *            Build listener
-	 */
-	public void validateParameters(Launcher launcher, TaskListener listener, Item project)
-	{
-		if (getLoginInformation(project) != null)
-		{
-			listener.getLogger().println(Messages.username() + " = " + getLoginInformation(project).getUsername()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredential()));
-		}
-
-		validateHostPort(listener);
-		
-		
-		if (getCodePage().isEmpty() == false)
-		{
-			listener.getLogger().println(Messages.codePage() + " = " + getCodePage()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.codePage()));
-		}
-
-		if (getFilterPattern().isEmpty() == false)
-		{
-			listener.getLogger().println(Messages.filterPattern() + " = " + getFilterPattern()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.filterPattern()));
-		}
-
-		if (getFileExtension().isEmpty() == false)
-		{
-			listener.getLogger().println(Messages.fileExtension() + " = " + getFileExtension()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
-		}
-
-		String cliLocation = getTopazCLILocation(launcher);
-		if ((cliLocation != null) && (cliLocation.isEmpty() == false))
-		{
-			listener.getLogger().println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
 		}
 	}
 
@@ -205,21 +149,22 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * Returns the ScmDescriptor for the SCM object. The ScmDescriptor is used to create new instances of the SCM.
 	 */
 	@Override
-	public DescriptorImpl getDescriptor()
+	public PdsDescriptorImpl getDescriptor()
 	{
-		return (DescriptorImpl) super.getDescriptor();
+		return (PdsDescriptorImpl) super.getDescriptor();
 	}
 
 	/**
-	 * 
 	 * DescriptorImpl is used to create instances of <code>PdsConfiguration</code>. It also contains the global configuration
 	 * options as fields, just like the <code>PdsConfiguration</code> contains the configuration options for a job
-	 * 
 	 */
 	@Extension
-	public static class DescriptorImpl extends SCMDescriptor<PdsConfiguration>
+	public static class PdsDescriptorImpl extends SCMDescriptor<PdsConfiguration>
 	{
-		public DescriptorImpl()
+		/**
+		 * Constructor.
+		 */
+		public PdsDescriptorImpl()
 		{
 			super(PdsConfiguration.class, null);
 			load();
@@ -228,8 +173,10 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		/**
 		 * Necessary to display UI in Jenkins Pipeline.
 		 */
+		@SuppressWarnings("rawtypes")
 		@Override 
-		public boolean isApplicable(Job project) {
+		public boolean isApplicable(Job project)
+		{
             return true;
         }
 
@@ -253,7 +200,9 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 *            Stapler request
 		 * @param formData
 		 *            Form data
-		 * @return TRUE if able to configure and continue to next page
+		 * 
+		 * @return <code>true</code> if able to configure and continue to next page
+		 * 
 		 * @throws FormException
 		 */
 		@Override
@@ -264,17 +213,20 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		}
 
 		/**
-		 * Validator for the 'Filter pattern' text field
+		 * Validator for the 'Filter pattern' text field.
 		 * 
 		 * @param value
-		 *            value passed from the "filterPattern" field
+		 *            value passed from the config.jelly "filterPattern" field
+		 * 
 		 * @return validation message
+		 * 
 		 * @throws IOException
 		 * @throws ServletException
 		 */
 		public FormValidation doCheckFilterPattern(@QueryParameter String value) throws IOException, ServletException
 		{
-			if (value.trim().isEmpty())
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
 			{
 				return FormValidation.error(Messages.checkFilterPatternEmptyError());
 			}
@@ -283,35 +235,47 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		}
 
 		/**
-		 * Validator for the 'Password' text field
+		 * Validator for the 'Host:port' text field.
 		 * 
 		 * @param value
-		 *            value passed from the config.jelly "password" field
+		 *            value passed from the config.jelly "hostPort" field
+		 * 
 		 * @return validation message
+		 * 
 		 * @throws IOException
 		 * @throws ServletException
 		 */
 		public FormValidation doCheckHostPort(@QueryParameter String value) throws IOException, ServletException
 		{
-			value = value.trim();
-			if (value.isEmpty())
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
 			{
 				return FormValidation.error(Messages.checkHostPortEmptyError());
 			}
-			else if (value.contains(Constants.COLON) == false)
+			else 
 			{
-				return FormValidation.error(Messages.checkHostPortFormatError());
-			}
-			else
-			{
-				int colonIndex = value.indexOf(Constants.COLON);
-				if ((colonIndex == 0))
+				String[] hostPort = StringUtils.split(tempValue, Constants.COLON);
+				if (hostPort.length != 2)
 				{
-					return FormValidation.error(Messages.checkHostPortMissingHostError());
+					return FormValidation.error(Messages.checkHostPortFormatError());
 				}
-				else if (colonIndex == (value.length() - 1))
+				else
 				{
-					return FormValidation.error(Messages.checkHostPortMissingPortError());
+					String host = StringUtils.trimToEmpty(hostPort[0]);
+					if (host.isEmpty() == true)
+					{
+						return FormValidation.error(Messages.checkHostPortMissingHostError());
+					}
+
+					String port = StringUtils.trimToEmpty(hostPort[1]);
+					if (port.isEmpty() == true)
+					{
+						return FormValidation.error(Messages.checkHostPortMissingPortError());
+					}
+					else if (StringUtils.isNumeric(port) == false)
+					{
+						return FormValidation.error(Messages.checkHostPortInvalidPorttError());
+					}
 				}
 			}
 
@@ -319,21 +283,24 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		}
 
 		/**
-		 * Validator for the 'File Extension' text field
+		 * Validator for the 'File extension to assign' text field.
 		 * 
 		 * @param value
 		 *            value passed from the config.jelly "fileExtension" field
+		 * 
 		 * @return validation message
+		 * 
 		 * @throws IOException
 		 * @throws ServletException
 		 */
 		public FormValidation doCheckFileExtension(@QueryParameter String value) throws IOException, ServletException
 		{
-			if (value.trim().isEmpty())
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
 			{
 				return FormValidation.error(Messages.checkFileExtensionEmptyError());
 			}
-			else if (value.contains(".")) //$NON-NLS-1$
+			else if (StringUtils.isAlphanumeric(tempValue) == false)
 			{
 				return FormValidation.error(Messages.checkFileExtensionFormatError());
 			}
@@ -342,64 +309,68 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		}
 
 		/**
-		 * Validator for the 'Login Credential' field
+		 * Validator for the 'Login Credentials' field.
 		 * 
 		 * @param value
-		 *            value passed from the config.jelly "fileExtension" field
+		 *            value passed from the config.jelly "credentialsId" field
+		 * 
 		 * @return validation message
+		 * 
 		 * @throws IOException
 		 * @throws ServletException
 		 */
 		public FormValidation doCheckCredentialsId(@QueryParameter String value) throws IOException, ServletException
 		{
-			if (value.equalsIgnoreCase(Constants.EMPTY_STRING))
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
 			{
-				return FormValidation.error(Messages.checkLoginCredentialError());
+				return FormValidation.error(Messages.checkLoginCredentialsError());
 			}
 
 			return FormValidation.ok();
 		}
 
 		/**
-		 * Fills in the Login Credential selection box with applicable Jenkins credentials
+		 * Fills in the Login Credentials selection box with applicable Jenkins credentials.
 		 * 
 		 * @param context
 		 *            filter for credentials
+		 * 
 		 * @return credential selections
+		 * 
 		 * @throws IOException
 		 * @throws ServletException
 		 */
 		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId, @AncestorInPath Item project) throws IOException, ServletException
 		{
-			List<StandardUsernamePasswordCredentials> creds = CredentialsProvider
-					.lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
-							Collections.<DomainRequirement> emptyList());
+			List<StandardUsernamePasswordCredentials> creds = CredentialsProvider.lookupCredentials(
+					StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
+					Collections.<DomainRequirement> emptyList());
 
 			StandardListBoxModel model = new StandardListBoxModel();
-
-			model.add(new Option(Constants.EMPTY_STRING, Constants.EMPTY_STRING, false));
+			model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
 
 			for (StandardUsernamePasswordCredentials c : creds)
 			{
 				boolean isSelected = false;
-
 				if (credentialsId != null)
 				{
 					isSelected = credentialsId.matches(c.getId());
 				}
 
 				String description = Util.fixEmptyAndTrim(c.getDescription());
-				model.add(new Option(c.getUsername()
-						+ (description != null ? " (" + description + ")" : Constants.EMPTY_STRING), c.getId(), isSelected)); //$NON-NLS-1$ //$NON-NLS-2$
+				model.add(new Option(c.getUsername() + (description != null ? " (" + description + ')' : StringUtils.EMPTY), //$NON-NLS-1$
+						c.getId(), isSelected));
 			}
 
 			return model;
 		}
 		
 		/**
-		 * Fills in the Code page selection box with code pages
+		 * Fills in the Code page selection box with code pages.
 		 *
 		 * @return code page selections
+		 * 
 		 * @throws IOException
 		 * @throws ServletException
 		 */
@@ -435,7 +406,6 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 			/*
 			 * (non-Javadoc)
-			 * 
 			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 			 */
 			@Override

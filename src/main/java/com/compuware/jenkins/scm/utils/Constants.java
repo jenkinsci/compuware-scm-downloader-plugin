@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 Compuware Corporation
+ * Copyright (c) 2016, 2017 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -28,7 +28,6 @@ public class Constants
 	
 	public static final String CODE_PAGE_PARM = "-code";
 	public static final String DATA_PARM = "-data";
-	public static final String EMPTY_STRING = "";
 	public static final String FILE_EXT_PARM = "-ext";
 	public static final String FILTER_PARM = "-filter";
 	public static final String HOST_PARM = "-host";
@@ -40,8 +39,11 @@ public class Constants
 
 	public static final String COLON = ":";
 	public static final String COMMA = ",";
-	public static final String ENDEVOR = "endevor";
 	public static final String LINE_RETURN = "\n";
+	public static final String DOUBLE_QUOTE = "\"";
+	public static final String DOUBLE_QUOTE_ESCAPED = "\"\"";
+
+	public static final String ENDEVOR = "endevor";
 	public static final String PDS = "pds";
 
 	public static final String TOPAZ_CLI_BAT = "TopazCLI.bat";
