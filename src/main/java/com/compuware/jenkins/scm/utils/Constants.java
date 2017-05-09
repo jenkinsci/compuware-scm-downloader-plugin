@@ -40,6 +40,8 @@ public class Constants
 	public static final String COLON = ":";
 	public static final String COMMA = ",";
 	public static final String LINE_RETURN = "\n";
+	public static final String SPACE = " ";
+
 	public static final String DOUBLE_QUOTE = "\"";
 	public static final String DOUBLE_QUOTE_ESCAPED = "\"\"";
 

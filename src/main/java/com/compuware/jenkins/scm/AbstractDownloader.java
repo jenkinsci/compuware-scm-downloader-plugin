@@ -40,15 +40,14 @@ public abstract class AbstractDownloader
 	 * 
 	 * @return comma-delimited <code>String</code> of dataset filters
 	 */
-	protected String convertFilterPattern(String filterPattern)
+	public String convertFilterPattern(String filterPattern)
 	{
 		String cdDatasets = null;
 
 		if (filterPattern != null)
 		{
-			cdDatasets = StringUtils.removeEnd(filterPattern, Constants.LINE_RETURN);
-			cdDatasets = StringUtils.replace(cdDatasets, Constants.LINE_RETURN, Constants.COMMA);
-			cdDatasets = StringUtils.deleteWhitespace(cdDatasets);
+			cdDatasets = StringUtils.normalizeSpace(filterPattern);
+			cdDatasets = StringUtils.replace(cdDatasets, Constants.SPACE, Constants.COMMA);
 		}
 
 		return cdDatasets;
