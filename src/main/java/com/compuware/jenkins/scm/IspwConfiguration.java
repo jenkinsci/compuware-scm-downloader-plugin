@@ -102,9 +102,6 @@ public class IspwConfiguration extends SCM
 		try
 		{
 			validateParameters(launcher, listener, build.getParent());
-
-			//PdsDownloader downloader = new PdsDownloader(this);
-			//rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
 			
 			IspwDownloader downloader = new IspwDownloader(this);
 			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile);
@@ -357,8 +354,14 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.codePage()));
 		}
 		
-		//ISPW Server Config can be empty
-		listener.getLogger().println(Messages.ispwServerConfig() + " = " + getServerConfig());
+		if (getServerConfig() != null)
+		{
+			listener.getLogger().println(Messages.ispwServerConfig() + " = " + getServerConfig());
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerConfig()));
+		}
 		
 		if (getServerStream().isEmpty() == false)
 		{
@@ -395,8 +398,8 @@ public class IspwConfiguration extends SCM
 		{
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
 		}
-		
-		if (getFilterName().isEmpty() == false)
+
+		if (getFilterName() != null)
 		{
 			listener.getLogger().println(Messages.ispwfilterName() + " = " + getFilterName());
 		}
@@ -405,7 +408,7 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterName()));
 		}
 		
-		if (getFilterType().isEmpty() == false)
+		if (getFilterType() != null)
 		{
 			listener.getLogger().println(Messages.ispwfilterType() + " = " + getFilterType());
 		}
@@ -522,7 +525,56 @@ public class IspwConfiguration extends SCM
 		{		
 			save();
 			return super.configure(req, formData);
-		}	
+		}
+		
+		/**
+		 * Validator for the 'Host:port' text field.
+		 * 
+		 * @param value
+		 *            value passed from the config.jelly "host:port" field
+		 * 
+		 * @return validation message
+		 * 
+		 * @throws IOException
+		 * @throws ServletException
+		 */
+		public FormValidation doCheckHostPort(@QueryParameter String value) throws IOException, ServletException
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
+			{
+				return FormValidation.error(Messages.checkHostPortEmptyError());
+			}
+			else
+			{
+				String[] hostPort = StringUtils.split(tempValue, Constants.COLON);
+				if (hostPort.length != 2)
+				{
+					return FormValidation.error(Messages.checkHostPortFormatError());
+				}
+				else
+				{
+					String host = StringUtils.trimToEmpty(hostPort[0]);
+					if (host.isEmpty() == true)
+					{
+						return FormValidation.error(Messages.checkHostPortMissingHostError());
+					}
+
+					String port = StringUtils.trimToEmpty(hostPort[1]);
+					if (port.isEmpty() == true)
+					{
+						return FormValidation.error(Messages.checkHostPortMissingPortError());
+					}
+					else if (StringUtils.isNumeric(port) == false)
+					{
+						return FormValidation.error(Messages.checkHostPortInvalidPorttError());
+					}
+				}
+			}
+
+			return FormValidation.ok();
+		}
+		
 
 		/**
 		 * Validator for the 'Login Credential' field
@@ -539,6 +591,72 @@ public class IspwConfiguration extends SCM
 			if (tempValue.isEmpty() == true)
 			{
 				return FormValidation.error(Messages.checkLoginCredentialsError());
+			}
+
+			return FormValidation.ok();
+		}
+		
+		/**
+		 * Validator for the 'Stream' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "serverStream" field
+		 * 
+		 * @return validation message
+		 * 
+		 * @throws IOException
+		 * @throws ServletException
+		 */
+		public FormValidation doCheckServerStream(@QueryParameter String value) throws IOException, ServletException
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
+			{
+				return FormValidation.error(Messages.checkIspwServerStreamError());
+			}
+
+			return FormValidation.ok();
+		}
+		
+		/**
+		 * Validator for the 'Application' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "serverApplication" field
+		 * 
+		 * @return validation message
+		 * 
+		 * @throws IOException
+		 * @throws ServletException
+		 */
+		public FormValidation doCheckServerApplication(@QueryParameter String value) throws IOException, ServletException
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
+			{
+				return FormValidation.error(Messages.checkIspwServerAppError());
+			}
+
+			return FormValidation.ok();
+		}
+		
+		/**
+		 * Validator for the 'Level' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "serverLevel" field
+		 * 
+		 * @return validation message
+		 * 
+		 * @throws IOException
+		 * @throws ServletException
+		 */
+		public FormValidation doCheckServerLevel(@QueryParameter String value) throws IOException, ServletException
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty() == true)
+			{
+				return FormValidation.error(Messages.checkIspwServerLevelError());
 			}
 
 			return FormValidation.ok();

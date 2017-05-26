@@ -55,7 +55,7 @@ public class PdsDownloader extends AbstractDownloader
 	 */
 	@Override
 	public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
-			File changelogFile, String filterPattern) throws InterruptedException, IOException
+			File changelogFile) throws InterruptedException, IOException
 	{
 		PrintStream logger = listener.getLogger();
 
@@ -76,7 +76,7 @@ public class PdsDownloader extends AbstractDownloader
 		String userId = escapeForScript(m_pdsConfig.getLoginInformation(build.getParent()).getUsername(), isShell);
 		String password = escapeForScript(m_pdsConfig.getLoginInformation(build.getParent()).getPassword().getPlainText(),
 				isShell);
-		String cdDatasets = escapeForScript(convertFilterPattern(filterPattern), isShell);
+		String cdDatasets = escapeForScript(convertFilterPattern(m_pdsConfig.getFilterPattern()), isShell);
 		String fileExtension = escapeForScript(m_pdsConfig.getFileExtension(), isShell);
 		String codePage = m_pdsConfig.getCodePage();
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;

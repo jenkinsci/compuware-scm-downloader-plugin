@@ -38,13 +38,13 @@ public class Constants
 	public static final String TARGET_FOLDER_PARM = "-targetFolder";
 	
 	public static final String ISPW = "ispw";
-	public static final String ISPW_SERVER_CONFIG_PARAM = "-serverConfig";
-	public static final String ISPW_SERVER_STREAM_PARAM = "-serverStream";
-	public static final String ISPW_SERVER_APP_PARAM= "-serverApplication";
-	public static final String ISPW_SERVER_LEVEL_PARAM = "-serverLevel";
-	public static final String ISPW_LEVEL_OPTION_PARAM = "-levelOption";
-	public static final String ISPW_FILTER_NAME_PARAM = "-filterName";
-	public static final String ISPW_FILTER_TYPE_PARAM = "-filterType";
+	public static final String ISPW_SERVER_CONFIG_PARAM = "-ispwServerConfig";
+	public static final String ISPW_SERVER_STREAM_PARAM = "-ispwServerStream";
+	public static final String ISPW_SERVER_APP_PARAM= "-ispwServerApp";
+	public static final String ISPW_SERVER_LEVEL_PARAM = "-ispwServerLevel";
+	public static final String ISPW_LEVEL_OPTION_PARAM = "-ispwLevelOption";
+	public static final String ISPW_FILTER_NAME_PARAM = "-ispwFilterName";
+	public static final String ISPW_FILTER_TYPE_PARAM = "-ispwFilterType";
 
 	public static final String COLON = ":";
 	public static final String COMMA = ",";
