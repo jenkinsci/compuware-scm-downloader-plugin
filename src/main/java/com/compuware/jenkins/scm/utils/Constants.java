@@ -36,6 +36,15 @@ public class Constants
 	public static final String SCM_TYPE_PARM = "-scm";
 	public static final String USERID_PARM = "-id";
 	public static final String TARGET_FOLDER_PARM = "-targetFolder";
+	
+	public static final String ISPW = "ispw";
+	public static final String ISPW_SERVER_CONFIG_PARAM = "-ispwServerConfig";
+	public static final String ISPW_SERVER_STREAM_PARAM = "-ispwServerStream";
+	public static final String ISPW_SERVER_APP_PARAM= "-ispwServerApp";
+	public static final String ISPW_SERVER_LEVEL_PARAM = "-ispwServerLevel";
+	public static final String ISPW_LEVEL_OPTION_PARAM = "-ispwLevelOption";
+	public static final String ISPW_FILTER_NAME_PARAM = "-ispwFilterName";
+	public static final String ISPW_FILTER_TYPE_PARAM = "-ispwFilterType";
 
 	public static final String COLON = ":";
 	public static final String COMMA = ",";

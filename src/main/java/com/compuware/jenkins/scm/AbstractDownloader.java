@@ -119,8 +119,6 @@ public abstract class AbstractDownloader
 	 * @param changelogFile
 	 *            upon a successful return, this file should capture the changelog. When there's no change, this file should
 	 *            contain an empty entry
-	 * @param filterPattern
-	 *            source filter pattern
 	 * 
 	 * @return <code>boolean</code> if the build was successful
 	 * 
@@ -128,5 +126,5 @@ public abstract class AbstractDownloader
 	 * @throws IOException
 	 */
 	public abstract boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
-			File changelogFile, String filterPattern) throws InterruptedException, IOException;
+			File changelogFile) throws InterruptedException, IOException;
 }

@@ -114,7 +114,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 
 			EndevorDownloader downloader = new EndevorDownloader(this);
 
-			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
+			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile);
 			if (rtnValue == false)
 			{
 				throw new AbortException();

@@ -56,7 +56,7 @@ public class EndevorDownloader extends AbstractDownloader
 	 */
 	@Override
 	public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
-			File changelogFile, String filterPattern) throws InterruptedException, IOException
+			File changelogFile) throws InterruptedException, IOException
 	{
 		PrintStream logger = listener.getLogger();
 
@@ -77,7 +77,7 @@ public class EndevorDownloader extends AbstractDownloader
 		String userId = escapeForScript(m_endevorConfig.getLoginInformation(build.getParent()).getUsername(), isShell);
 		String password = escapeForScript(m_endevorConfig.getLoginInformation(build.getParent()).getPassword().getPlainText(),
 				isShell);
-		String cdDatasets = escapeForScript(convertFilterPattern(filterPattern), isShell);
+		String cdDatasets = escapeForScript(convertFilterPattern(m_endevorConfig.getFilterPattern()), isShell);
 		String fileExtension = escapeForScript(m_endevorConfig.getFileExtension(), isShell);
 		String codePage = m_endevorConfig.getCodePage();
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;

@@ -113,7 +113,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 			PdsDownloader downloader = new PdsDownloader(this);
 
-			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile, getFilterPattern());
+			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile);
 			if (rtnValue == false)
 			{
 				throw new AbortException();
