@@ -186,7 +186,7 @@ public class AbstractDownloaderTest
 		 */
 		@Override
 		public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
-				File changelogFile, String filterPattern) throws InterruptedException, IOException
+				File changelogFile) throws InterruptedException, IOException
 		{
 			return false;
 		}
