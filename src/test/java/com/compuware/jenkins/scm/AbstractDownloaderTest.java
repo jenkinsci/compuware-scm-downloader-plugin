@@ -163,11 +163,19 @@ public class AbstractDownloaderTest
 		expectedResults = "a.b.c,d.e.f,g.h.i";
 		testFilterPattern(input, expectedResults);
 		
-		// Test " \t\na.b.c\n \t d.e.f g.h.i\n\t   "
-		input = " \t\na.b.c\n \t d.e.f g.h.i\n\t   ";
-		expectedResults = "a.b.c,d.e.f,g.h.i";
+		// Test " \t\na.b.c\n \t d.e.f g.h.i,j.k.l\n\t   "
+		input = " \t\na.b.c\n \t d.e.f g.h.i,j.k.l\n\t   ";
+		expectedResults = "a.b.c,d.e.f,g.h.i,j.k.l";
 		testFilterPattern(input, expectedResults);
 		assertTrue(true);
+	}
+	
+	@Test
+	public void convertFilterPatternCommaTest()
+	{
+		String input = "a.b.c,d.e.f";
+		String expectedResults = "a.b.c,d.e.f";
+		testFilterPattern(input, expectedResults);
 	}
 	
 	private void testFilterPattern(String input, String expectedResults)
@@ -175,7 +183,6 @@ public class AbstractDownloaderTest
 		String msg = String.format("Input: %s, Expected: %s", input, expectedResults);
 		String convertedText = m_testDownloader.convertFilterPattern(input);
 		assertEquals(msg, expectedResults, convertedText);
-		
 	}
 	
 	private class TestDownloader extends AbstractDownloader
@@ -186,7 +193,7 @@ public class AbstractDownloaderTest
 		 */
 		@Override
 		public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
-				File changelogFile, String filterPattern) throws InterruptedException, IOException
+				File changelogFile) throws InterruptedException, IOException
 		{
 			return false;
 		}
