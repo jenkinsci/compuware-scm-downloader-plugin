@@ -74,6 +74,10 @@ public abstract class AbstractDownloader
 			{
 				output = String.format("\"%s\"", input); //$NON-NLS-1$
 			}
+			else
+			{
+				output = input;
+			}
 		}
 
 		return output;
