@@ -18,7 +18,6 @@
 */
 package com.compuware.jenkins.scm;
 
-import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -26,41 +25,40 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.cloudbees.plugins.credentials.matchers.IdMatcher;
-import com.compuware.jenkins.scm.global.SCMGlobalConfiguration;
-import com.compuware.jenkins.scm.utils.Constants;
-import hudson.Launcher;
 import hudson.model.Item;
-import hudson.model.TaskListener;
 import hudson.scm.ChangeLogParser;
 import hudson.scm.SCM;
 import hudson.security.ACL;
 
+/**
+ * Abstsract class containing common data and methods for SCM configurations.
+ */
 public abstract class CpwrScmConfiguration extends SCM
 {
 	// Member Variables
-	private final String m_hostPort;
+	private final String m_connectionId;
 	private final String m_credentialsId;
-	private final String m_codePage;
 	private final String m_filterPattern;
 	private final String m_fileExtension;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param hostPort
+	 * @param connectionId
+	 *            a unique host connection identifier
 	 * @param filterPattern
+	 *            filter for the datasets to be retrieved from the mainframe
 	 * @param fileExtension
+	 *            file extension for the incoming datasets
 	 * @param credentialsId
-	 * @param codePage
+	 *            unique id of the selected credential
 	 */
-	protected CpwrScmConfiguration(String hostPort, String filterPattern, String fileExtension, String credentialsId,
-			String codePage)
+	protected CpwrScmConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId)
 	{
-		m_hostPort = StringUtils.trimToEmpty(hostPort);
+		m_connectionId = StringUtils.trimToEmpty(connectionId);
 		m_filterPattern = StringUtils.trimToEmpty(filterPattern);
 		m_fileExtension = StringUtils.trimToEmpty(fileExtension);
 		m_credentialsId = StringUtils.trimToEmpty(credentialsId);
-		m_codePage = StringUtils.trimToEmpty(codePage);
 	}
 
 	/* 
@@ -74,13 +72,13 @@ public abstract class CpwrScmConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Host:Port'.
+	 * Gets the unique identifier of the 'Host connection'.
 	 * 
-	 * @return <code>String</code> value of m_hostport
+	 * @return <code>String</code> value of m_connectionId
 	 */
-	public String getHostPort()
+	public String getConnectionId()
 	{
-		return m_hostPort;
+		return m_connectionId;
 	}
 
 	/**
@@ -114,50 +112,6 @@ public abstract class CpwrScmConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Code Page'.
-	 * 
-	 * @return <code>String</code> value of m_codePage
-	 */
-	public String getCodePage()
-	{
-		return m_codePage;
-	}
-
-	/**
-	 * Gets the value of the 'Topaz CLI Location' based on node.
-	 * 
-	 * @param launcher
-	 *            the launcher associated with the current node
-	 * 
-	 * @return <code>String</code> value of topazCLILocation
-	 */
-	public String getTopazCLILocation(Launcher launcher)
-	{
-		SCMGlobalConfiguration globalConfig = SCMGlobalConfiguration.get();
-		return globalConfig.getTopazCLILocation(launcher);
-	}
-
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the <code>String</code> host
-	 */
-	public String getHost()
-	{
-		return StringUtils.substringBefore(getHostPort(), Constants.COLON);
-	}
-
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the <code>String</code> port
-	 */
-	public String getPort()
-	{
-		return StringUtils.substringAfter(getHostPort(), Constants.COLON);
-	}
-
-	/**
 	 * Retrieves login information given a credential ID.
 	 * 
 	 * @param project
@@ -178,120 +132,77 @@ public abstract class CpwrScmConfiguration extends SCM
 		{
 			if (matcher.matches(c))
 			{
-				credential = (StandardUsernamePasswordCredentials) c;
+				credential = c;
 			}
 		}
 
 		return credential;
 	}
 
-	/**
-	 * Validates the configuration parameters.
-	 * 
-	 * @param launcher
-	 *            the machine that the files will be checked out
-	 * @param listener
-	 *            build listener
-	 * @param project
-	 *            the Jenkins project
-	 */
-	protected void validateParameters(Launcher launcher, TaskListener listener, Item project)
-	{
-		PrintStream logger = listener.getLogger();
-
-		validateHostPort(logger);
-
-		StandardUsernamePasswordCredentials credentials = getLoginInformation(project);
-		if (credentials != null)
-		{
-			logger.println(Messages.username() + " = " + credentials.getUsername()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
-		}
-
-		String codePage = getCodePage();
-		if (codePage.isEmpty() == false)
-		{
-			logger.println(Messages.codePage() + " = " + codePage); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.codePage()));
-		}
-
-		String filterPattern = getFilterPattern();
-		if (filterPattern.isEmpty() == false)
-		{
-			logger.println(Messages.filterPattern() + " = " + filterPattern); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.filterPattern()));
-		}
-
-		String fileExtension = getFileExtension();
-		if (fileExtension.isEmpty() == false)
-		{
-			logger.println(Messages.fileExtension() + " = " + fileExtension); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
-		}
-
-		String cliLocation = getTopazCLILocation(launcher);
-		if (StringUtils.isEmpty(cliLocation) == false)
-		{
-			logger.println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
-		}
-	}
-
-	/**
-	 * Validate that there is a host and port defined.
-	 * 
-	 * @param logger
-	 *            the logger to write messages to
-	 */
-	protected void validateHostPort(PrintStream logger)
-	{
-		String hostPort = getHostPort();
-		if (hostPort.isEmpty() == true)
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
-		}
-		else
-		{
-			String[] hostPortValues = StringUtils.split(hostPort, Constants.COLON);
-			if (hostPortValues.length != 2)
-			{
-				throw new IllegalArgumentException(Messages.checkoutInvalidParameterValueError(Messages.hostPort(), hostPort));
-			}
-			else
-			{
-				String host = StringUtils.trimToEmpty(hostPortValues[0]);
-				if (host.isEmpty() == true)
-				{
-					throw new IllegalArgumentException(
-							Messages.checkoutInvalidParameterValueError(Messages.hostPort(), hostPort));
-				}
-
-				String port = StringUtils.trimToEmpty(hostPortValues[1]);
-				if (port.isEmpty() == true || StringUtils.isNumeric(port) == false)
-				{
-					throw new IllegalArgumentException(
-							Messages.checkoutInvalidParameterValueError(Messages.hostPort(), hostPort));
-				}
-				else
-				{
-					logger.println(Messages.hostPort() + " = " + hostPort); //$NON-NLS-1$
-				}
-			}
-		}
-	}
+// TODO (pfhjyg0: validation duplication??? Leave commented for now until we decide if validation performed in CLI is adequate.
+//	/**
+//	 * Validates the configuration parameters.
+//	 * 
+//	 * @param launcher
+//	 *            the machine that the files will be checked out
+//	 * @param listener
+//	 *            build listener
+//	 * @param project
+//	 *            the Jenkins project
+//	 */
+//	protected void validateParameters(Launcher launcher, TaskListener listener, Item project)
+//	{
+//		PrintStream logger = listener.getLogger();
+//
+//		HostConnection connection = getHostConnection();
+//		if (connection != null)
+//		{
+//			logger.println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+//		}
+//		else
+//		{
+//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
+//		}
+//
+//		StandardUsernamePasswordCredentials credentials = getLoginInformation(project);
+//		if (credentials != null)
+//		{
+//			logger.println(Messages.username() + " = " + credentials.getUsername()); //$NON-NLS-1$
+//		}
+//		else
+//		{
+//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
+//		}
+//
+//		String filterPattern = getFilterPattern();
+//		if (!filterPattern.isEmpty())
+//		{
+//			logger.println(Messages.filterPattern() + " = " + filterPattern); //$NON-NLS-1$
+//		}
+//		else
+//		{
+//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.filterPattern()));
+//		}
+//
+//		String fileExtension = getFileExtension();
+//		if (!fileExtension.isEmpty())
+//		{
+//			logger.println(Messages.fileExtension() + " = " + fileExtension); //$NON-NLS-1$
+//		}
+//		else
+//		{
+//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
+//		}
+//
+//		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+//		String cliLocation = globalConfig.getTopazCLILocation(launcher);
+//		if (!StringUtils.isEmpty(cliLocation))
+//		{
+//			logger.println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
+//		}
+//		else
+//		{
+//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
+//		}
+//	}
 }

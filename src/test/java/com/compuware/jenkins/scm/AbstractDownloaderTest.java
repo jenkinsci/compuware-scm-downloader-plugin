@@ -25,17 +25,16 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 /**
- * 
+ * AbstractDownloader unit tests.
  */
 @SuppressWarnings("nls")
 public class AbstractDownloaderTest
 {
-
 	@Rule
 	public JenkinsRule j = new JenkinsRule();
-	
+
 	private TestDownloader m_testDownloader = new TestDownloader();
-	
+
 	@Test
 	public void convertFilterPatternNullTest()
 	{
@@ -46,7 +45,6 @@ public class AbstractDownloaderTest
 	@Test
 	public void convertFilterPatternSpacesTest()
 	{
-		
 		// Single space
 		// Test " "
 		// Test "a.b.c d.e.f"
@@ -54,10 +52,10 @@ public class AbstractDownloaderTest
 		// Test " a.b.c d.e.f "
 
 		// Multiple Spaces
-		// Test "    "
-		// Test "a.b.c   d.e.f"
-		// Test "a.b.c  d.e.f    "
-		// Test "   a.b.c    d.e.f      "
+		// Test " "
+		// Test "a.b.c d.e.f"
+		// Test "a.b.c d.e.f "
+		// Test " a.b.c d.e.f "
 		assertTrue(true);
 	}
 
@@ -73,12 +71,12 @@ public class AbstractDownloaderTest
 		input = "a.b.c\nd.e.f";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\nd.e.f\n"
 		input = "a.b.c\nd.e.f\n";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "\na.b.c\nd.e.f\n"
 		input = "\na.b.c\nd.e.f\n";
 		expectedResults = "a.b.c,d.e.f";
@@ -88,17 +86,17 @@ public class AbstractDownloaderTest
 		input = "\n\n\n";
 		expectedResults = StringUtils.EMPTY;
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\n\n\nd.e.f"
 		input = "a.b.c\n\n\nd.e.f";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\n\nd.e.f\n\n"
 		input = "a.b.c\n\nd.e.f\n\n";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "\n\na.b.c\n\n\nd.e.f\n\n\n\n"
 		input = "\n\na.b.c\n\n\nd.e.f\n\n\n\n";
 		expectedResults = "a.b.c,d.e.f";
@@ -117,12 +115,12 @@ public class AbstractDownloaderTest
 		input = "a.b.c\td.e.f";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\td.e.f\t"
 		input = "a.b.c\td.e.f\t";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "\ta.b.c\td.e.f\t"
 		input = "\ta.b.c\td.e.f\t";
 		expectedResults = "a.b.c,d.e.f";
@@ -132,17 +130,17 @@ public class AbstractDownloaderTest
 		input = "\t\t\t";
 		expectedResults = StringUtils.EMPTY;
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\t\t\td.e.f"
 		input = "a.b.c\t\t\td.e.f";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\t\td.e.f\t\t"
 		input = "a.b.c\t\td.e.f\t\t";
 		expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "\t\ta.b.c\t\t\td.e.f\t\t\t\t"
 		input = "\t\ta.b.c\t\t\td.e.f\t\t\t\t";
 		expectedResults = "a.b.c,d.e.f";
@@ -153,23 +151,23 @@ public class AbstractDownloaderTest
 	public void convertFilterPatternMixedTest()
 	{
 		// Mixed delimiters
-		// Test "  \t \n \t\t\n"
+		// Test " \t \n \t\t\n"
 		String input = "  \t \n \t\t\n";
 		String expectedResults = StringUtils.EMPTY;
 		testFilterPattern(input, expectedResults);
-		
+
 		// Test "a.b.c\td.e.f\ng.h.i"
 		input = "a.b.c\td.e.f\ng.h.i";
 		expectedResults = "a.b.c,d.e.f,g.h.i";
 		testFilterPattern(input, expectedResults);
-		
-		// Test " \t\na.b.c\n \t d.e.f g.h.i,j.k.l\n\t   "
+
+		// Test " \t\na.b.c\n \t d.e.f g.h.i,j.k.l\n\t "
 		input = " \t\na.b.c\n \t d.e.f g.h.i,j.k.l\n\t   ";
 		expectedResults = "a.b.c,d.e.f,g.h.i,j.k.l";
 		testFilterPattern(input, expectedResults);
 		assertTrue(true);
 	}
-	
+
 	@Test
 	public void convertFilterPatternCommaTest()
 	{
@@ -177,17 +175,16 @@ public class AbstractDownloaderTest
 		String expectedResults = "a.b.c,d.e.f";
 		testFilterPattern(input, expectedResults);
 	}
-	
+
 	private void testFilterPattern(String input, String expectedResults)
 	{
 		String msg = String.format("Input: %s, Expected: %s", input, expectedResults);
 		String convertedText = m_testDownloader.convertFilterPattern(input);
 		assertEquals(msg, expectedResults, convertedText);
 	}
-	
+
 	private class TestDownloader extends AbstractDownloader
 	{
-
 		/* (non-Javadoc)
 		 * @see com.compuware.jenkins.scm.AbstractDownloader#getSource(hudson.model.Run, hudson.Launcher, hudson.FilePath, hudson.model.TaskListener, java.io.File, java.lang.String)
 		 */

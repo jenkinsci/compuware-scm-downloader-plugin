@@ -20,15 +20,8 @@ package com.compuware.jenkins.scm;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import javax.servlet.ServletException;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -38,7 +31,8 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-import com.compuware.jenkins.scm.utils.Constants;
+import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
+import com.compuware.jenkins.common.configuration.HostConnection;
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
@@ -66,21 +60,19 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * Gets the data from the configuration page. The parameter names must match the field names set by
 	 * <code>config.jelly</code>.
 	 * 
-	 * @param hostPort
-	 *            'Host':'Port'
+	 * @param connectionId
+				  a unique host connection identifier
 	 * @param filterPattern
 	 *            filter for the datasets to be retrieved from the mainframe
 	 * @param fileExtension
 	 *            file extension for the incoming datasets
 	 * @param credentialsId
 	 *            unique id of the selected credential
-	 * @param codePage
-	 *            code page
 	 */
 	@DataBoundConstructor
-	public PdsConfiguration(String hostPort, String filterPattern, String fileExtension, String credentialsId, String codePage)
+	public PdsConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId)
 	{
-		super(hostPort, filterPattern, fileExtension, credentialsId, codePage);
+		super(connectionId, filterPattern, fileExtension, credentialsId);
 	}
 
 	/**
@@ -109,12 +101,13 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 		try
 		{
-			validateParameters(launcher, listener, build.getParent());
+			// TODO (pfhjyg0) : Leave commented out for now; see comment in CpwrScmConfiguration.java#validateParameters()
+			//validateParameters(launcher, listener, build.getParent());
 
 			PdsDownloader downloader = new PdsDownloader(this);
 
 			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile);
-			if (rtnValue == false)
+			if (!rtnValue)
 			{
 				throw new AbortException();
 			}
@@ -219,14 +212,11 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 *            value passed from the config.jelly "filterPattern" field
 		 * 
 		 * @return validation message
-		 * 
-		 * @throws IOException
-		 * @throws ServletException
 		 */
-		public FormValidation doCheckFilterPattern(@QueryParameter String value) throws IOException, ServletException
+		public FormValidation doCheckFilterPattern(@QueryParameter String value)
 		{
 			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty() == true)
+			if (tempValue.isEmpty())
 			{
 				return FormValidation.error(Messages.checkFilterPatternEmptyError());
 			}
@@ -235,51 +225,58 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		}
 
 		/**
-		 * Validator for the 'Host:port' text field.
+		 * Validator for the 'Host connection' field.
 		 * 
-		 * @param value
-		 *            value passed from the config.jelly "hostPort" field
+		 * @param connectionId
+		 *            unique identifier for the host connection passed from the config.jelly "connectionId" field
 		 * 
 		 * @return validation message
-		 * 
-		 * @throws IOException
-		 * @throws ServletException
 		 */
-		public FormValidation doCheckHostPort(@QueryParameter String value) throws IOException, ServletException
+		public FormValidation doCheckConnectionId(@QueryParameter String connectionId)
 		{
-			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty() == true)
+			String tempValue = StringUtils.trimToEmpty(connectionId);
+			if (tempValue.isEmpty())
 			{
-				return FormValidation.error(Messages.checkHostPortEmptyError());
-			}
-			else 
-			{
-				String[] hostPort = StringUtils.split(tempValue, Constants.COLON);
-				if (hostPort.length != 2)
-				{
-					return FormValidation.error(Messages.checkHostPortFormatError());
-				}
-				else
-				{
-					String host = StringUtils.trimToEmpty(hostPort[0]);
-					if (host.isEmpty() == true)
-					{
-						return FormValidation.error(Messages.checkHostPortMissingHostError());
-					}
-
-					String port = StringUtils.trimToEmpty(hostPort[1]);
-					if (port.isEmpty() == true)
-					{
-						return FormValidation.error(Messages.checkHostPortMissingPortError());
-					}
-					else if (StringUtils.isNumeric(port) == false)
-					{
-						return FormValidation.error(Messages.checkHostPortInvalidPorttError());
-					}
-				}
+				return FormValidation.error(Messages.checkHostConnectionError());
 			}
 
 			return FormValidation.ok();
+		}
+
+		/**
+		 * Fills in the Host Connection selection box with applicable connections.
+		 * 
+		 * @param context
+		 *            filter for host connections
+		 * @param connectionId
+		 *            an existing host connection identifier; can be null
+		 * @param project
+		 *            the Jenkins project
+		 * 
+		 * @return host connection selections
+		 */
+		public ListBoxModel doFillConnectionIdItems(@AncestorInPath Jenkins context, @QueryParameter String connectionId,
+				@AncestorInPath Item project)
+		{
+			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+			HostConnection[] hostConnections = globalConfig.getHostConnections();
+
+			ListBoxModel model = new ListBoxModel();
+			model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
+
+			for (HostConnection connection : hostConnections)
+			{
+				boolean isSelected = false;
+				if (connectionId != null)
+				{
+					isSelected = connectionId.matches(connection.getConnectionId());
+				}
+
+				model.add(new Option(connection.getDescription() + " [" + connection.getHostPort() + ']', //$NON-NLS-1$
+						connection.getConnectionId(), isSelected));
+			}
+
+			return model;
 		}
 
 		/**
@@ -289,18 +286,15 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 *            value passed from the config.jelly "fileExtension" field
 		 * 
 		 * @return validation message
-		 * 
-		 * @throws IOException
-		 * @throws ServletException
 		 */
-		public FormValidation doCheckFileExtension(@QueryParameter String value) throws IOException, ServletException
+		public FormValidation doCheckFileExtension(@QueryParameter String value)
 		{
 			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty() == true)
+			if (tempValue.isEmpty())
 			{
 				return FormValidation.error(Messages.checkFileExtensionEmptyError());
 			}
-			else if (StringUtils.isAlphanumeric(tempValue) == false)
+			else if (!StringUtils.isAlphanumeric(tempValue))
 			{
 				return FormValidation.error(Messages.checkFileExtensionFormatError());
 			}
@@ -315,14 +309,11 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 *            value passed from the config.jelly "credentialsId" field
 		 * 
 		 * @return validation message
-		 * 
-		 * @throws IOException
-		 * @throws ServletException
 		 */
-		public FormValidation doCheckCredentialsId(@QueryParameter String value) throws IOException, ServletException
+		public FormValidation doCheckCredentialsId(@QueryParameter String value)
 		{
 			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty() == true)
+			if (tempValue.isEmpty())
 			{
 				return FormValidation.error(Messages.checkLoginCredentialsError());
 			}
@@ -335,13 +326,14 @@ public class PdsConfiguration extends CpwrScmConfiguration
 		 * 
 		 * @param context
 		 *            filter for credentials
+		 * @param credentialsId
+		 *            existing login credentials; can be null
+		 * @param project
+		 *            the Jenkins project
 		 * 
 		 * @return credential selections
-		 * 
-		 * @throws IOException
-		 * @throws ServletException
 		 */
-		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId, @AncestorInPath Item project) throws IOException, ServletException
+		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId, @AncestorInPath Item project)
 		{
 			List<StandardUsernamePasswordCredentials> creds = CredentialsProvider.lookupCredentials(
 					StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
@@ -364,58 +356,6 @@ public class PdsConfiguration extends CpwrScmConfiguration
 			}
 
 			return model;
-		}
-		
-		/**
-		 * Fills in the Code page selection box with code pages.
-		 *
-		 * @return code page selections
-		 * 
-		 * @throws IOException
-		 * @throws ServletException
-		 */
-		public ListBoxModel doFillCodePageItems() throws IOException, ServletException
-		{
-			ListBoxModel codePageModel = new ListBoxModel();
-			
-			ResourceBundle cpBundle = ResourceBundle.getBundle("com.compuware.jenkins.scm.codePageMappings"); //$NON-NLS-1$
-			Set<String> cpNumberSet = cpBundle.keySet();
-
-			// sort the code page values (for display purposes)
-			List<String> cpNumberList = new ArrayList<String>(cpNumberSet);
-			Collections.sort(cpNumberList, new NumericStringComparator());
-
-			Iterator<String> iterator = cpNumberList.iterator();
-			while (iterator.hasNext() == true)
-			{
-				String cpNumber = iterator.next();
-				String cpDescription = cpBundle.getString(cpNumber);
-				
-				codePageModel.add(cpDescription, cpNumber);
-			}
-			
-			return codePageModel;
-		}
-		
-		/**
-		 * Comparator for comparing Strings numerically.
-		 */
-		private static class NumericStringComparator implements Comparator<String>, Serializable
-		{
-			private static final long serialVersionUID = 1L;
-
-			/*
-			 * (non-Javadoc)
-			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-			 */
-			@Override
-			public int compare(String numStr1, String numStr2)
-			{
-				int intVal1 = Integer.parseInt(numStr1);
-				int intVal2 = Integer.parseInt(numStr2);
-
-				return intVal1 - intVal2;
-			}
-		}
+		}		
 	}
 }
