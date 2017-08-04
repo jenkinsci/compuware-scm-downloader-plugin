@@ -96,6 +96,8 @@ public class EndevorDownloader extends AbstractDownloader
 		args.add(cliScriptFileRemote);
 		args.add(Constants.HOST_PARM, host);
 		args.add(Constants.PORT_PARM, port);
+		args.add(Constants.CODE_PAGE_PARM, codePage);
+		args.add(Constants.TIMEOUT_PARM, timeout);
 		args.add(Constants.USERID_PARM, userId);
 		args.add(Constants.PW_PARM);
 		args.add(password, true);
@@ -103,9 +105,7 @@ public class EndevorDownloader extends AbstractDownloader
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.ENDEVOR);
 		args.add(Constants.FILE_EXT_PARM, fileExtension);
-		args.add(Constants.CODE_PAGE_PARM, codePage);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);
-		args.add(Constants.TIMEOUT_PARM, timeout);
 
 		FilePath workDir = new FilePath(vChannel, workspaceFilePath.getRemote());
 		workDir.mkdirs();

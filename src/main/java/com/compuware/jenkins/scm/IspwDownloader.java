@@ -99,6 +99,8 @@ public class IspwDownloader extends AbstractDownloader
 
 		args.add(Constants.HOST_PARM, host);
 		args.add(Constants.PORT_PARM, port);
+		args.add(Constants.CODE_PAGE_PARM, codePage);
+		args.add(Constants.TIMEOUT_PARM, timeout);
 		args.add(Constants.USERID_PARM, username);
 		args.add(Constants.PW_PARM);
 		args.add(password, true);
@@ -106,7 +108,6 @@ public class IspwDownloader extends AbstractDownloader
 		args.add(Constants.ISPW_SERVER_APP_PARAM, serverApp);
 		args.add(Constants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
 		args.add(Constants.ISPW_LEVEL_OPTION_PARAM, levelOption);
-		args.add(Constants.TIMEOUT_PARM, timeout);
 
 		String runtimeConfig = m_ispwConfig.getServerConfig();
 		String componentName = m_ispwConfig.getFilterName();
@@ -132,7 +133,6 @@ public class IspwDownloader extends AbstractDownloader
 
 		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.ISPW);
-		args.add(Constants.CODE_PAGE_PARM, codePage);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);
 
 		FilePath workDir = new FilePath(vChannel, workspaceFilePath.getRemote());
