@@ -101,8 +101,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 
 		try
 		{
-			// TODO (pfhjyg0) : Leave commented out for now; see comment in CpwrScmConfiguration.java#validateParameters()
-			//validateParameters(launcher, listener, build.getParent());
+			validateParameters(launcher, listener, build.getParent());
 
 			PdsDownloader downloader = new PdsDownloader(this);
 

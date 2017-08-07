@@ -18,6 +18,7 @@
 */
 package com.compuware.jenkins.scm;
 
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -25,7 +26,11 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.cloudbees.plugins.credentials.matchers.IdMatcher;
+import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
+import com.compuware.jenkins.common.configuration.HostConnection;
+import hudson.Launcher;
 import hudson.model.Item;
+import hudson.model.TaskListener;
 import hudson.scm.ChangeLogParser;
 import hudson.scm.SCM;
 import hudson.security.ACL;
@@ -139,70 +144,69 @@ public abstract class CpwrScmConfiguration extends SCM
 		return credential;
 	}
 
-// TODO (pfhjyg0: validation duplication??? Leave commented for now until we decide if validation performed in CLI is adequate.
-//	/**
-//	 * Validates the configuration parameters.
-//	 * 
-//	 * @param launcher
-//	 *            the machine that the files will be checked out
-//	 * @param listener
-//	 *            build listener
-//	 * @param project
-//	 *            the Jenkins project
-//	 */
-//	protected void validateParameters(Launcher launcher, TaskListener listener, Item project)
-//	{
-//		PrintStream logger = listener.getLogger();
-//
-//		HostConnection connection = getHostConnection();
-//		if (connection != null)
-//		{
-//			logger.println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
-//		}
-//		else
-//		{
-//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
-//		}
-//
-//		StandardUsernamePasswordCredentials credentials = getLoginInformation(project);
-//		if (credentials != null)
-//		{
-//			logger.println(Messages.username() + " = " + credentials.getUsername()); //$NON-NLS-1$
-//		}
-//		else
-//		{
-//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
-//		}
-//
-//		String filterPattern = getFilterPattern();
-//		if (!filterPattern.isEmpty())
-//		{
-//			logger.println(Messages.filterPattern() + " = " + filterPattern); //$NON-NLS-1$
-//		}
-//		else
-//		{
-//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.filterPattern()));
-//		}
-//
-//		String fileExtension = getFileExtension();
-//		if (!fileExtension.isEmpty())
-//		{
-//			logger.println(Messages.fileExtension() + " = " + fileExtension); //$NON-NLS-1$
-//		}
-//		else
-//		{
-//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
-//		}
-//
-//		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-//		String cliLocation = globalConfig.getTopazCLILocation(launcher);
-//		if (!StringUtils.isEmpty(cliLocation))
-//		{
-//			logger.println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
-//		}
-//		else
-//		{
-//			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
-//		}
-//	}
+	/**
+	 * Validates the configuration parameters.
+	 * 
+	 * @param launcher
+	 *            the machine that the files will be checked out
+	 * @param listener
+	 *            build listener
+	 * @param project
+	 *            the Jenkins project
+	 */
+	protected void validateParameters(Launcher launcher, TaskListener listener, Item project)
+	{
+		PrintStream logger = listener.getLogger();
+		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+
+		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
+		if (connection != null)
+		{
+			logger.println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
+		}
+
+		StandardUsernamePasswordCredentials credentials = getLoginInformation(project);
+		if (credentials != null)
+		{
+			logger.println(Messages.username() + " = " + credentials.getUsername()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
+		}
+
+		String filterPattern = getFilterPattern();
+		if (!filterPattern.isEmpty())
+		{
+			logger.println(Messages.filterPattern() + " = " + filterPattern); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.filterPattern()));
+		}
+
+		String fileExtension = getFileExtension();
+		if (!fileExtension.isEmpty())
+		{
+			logger.println(Messages.fileExtension() + " = " + fileExtension); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
+		}
+
+		String cliLocation = globalConfig.getTopazCLILocation(launcher);
+		if (!StringUtils.isEmpty(cliLocation))
+		{
+			logger.println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
+		}
+	}
 }

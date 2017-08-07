@@ -101,8 +101,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 
 		try
 		{
-			// TODO (pfhjyg0) : Leave commented out for now; see comment in CpwrScmConfiguration.java#validateParameters()
-			// validateParameters(launcher, listener, build.getParent());
+			validateParameters(launcher, listener, build.getParent());
 
 			EndevorDownloader downloader = new EndevorDownloader(this);
 
