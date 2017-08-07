@@ -109,8 +109,7 @@ public class IspwConfiguration extends SCM
 
 		try
 		{
-			// TODO (pfhjyg0) : Leave commented out for now; see comment in IspwConfiguration.java#validateParameters()
-			// validateParameters(launcher, listener, build.getParent());
+			validateParameters(launcher, listener, build.getParent());
 
 			IspwDownloader downloader = new IspwDownloader(this);
 			rtnValue = downloader.getSource(build, launcher, workspaceFilePath, listener, changelogFile);
@@ -246,30 +245,6 @@ public class IspwConfiguration extends SCM
 	}
 
 	/**
-	 * Retrieves host connection information given a host connection id.
-	 *
-	 * @return a Jenkins host connection
-	 */
-	protected HostConnection getHostConnection()
-	{
-		HostConnection connection = null;
-
-		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-		HostConnection[] hostConnections = globalConfig.getHostConnections();
-
-		String connectionId = getConnectionId();
-		for (HostConnection c : hostConnections)
-		{
-			if (connectionId.matches(c.getConnectionId()))
-			{
-				connection = c;
-			}
-		}
-
-		return connection;
-	}
-
-	/**
 	 * Retrieves login information given a credential ID
 	 * 
 	 * @param project
@@ -296,114 +271,112 @@ public class IspwConfiguration extends SCM
 		return credential;
 	}
 
-	// TODO (pfhjyg0: validation duplication??? Leave commented for now until we decide if validation performed in CLI is
-	// adequate.
-	// /**
-	// * Validates the configuration parameters.
-	// *
-	// * @param launcher
-	// * The machine that the files will be checked out.
-	// * @param listener
-	// * Build listener
-	// * @param project the Jenkins project
-	// */
-	// public void validateParameters(Launcher launcher, TaskListener listener, Item project)
-	// {
-	//
-	// if (getLoginInformation(project) != null)
-	// {
-	// listener.getLogger().println(Messages.username() + " = " + getLoginInformation(project).getUsername()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
-	// }
-	//
-	// HostConnection connection = getHostConnection();
-	// if (connection != null)
-	// {
-	// listener.getLogger().println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort());
-	// //$NON-NLS-1$ //$NON-NLS-2$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
-	// }
-	//
-	// if (getServerConfig() != null)
-	// {
-	// listener.getLogger().println(Messages.ispwServerConfig() + " = " + getServerConfig()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerConfig()));
-	// }
-	//
-	// if (!getServerStream().isEmpty())
-	// {
-	// listener.getLogger().println(Messages.ispwServerStream() + " = " + getServerStream()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerStream()));
-	// }
-	//
-	// if (!getServerApplication().isEmpty())
-	// {
-	// listener.getLogger().println(Messages.ispwServerApp() + " = " + getServerApplication()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerApp()));
-	// }
-	//
-	// if (!getServerLevel().isEmpty())
-	// {
-	// listener.getLogger().println(Messages.ispwServerLevel() + " = " + getServerLevel()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerLevel()));
-	// }
-	//
-	// if (!getLevelOption().isEmpty())
-	// {
-	// listener.getLogger().println(Messages.ispwLevelOption() + " = " + getLevelOption()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
-	// }
-	//
-	// if (getFilterName() != null)
-	// {
-	// listener.getLogger().println(Messages.ispwfilterName() + " = " + getFilterName()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterName()));
-	// }
-	//
-	// if (getFilterType() != null)
-	// {
-	// listener.getLogger().println(Messages.ispwfilterType() + " = " + getFilterType()); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterType()));
-	// }
-	//
-	// CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-	// String cliLocation = globalConfig.getTopazCLILocation(launcher);
-	// if ((cliLocation != null) && !cliLocation.isEmpty())
-	// {
-	// listener.getLogger().println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
-	// }
-	// }
+	/**
+	 * Validates the configuration parameters.
+	 *
+	 * @param launcher
+	 *            The machine that the files will be checked out.
+	 * @param listener
+	 *            Build listener
+	 * @param project
+	 *            the Jenkins project
+	 */
+	public void validateParameters(Launcher launcher, TaskListener listener, Item project)
+	{
+		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+
+		if (getLoginInformation(project) != null)
+		{
+			listener.getLogger().println(Messages.username() + " = " + getLoginInformation(project).getUsername()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
+		}
+
+		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
+		if (connection != null)
+		{
+			listener.getLogger().println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
+		}
+
+		if (getServerConfig() != null)
+		{
+			listener.getLogger().println(Messages.ispwServerConfig() + " = " + getServerConfig()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerConfig()));
+		}
+
+		if (!getServerStream().isEmpty())
+		{
+			listener.getLogger().println(Messages.ispwServerStream() + " = " + getServerStream()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerStream()));
+		}
+
+		if (!getServerApplication().isEmpty())
+		{
+			listener.getLogger().println(Messages.ispwServerApp() + " = " + getServerApplication()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerApp()));
+		}
+
+		if (!getServerLevel().isEmpty())
+		{
+			listener.getLogger().println(Messages.ispwServerLevel() + " = " + getServerLevel()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerLevel()));
+		}
+
+		if (!getLevelOption().isEmpty())
+		{
+			listener.getLogger().println(Messages.ispwLevelOption() + " = " + getLevelOption()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
+		}
+
+		if (getFilterName() != null)
+		{
+			listener.getLogger().println(Messages.ispwfilterName() + " = " + getFilterName()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterName()));
+		}
+
+		if (getFilterType() != null)
+		{
+			listener.getLogger().println(Messages.ispwfilterType() + " = " + getFilterType()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterType()));
+		}
+
+		String cliLocation = globalConfig.getTopazCLILocation(launcher);
+		if ((cliLocation != null) && !cliLocation.isEmpty())
+		{
+			listener.getLogger().println(Messages.topazCLILocation() + " = " + cliLocation); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
+		}
+	}
 
 	/**
 	 * Plugin does not support polling. We handle file changes in the CLI.
