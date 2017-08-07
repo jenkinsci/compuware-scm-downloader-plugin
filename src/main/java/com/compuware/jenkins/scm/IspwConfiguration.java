@@ -297,11 +297,11 @@ public class IspwConfiguration extends SCM
 		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
 		if (connection != null)
 		{
-			listener.getLogger().println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+			listener.getLogger().println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostConnection()));
 		}
 
 		if (getServerConfig() != null)

@@ -162,11 +162,11 @@ public abstract class CpwrScmConfiguration extends SCM
 		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
 		if (connection != null)
 		{
-			logger.println(Messages.hostPort() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostPort()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostConnection()));
 		}
 
 		StandardUsernamePasswordCredentials credentials = getLoginInformation(project);
