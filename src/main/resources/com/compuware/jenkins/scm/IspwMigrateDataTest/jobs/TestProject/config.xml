@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="com.compuware.jenkins.scm.IspwConfiguration" plugin="compuware-scm-downloader@1.81">
+    <m__hostPort>CW11:16196</m__hostPort>
+    <m__credentialsId>0f6dbaa8-2cac-4968-a67b-fc97819ec413</m__credentialsId>
+    <m__codePage>1047</m__codePage>
+    <m__serverConfig>W3TINTT</m__serverConfig>
+    <m__serverStream>BASIC</m__serverStream>
+    <m__serverApplication>CPWR</m__serverApplication>
+    <m__serverLevel>PROD</m__serverLevel>
+    <m__levelOption>1</m__levelOption>
+    <m__filterType>COB</m__filterType>
+    <m__filterName></m__filterName>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders/>
+  <publishers/>
+  <buildWrappers/>
+</project>

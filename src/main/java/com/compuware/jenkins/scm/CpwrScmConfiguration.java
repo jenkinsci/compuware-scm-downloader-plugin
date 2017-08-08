@@ -41,10 +41,14 @@ import hudson.security.ACL;
 public abstract class CpwrScmConfiguration extends SCM
 {
 	// Member Variables
-	private final String m_connectionId;
-	private final String m_credentialsId;
-	private final String m_filterPattern;
-	private final String m_fileExtension;
+	private String m_connectionId;
+	private String m_credentialsId;
+	private String m_filterPattern;
+	private String m_fileExtension;
+
+	// Backward compatibility
+	private transient @Deprecated String m_hostPort;
+	private transient @Deprecated String m_codePage;
 
 	/**
 	 * Constructor.
@@ -66,6 +70,34 @@ public abstract class CpwrScmConfiguration extends SCM
 		m_credentialsId = StringUtils.trimToEmpty(credentialsId);
 	}
 
+    /**
+     *  Handle data migration
+     *  
+     *  In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is 
+     *  a global and created with the Global Configuration page. If old hostPort and codePage properties exist, then 
+     *  a an attempt is made to create a new host connection with these properties and add it to the list of global 
+     *  host connections, as long as there is no other host connection already existing with the same properties. 
+     * 
+     * @return the configuration 
+     */
+    protected Object readResolve() 
+    {
+    	// Migrate from 1.X to 2.0
+        if (m_hostPort != null && m_codePage != null) 
+        {
+    		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+    		if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
+    		{
+    			String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
+    			HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
+    			globalConfig.addHostConnection(connection);
+    			m_connectionId = connection.getConnectionId();
+    		}
+        }
+
+        return this;
+    }
+
 	/* 
 	 * (non-Javadoc)
 	 * @see hudson.scm.SCM#createChangeLogParser()
@@ -77,6 +109,16 @@ public abstract class CpwrScmConfiguration extends SCM
 	}
 
 	/**
+	 * Gets the value of the 'Host:Port'.
+	 * 
+	 * @return <code>String</code> value of m_hostport
+	 */
+	public String getHostPort()
+	{
+		return m_hostPort;
+	}
+
+	/**
 	 * Gets the unique identifier of the 'Host connection'.
 	 * 
 	 * @return <code>String</code> value of m_connectionId
@@ -84,6 +126,16 @@ public abstract class CpwrScmConfiguration extends SCM
 	public String getConnectionId()
 	{
 		return m_connectionId;
+	}
+
+	/**
+	 * Gets the value of the 'Code Page'.
+	 * 
+	 * @return <code>String</code> value of m_codePage
+	 */
+	public String getCodePage()
+	{
+		return m_codePage;
 	}
 
 	/**
@@ -114,6 +166,30 @@ public abstract class CpwrScmConfiguration extends SCM
 	public String getCredentialsId()
 	{
 		return m_credentialsId;
+	}
+
+	/**
+	 * Retrieves host connection information given a host connection id.
+	 *
+	 * @return a Jenkins host connection
+	 */
+	protected HostConnection getHostConnection()
+	{
+		HostConnection connection = null;
+
+		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+		HostConnection[] hostConnections = globalConfig.getHostConnections();
+
+		String connectionId = getConnectionId();
+		for (HostConnection c : hostConnections)
+		{
+			if (connectionId.matches(c.getConnectionId()))
+			{
+				connection = c;
+			}
+		}
+
+		return connection;
 	}
 
 	/**
