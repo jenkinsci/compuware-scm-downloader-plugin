@@ -11,7 +11,6 @@
 package com.compuware.jenkins.scm.util;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import java.io.IOException;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -21,11 +20,9 @@ import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import hudson.model.FreeStyleProject;
-import hudson.model.TopLevelItem;
 import hudson.scm.SCM;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import static org.hamcrest.Matchers.instanceOf;
 
 /**
  * Utility class to handle test file routines.
@@ -108,5 +105,5 @@ public class ScmTestUtils
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-	}	
+	}
 }

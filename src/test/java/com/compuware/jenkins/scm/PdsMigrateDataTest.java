@@ -17,39 +17,20 @@
 package com.compuware.jenkins.scm;
 
 import static org.junit.Assert.fail;
-import java.io.IOException;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.LocalData;
 import com.compuware.jenkins.scm.util.CpwrScmConfigTestUtils;
-import com.compuware.jenkins.scm.util.ScmTestUtils;
 
 /**
- * PdsConfiguration unit tests.
+ * Pds data migration unit tests.
  */
-@SuppressWarnings("nls")
 public class PdsMigrateDataTest
 {
 	// Member Variables
 	@Rule
 	public JenkinsRule m_jenkinsRule = new JenkinsRule();
-
-	@Before
-	public void setup()
-	{
-		try
-		{
-			ScmTestUtils.setupGlobalConfiguration();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Perform a round trip test on the configuration.

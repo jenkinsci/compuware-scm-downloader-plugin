@@ -3,19 +3,17 @@
  * 
  * Copyright (c) 2017 Compuware Corporation
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
- * and associated documentation files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
- * subject to the following conditions: The above copyright notice and this permission notice shall be 
- * included in all copies or substantial portions of the Software.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice
+ * shall be included in all copies or substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
- * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.compuware.jenkins.scm;
 
 import java.io.PrintStream;
@@ -70,33 +68,33 @@ public abstract class CpwrScmConfiguration extends SCM
 		m_credentialsId = StringUtils.trimToEmpty(credentialsId);
 	}
 
-    /**
-     *  Handle data migration
-     *  
-     *  In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is 
-     *  a global and created with the Global Configuration page. If old hostPort and codePage properties exist, then 
-     *  a an attempt is made to create a new host connection with these properties and add it to the list of global 
-     *  host connections, as long as there is no other host connection already existing with the same properties. 
-     * 
-     * @return the configuration 
-     */
-    protected Object readResolve() 
-    {
-    	// Migrate from 1.X to 2.0
-        if (m_hostPort != null && m_codePage != null) 
-        {
-    		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-    		if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
-    		{
-    			String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-    			HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
-    			globalConfig.addHostConnection(connection);
-    			m_connectionId = connection.getConnectionId();
-    		}
-        }
+	/**
+	 * Handle data migration
+	 * 
+	 * In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is a global and
+	 * created with the Global Configuration page. If old hostPort and codePage properties exist, then a an attempt is made to
+	 * create a new host connection with these properties and add it to the list of global host connections, as long as there is
+	 * no other host connection already existing with the same properties.
+	 * 
+	 * @return the configuration
+	 */
+	protected Object readResolve()
+	{
+		// Migrate from 1.X to 2.0
+		if (m_hostPort != null && m_codePage != null)
+		{
+			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
+			{
+				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
+				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
+				globalConfig.addHostConnection(connection);
+				m_connectionId = connection.getConnectionId();
+			}
+		}
 
-        return this;
-    }
+		return this;
+	}
 
 	/* 
 	 * (non-Javadoc)
@@ -109,16 +107,6 @@ public abstract class CpwrScmConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Host:Port'.
-	 * 
-	 * @return <code>String</code> value of m_hostport
-	 */
-	public String getHostPort()
-	{
-		return m_hostPort;
-	}
-
-	/**
 	 * Gets the unique identifier of the 'Host connection'.
 	 * 
 	 * @return <code>String</code> value of m_connectionId
@@ -126,16 +114,6 @@ public abstract class CpwrScmConfiguration extends SCM
 	public String getConnectionId()
 	{
 		return m_connectionId;
-	}
-
-	/**
-	 * Gets the value of the 'Code Page'.
-	 * 
-	 * @return <code>String</code> value of m_codePage
-	 */
-	public String getCodePage()
-	{
-		return m_codePage;
 	}
 
 	/**
@@ -169,30 +147,6 @@ public abstract class CpwrScmConfiguration extends SCM
 	}
 
 	/**
-	 * Retrieves host connection information given a host connection id.
-	 *
-	 * @return a Jenkins host connection
-	 */
-	protected HostConnection getHostConnection()
-	{
-		HostConnection connection = null;
-
-		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-		HostConnection[] hostConnections = globalConfig.getHostConnections();
-
-		String connectionId = getConnectionId();
-		for (HostConnection c : hostConnections)
-		{
-			if (connectionId.matches(c.getConnectionId()))
-			{
-				connection = c;
-			}
-		}
-
-		return connection;
-	}
-
-	/**
 	 * Retrieves login information given a credential ID.
 	 * 
 	 * @param project
@@ -204,9 +158,8 @@ public abstract class CpwrScmConfiguration extends SCM
 	{
 		StandardUsernamePasswordCredentials credential = null;
 
-		List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
-				.lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
-						Collections.<DomainRequirement> emptyList());
+		List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider.lookupCredentials(
+				StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM, Collections.<DomainRequirement> emptyList());
 
 		IdMatcher matcher = new IdMatcher(getCredentialsId());
 		for (StandardUsernamePasswordCredentials c : credentials)

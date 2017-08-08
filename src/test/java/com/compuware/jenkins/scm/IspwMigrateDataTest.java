@@ -16,19 +16,29 @@
  */
 package com.compuware.jenkins.scm;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.LocalData;
-import com.compuware.jenkins.scm.util.CpwrScmConfigTestUtils;
-import com.compuware.jenkins.scm.util.ScmTestUtils;
+import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
+import com.compuware.jenkins.common.configuration.HostConnection;
+import com.compuware.jenkins.scm.util.TestConstants;
+import hudson.model.FreeStyleProject;
+import hudson.model.TopLevelItem;
 
 /**
- * PdsConfiguration unit tests.
+ * ISPW data migration unit tests.
  */
 @SuppressWarnings("nls")
 public class IspwMigrateDataTest
@@ -36,20 +46,6 @@ public class IspwMigrateDataTest
 	// Member Variables
 	@Rule
 	public JenkinsRule m_jenkinsRule = new JenkinsRule();
-
-	@Before
-	public void setup()
-	{
-		try
-		{
-			ScmTestUtils.setupGlobalConfiguration();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Perform a round trip test on the configuration.
@@ -63,7 +59,8 @@ public class IspwMigrateDataTest
 	{
 		try
 		{
-			CpwrScmConfigTestUtils.migrateDataTest(m_jenkinsRule);
+			TopLevelItem item = m_jenkinsRule.jenkins.getItem("TestProject");
+			assertDataMigrated(item);
 		}
 		catch (Exception e)
 		{
@@ -71,6 +68,61 @@ public class IspwMigrateDataTest
 			// example, if the exception is constructed without a message, you get no information from executing fail().
 			e.printStackTrace();
 			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * Test data has been migrated.
+	 * 
+	 * @param proj
+	 *            project being migrated
+	 * @throws IOException
+	 */
+	private static void assertDataMigrated(TopLevelItem proj) throws IOException
+	{
+		assertThat(proj, instanceOf(FreeStyleProject.class));
+		FreeStyleProject project = (FreeStyleProject) proj;
+		IspwConfiguration config = (IspwConfiguration) project.getScm();
+
+		assertNotNull(config.getConnectionId());
+
+		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+		HostConnection connection = globalConfig.getHostConnection(config.getConnectionId());
+		assertNotNull(connection);
+
+		File inputFile = project.getConfigFile().getFile();
+		BufferedReader br = new BufferedReader(new FileReader(inputFile));
+		try
+		{
+			String line = null;
+
+			// Lets use the TreeMap for always correct ordering
+			while ((line = br.readLine()) != null)
+			{
+				line = line.trim();
+
+				String tagName = line.substring(0, line.indexOf(">") + 1);
+				if (TestConstants.HOST_PORT_OPEN_TAG.equals(tagName))
+				{
+					String hostPort = StringUtils.substringBetween(line, tagName, TestConstants.HOST_PORT_CLOSE_TAG);
+					String expectedHost = StringUtils.substringBefore(hostPort, TestConstants.COLON);
+					String expectedPort = StringUtils.substringAfter(hostPort, TestConstants.COLON);
+					assertThat(String.format("Expected HostConnection.getHost() to return %s", expectedHost),
+							connection.getHost(), is(equalTo(expectedHost)));
+					assertThat(String.format("Expected HostConnection.getPort() to return %s", expectedPort),
+							connection.getPort(), is(equalTo(expectedPort)));
+				}
+				else if (TestConstants.CODE_PAGE_OPEN_TAG.equals(tagName))
+				{
+					String expectedCodePage = StringUtils.substringBetween(line, tagName, TestConstants.CODE_PAGE_CLOSE_TAG);
+					assertThat(String.format("Expected HostConnection.getCodePage() to return %s", expectedCodePage),
+							connection.getCodePage(), is(equalTo(expectedCodePage)));
+				}
+			}
+		}
+		finally
+		{
+			br.close();
 		}
 	}
 }

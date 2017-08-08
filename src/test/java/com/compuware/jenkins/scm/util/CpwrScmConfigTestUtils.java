@@ -138,7 +138,7 @@ public class CpwrScmConfigTestUtils
 		try
 		{
 			TopLevelItem item = jenkinsRule.jenkins.getItem("TestProject");
-			assertDataMigrated(item);			
+			assertDataMigrated(item);
 		}
 		catch (Exception e)
 		{
@@ -146,57 +146,61 @@ public class CpwrScmConfigTestUtils
 			// example, if the exception is constructed without a message, you get no information from executing fail().
 			e.printStackTrace();
 			fail(e.getMessage());
-		}		
+		}
 	}
 
 	/**
-	 * Verify data has been migrated.
+	 * Test data has been migrated.
 	 * 
-	 * @param proj project being verified
+	 * @param proj
+	 *            project being migrated
 	 * @throws IOException
 	 */
-    private static void assertDataMigrated(TopLevelItem proj) throws IOException
-    {
-        assertThat(proj, instanceOf(FreeStyleProject.class));
-        FreeStyleProject project = (FreeStyleProject) proj;
-        CpwrScmConfiguration config = (CpwrScmConfiguration) project.getScm();
-        
-        assertNotNull(config.getConnectionId());
-        
+	private static void assertDataMigrated(TopLevelItem proj) throws IOException
+	{
+		assertThat(proj, instanceOf(FreeStyleProject.class));
+		FreeStyleProject project = (FreeStyleProject) proj;
+		CpwrScmConfiguration config = (CpwrScmConfiguration) project.getScm();
+
+		assertNotNull(config.getConnectionId());
+
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
 		HostConnection connection = globalConfig.getHostConnection(config.getConnectionId());
-        assertNotNull(connection);
-        
-        File inputFile = project.getConfigFile().getFile();
-        BufferedReader br = new BufferedReader(new FileReader(inputFile)); 
-        try 
-        { 
-            String line = null; 
-       
-            // Lets use the TreeMap for always correct ordering 
-            while ((line = br.readLine()) != null) 
-            { 
-            	line = line.trim(); 
-       
-            	String tagName = line.substring(0, line.indexOf(">") + 1);
-            	if (TestConstants.HOST_PORT_OPEN_TAG.equals(tagName)) 
-            	{
-            		String hostPort = StringUtils.substringBetween(line, tagName, TestConstants.HOST_PORT_CLOSE_TAG);
-            		String expectedHost = StringUtils.substringBefore(hostPort, TestConstants.COLON);
-            		String expectedPort = StringUtils.substringAfter(hostPort, TestConstants.COLON);
-                    assertThat(String.format("Expected HostConnection.getHost() to return %s", expectedHost), connection.getHost(), is(equalTo(expectedHost)));
-                    assertThat(String.format("Expected HostConnection.getPort() to return %s", expectedPort), connection.getPort(), is(equalTo(expectedPort)));
-            	} 
-            	else if (TestConstants.CODE_PAGE_OPEN_TAG.equals(tagName)) 
-            	{
-            		String expectedCodePage = StringUtils.substringBetween(line, tagName, TestConstants.CODE_PAGE_CLOSE_TAG);
-                    assertThat(String.format("Expected HostConnection.getCodePage() to return %s", expectedCodePage), connection.getCodePage(), is(equalTo(expectedCodePage)));
-            	} 
-            }
-        }
-        finally 
-        { 
-        	br.close(); 
-        }         
-    }
+		assertNotNull(connection);
+
+		File inputFile = project.getConfigFile().getFile();
+		BufferedReader br = new BufferedReader(new FileReader(inputFile));
+		try
+		{
+			String line = null;
+
+			// Lets use the TreeMap for always correct ordering
+			while ((line = br.readLine()) != null)
+			{
+				line = line.trim();
+
+				String tagName = line.substring(0, line.indexOf(">") + 1);
+				if (TestConstants.HOST_PORT_OPEN_TAG.equals(tagName))
+				{
+					String hostPort = StringUtils.substringBetween(line, tagName, TestConstants.HOST_PORT_CLOSE_TAG);
+					String expectedHost = StringUtils.substringBefore(hostPort, TestConstants.COLON);
+					String expectedPort = StringUtils.substringAfter(hostPort, TestConstants.COLON);
+					assertThat(String.format("Expected HostConnection.getHost() to return %s", expectedHost),
+							connection.getHost(), is(equalTo(expectedHost)));
+					assertThat(String.format("Expected HostConnection.getPort() to return %s", expectedPort),
+							connection.getPort(), is(equalTo(expectedPort)));
+				}
+				else if (TestConstants.CODE_PAGE_OPEN_TAG.equals(tagName))
+				{
+					String expectedCodePage = StringUtils.substringBetween(line, tagName, TestConstants.CODE_PAGE_CLOSE_TAG);
+					assertThat(String.format("Expected HostConnection.getCodePage() to return %s", expectedCodePage),
+							connection.getCodePage(), is(equalTo(expectedCodePage)));
+				}
+			}
+		}
+		finally
+		{
+			br.close();
+		}
+	}
 }
