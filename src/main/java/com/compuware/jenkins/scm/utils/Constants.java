@@ -19,11 +19,21 @@
 package com.compuware.jenkins.scm.utils;
 
 /**
- * Constants used by Endevor Source Control Management.
+ * Constants used by the Source Control Management plugin.
  */
 @SuppressWarnings("nls")
 public class Constants
 {
+	/**
+	 * Private constructor.
+	 * <p>
+	 * All constants should be accessed statically.
+	 */
+	private Constants()
+	{
+	}
+
+	// Constants
 	public static final String FILE_SEPARATOR = "file.separator";
 	
 	public static final String CODE_PAGE_PARM = "-code";
@@ -31,7 +41,7 @@ public class Constants
 	public static final String FILE_EXT_PARM = "-ext";
 	public static final String FILTER_PARM = "-filter";
 	public static final String HOST_PARM = "-host";
-	public static final String PASSWORD_PARM = "-pass";
+	public static final String PW_PARM = "-pass";
 	public static final String PORT_PARM = "-port";
 	public static final String SCM_TYPE_PARM = "-scm";
 	public static final String USERID_PARM = "-id";
@@ -57,7 +67,7 @@ public class Constants
 	public static final String ENDEVOR = "endevor";
 	public static final String PDS = "pds";
 
-	public static final String TOPAZ_CLI_BAT = "TopazCLI.bat";
-	public static final String TOPAZ_CLI_SH = "TopazCLI.sh";
+	public static final String SCM_DOWNLOADER_CLI_BAT = "SCMDownloaderCLI.bat";
+	public static final String SCM_DOWNLOADER_CLI_SH = "SCMDownloaderCLI.sh";
 	public static final String TOPAZ_CLI_WORKSPACE = "TopazCliWkspc";
 }

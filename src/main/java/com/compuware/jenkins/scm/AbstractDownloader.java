@@ -65,19 +65,11 @@ public abstract class AbstractDownloader
 	 */
 	protected String wrapInQuotes(String input, boolean isShell)
 	{
-		String output = null;
+		String output = input;
 
-		if (input != null)
+		if (StringUtils.isNotEmpty(input))
 		{
-			// shell scripts don't need args wrapped in quotes
-			if (isShell == false)
-			{
-				output = String.format("\"%s\"", input); //$NON-NLS-1$
-			}
-			else
-			{
-				output = input;
-			}
+			output = String.format("\"%s\"", input); //$NON-NLS-1$
 		}
 
 		return output;
@@ -95,9 +87,9 @@ public abstract class AbstractDownloader
 	 */
 	protected String escapeForScript(String input, boolean isShell)
 	{
-		String output = null;
+		String output = input;
 
-		if (input != null)
+		if (StringUtils.isNotEmpty(input))
 		{
 			// escape any double quotes (") with another double quote (") for both batch and shell scripts
 			output = StringUtils.replace(input, Constants.DOUBLE_QUOTE, Constants.DOUBLE_QUOTE_ESCAPED);
