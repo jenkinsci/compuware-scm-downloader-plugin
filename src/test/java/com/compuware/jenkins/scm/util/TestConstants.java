@@ -16,6 +16,8 @@ package com.compuware.jenkins.scm.util;
 @SuppressWarnings("nls")
 public class TestConstants
 {
+	public static final String COLON = ":";
+
 	public static final String DESCRIPTION = "description";
 	public static final String HOST_PORT = "hostPort";
 	public static final String CODE_PAGE = "codePage";
@@ -35,4 +37,9 @@ public class TestConstants
 	public static final String EXPECTED_TIMEOUT = "123";
 	public static final String EXPECTED_USER_ID = "xdevreg";
 	public static final String EXPECTED_PASSWORD = "********";
+
+	public static final String HOST_PORT_OPEN_TAG = "<m__hostPort>";
+	public static final String HOST_PORT_CLOSE_TAG = "</m__hostPort>";
+	public static final String CODE_PAGE_OPEN_TAG = "<m__codePage>";
+	public static final String CODE_PAGE_CLOSE_TAG = "</m__codePage>";
 }
