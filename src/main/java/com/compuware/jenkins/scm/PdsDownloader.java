@@ -26,7 +26,8 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
 import com.compuware.jenkins.common.utils.ArgumentUtils;
-import com.compuware.jenkins.scm.utils.Constants;
+import com.compuware.jenkins.common.utils.CommonConstants;
+import com.compuware.jenkins.scm.utils.ScmConstants;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -68,8 +69,8 @@ public class PdsDownloader extends AbstractDownloader
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
         VirtualChannel vChannel = launcher.getChannel();
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
-        String remoteFileSeparator = remoteProperties.getProperty(Constants.FILE_SEPARATOR);
-		String osFile = launcher.isUnix() ? Constants.SCM_DOWNLOADER_CLI_SH : Constants.SCM_DOWNLOADER_CLI_BAT;
+		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
+		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;
 
 		String cliScriptFile = globalConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
@@ -85,7 +86,7 @@ public class PdsDownloader extends AbstractDownloader
 		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
-		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;
+		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
 		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
 		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(m_pdsConfig.getFilterPattern()));
 		String fileExtension = ArgumentUtils.escapeForScript(m_pdsConfig.getFileExtension());
@@ -93,18 +94,18 @@ public class PdsDownloader extends AbstractDownloader
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
 		args.add(cliScriptFileRemote);
-		args.add(Constants.HOST_PARM, host);
-		args.add(Constants.PORT_PARM, port);
-		args.add(Constants.USERID_PARM, userId);
-		args.add(Constants.PW_PARM);
+		args.add(CommonConstants.HOST_PARM, host);
+		args.add(CommonConstants.PORT_PARM, port);
+		args.add(CommonConstants.USERID_PARM, userId);
+		args.add(CommonConstants.PW_PARM);
 		args.add(password, true);
-		args.add(Constants.CODE_PAGE_PARM, codePage);
-		args.add(Constants.TIMEOUT_PARM, timeout);
-		args.add(Constants.SCM_TYPE_PARM, Constants.PDS);
-		args.add(Constants.TARGET_FOLDER_PARM, targetFolder);
-		args.add(Constants.DATA_PARM, topazCliWorkspace);
-		args.add(Constants.FILTER_PARM, cdDatasets);
-		args.add(Constants.FILE_EXT_PARM, fileExtension);
+		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
+		args.add(CommonConstants.TIMEOUT_PARM, timeout);
+		args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.PDS);
+		args.add(CommonConstants.TARGET_FOLDER_PARM, targetFolder);
+		args.add(CommonConstants.DATA_PARM, topazCliWorkspace);
+		args.add(ScmConstants.FILTER_PARM, cdDatasets);
+		args.add(ScmConstants.FILE_EXT_PARM, fileExtension);
 		
 		// create the CLI workspace (in case it doesn't already exist)
 		EnvVars env = build.getEnvironment(listener);
