@@ -129,7 +129,7 @@ public class CpwrScmConfigTestUtils
 	}
 
 	/**
-	 * 
+	 * Test migration of the host connection.
 	 * @param jenkinsRule
 	 *            the Jenkins rule
 	 */
