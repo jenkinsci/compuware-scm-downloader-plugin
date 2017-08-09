@@ -1,23 +1,15 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
-      
-      <f:entry title="${%hostPort}" field="hostPort">
-            <f:textbox/>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:cc="/lib/compuware">
+      <f:entry title="${%hostConnection}" field="connectionId" help="/plugin/compuware-scm-downloader/help-connectionId.html">
+            <cc:hostSelect default=""/>
       </f:entry>
-      
-      <f:entry title="${%loginCredentials}" field="credentialsId">
+      <f:entry title="${%loginCredentials}" field="credentialsId" help="/plugin/compuware-scm-downloader/help-credentialsId.html">
             <c:select/>
       </f:entry>
-      
-      <f:entry title="${%codePage}" field="codePage">
-            <f:select default="1047"/>
-      </f:entry>
-
-      <f:entry title="${%filterPattern}" field="filterPattern" description="${%filterPatternDescription}">
+      <f:entry title="${%filterPattern}" field="filterPattern" description="${%filterPatternDescription}" help="/plugin/compuware-scm-downloader/endevor/help-filterPattern.html">
             <f:textarea/>
       </f:entry>
-      
-      <f:entry title="${%fileExtension}" field="fileExtension">
+      <f:entry title="${%fileExtension}" field="fileExtension" help="/plugin/compuware-scm-downloader/help-fileExtension.html">
             <f:textbox/>
       </f:entry>
 </j:jelly>

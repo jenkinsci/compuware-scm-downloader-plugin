@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 Compuware Corporation
+ * Copyright (c) 2017 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -16,28 +16,42 @@
  */
 package com.compuware.jenkins.scm;
 
-import hudson.remoting.Callable;
-import java.util.Properties;
-import org.jenkinsci.remoting.RoleChecker;
+import static org.junit.Assert.fail;
+import org.junit.Rule;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.recipes.LocalData;
+import com.compuware.jenkins.scm.util.CpwrScmConfigTestUtils;
 
 /**
- * Get remote system properties
+ * Endevor data migration unit test.
  */
-public class RemoteSystemProperties implements Callable<Properties, RuntimeException>
+public class EndevorMigrateDataTest
 {
-	private static final long serialVersionUID = -8859580651709239685L;
+	// Member Variables
+	@Rule
+	public JenkinsRule m_jenkinsRule = new JenkinsRule();
 
-	public Properties call()
-	{
-		return System.getProperties();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.jenkinsci.remoting.RoleSensitive#checkRoles(org.jenkinsci.remoting.RoleChecker)
+	/**
+	 * Perform a round trip test on the configuration.
+	 * <p>
+	 * A project is created, configured, submitted / saved, and reloaded where the original configuration is compared against
+	 * the reloaded configuration for equality.
 	 */
-	@Override
-	public void checkRoles(RoleChecker checker)
+	@Test
+	@LocalData
+	public void migrateDataTest()
 	{
-		// Implementation required by interface, but not using
+		try
+		{
+			CpwrScmConfigTestUtils.migrateDataTest(m_jenkinsRule);
+		}
+		catch (Exception e)
+		{
+			// Add the print of the stack trace because the exception message is not enough to troubleshoot the root issue. For
+			// example, if the exception is constructed without a message, you get no information from executing fail().
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 	}
 }

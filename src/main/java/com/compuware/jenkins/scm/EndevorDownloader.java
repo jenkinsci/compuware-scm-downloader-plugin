@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
+import com.compuware.jenkins.common.configuration.HostConnection;
+import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.scm.utils.Constants;
 import hudson.AbortException;
 import hudson.EnvVars;
@@ -63,27 +66,30 @@ public class EndevorDownloader extends AbstractDownloader
 	{
 		// obtain argument values to pass to the CLI
 		PrintStream logger = listener.getLogger();
+		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
         VirtualChannel vChannel = launcher.getChannel();
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
         String remoteFileSeparator = remoteProperties.getProperty(Constants.FILE_SEPARATOR);
-        boolean isShell = launcher.isUnix();
-		String osFile = isShell ? Constants.SCM_DOWNLOADER_CLI_SH : Constants.SCM_DOWNLOADER_CLI_BAT;
+		String osFile = launcher.isUnix() ? Constants.SCM_DOWNLOADER_CLI_SH : Constants.SCM_DOWNLOADER_CLI_BAT;
 
-		String cliScriptFile = m_endevorConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
+		String cliScriptFile = globalConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
-		String host = escapeForScript(m_endevorConfig.getHost(), isShell);
-		String port = escapeForScript(m_endevorConfig.getPort(), isShell);
-		StandardUsernamePasswordCredentials credentials = m_endevorConfig.getLoginInformation(build.getParent());
-		String userId = escapeForScript(credentials.getUsername(), isShell);
-		String password = escapeForScript(credentials.getPassword().getPlainText(), isShell);
-		String codePage = m_endevorConfig.getCodePage();
-		String targetFolder = escapeForScript(workspaceFilePath.getRemote(), isShell);
+		HostConnection connection = globalConfig.getHostConnection(m_endevorConfig.getConnectionId());
+		String host = ArgumentUtils.escapeForScript(connection.getHost());
+		String port = ArgumentUtils.escapeForScript(connection.getPort());
+		String codePage = connection.getCodePage();
+		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
+		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
+				m_endevorConfig.getCredentialsId());
+		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
+		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
+		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;
 		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
-		String cdDatasets = escapeForScript(convertFilterPattern(m_endevorConfig.getFilterPattern()), isShell);
-		String fileExtension = escapeForScript(m_endevorConfig.getFileExtension(), isShell);
+		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(m_endevorConfig.getFilterPattern()));
+		String fileExtension = ArgumentUtils.escapeForScript(m_endevorConfig.getFileExtension());
 
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
@@ -94,6 +100,7 @@ public class EndevorDownloader extends AbstractDownloader
 		args.add(Constants.PW_PARM);
 		args.add(password, true);
 		args.add(Constants.CODE_PAGE_PARM, codePage);
+		args.add(Constants.TIMEOUT_PARM, timeout);
 		args.add(Constants.SCM_TYPE_PARM, Constants.ENDEVOR);
 		args.add(Constants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);

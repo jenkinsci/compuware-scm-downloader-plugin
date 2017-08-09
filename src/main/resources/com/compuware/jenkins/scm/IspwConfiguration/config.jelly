@@ -1,48 +1,35 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
-      
-      <f:section title="Server">
-	      <f:entry title="${%hostPort}" field="hostPort">
-	            <f:textbox/>
-	      </f:entry>
-	      
-	      <f:entry title="${%serverConfig}" field="serverConfig">
-	            <f:textbox/>
-	      </f:entry>
-	      
-	      <f:entry title="${%loginCredentials}" field="credentialsId">
-	            <c:select/>
-	      </f:entry>
-	      
-	      <f:entry title="${%codePage}" field="codePage">
-            <f:select default="1047"/>
-          </f:entry>
-	  </f:section>
-           
-	  <f:section title="Filter"> 
-	      <f:entry title="${%serverStream}" field="serverStream">
-	            <f:textbox/>
-	      </f:entry>
-	      
-	      <f:entry title="${%serverApplication}" field="serverApplication">
-	            <f:textbox/>
-	      </f:entry>
-	      
-	      <f:entry title="${%serverLevel}" field="serverLevel">
-	            <f:textbox/>
-	      </f:entry>
-	      
-	      <f:entry title="${%levelOption}" field="levelOption">
-	            <f:select default="0"/>
-	      </f:entry>
-      
-      	  <f:entry title="${%filterName}" field="filterName">
-	            <f:textbox/>
-	      </f:entry>
-	      
-	      <f:entry title="${%filterType}" field="filterType">
-	            <f:textbox/>
-	      </f:entry>
-	  </f:section>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:cc="/lib/compuware">
+	<f:section title="Server">
+    	<f:entry title="${%hostConnection}" field="connectionId" help="/plugin/compuware-scm-downloader/help-connectionId.html">
+        	<cc:hostSelect default=""/>
+		</f:entry>
+		<f:entry title="${%serverConfig}" field="serverConfig" help="/plugin/compuware-scm-downloader/ispw/help-serverConfig.html">
+			<f:textbox/>
+		</f:entry>
+		<f:entry title="${%loginCredentials}" field="credentialsId" help="/plugin/compuware-scm-downloader/help-credentialsId.html">
+			<c:select/>
+		</f:entry>
+	</f:section>
+	<f:section title="Filter"> 
+		<f:entry title="${%serverStream}" field="serverStream" help="/plugin/compuware-scm-downloader/ispw/help-serverStream.html">
+			<f:textbox/>
+		</f:entry>
+		<f:entry title="${%serverApplication}" field="serverApplication" help="/plugin/compuware-scm-downloader/ispw/help-serverApplication.html">
+			<f:textbox/>
+		</f:entry>
+		<f:entry title="${%serverLevel}" field="serverLevel" help="/plugin/compuware-scm-downloader/ispw/help-serverLevel.html">
+			<f:textbox/>
+		</f:entry>
+		<f:entry title="${%levelOption}" field="levelOption" help="/plugin/compuware-scm-downloader/ispw/help-serverOption.html">
+			<f:select default="0"/>
+		</f:entry>
+		<f:entry title="${%filterName}" field="filterName" help="/plugin/compuware-scm-downloader/ispw/help-filterName.html">
+			<f:textbox/>
+		</f:entry>
+		<f:entry title="${%filterType}" field="filterType" help="/plugin/compuware-scm-downloader/ispw/help-filterType.html">
+			<f:textbox/>
+		</f:entry>
+	</f:section>
 </j:jelly>
 

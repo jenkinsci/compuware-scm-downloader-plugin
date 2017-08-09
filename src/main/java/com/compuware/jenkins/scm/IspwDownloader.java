@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
+import com.compuware.jenkins.common.configuration.HostConnection;
+import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.scm.utils.Constants;
 import hudson.AbortException;
 import hudson.EnvVars;
@@ -31,6 +34,9 @@ import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
 import hudson.util.ArgumentListBuilder;
 
+/**
+ * Class used to download ISPW components. This class will utilize the Topaz command line interface to do the download.
+ */
 public class IspwDownloader extends AbstractDownloader
 {
 	// Member Variables
@@ -57,30 +63,33 @@ public class IspwDownloader extends AbstractDownloader
 	{
 		// obtain argument values to pass to the CLI
 		PrintStream logger = listener.getLogger();
+		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
 		VirtualChannel vChannel = launcher.getChannel();
 		Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(Constants.FILE_SEPARATOR);
-        boolean isShell = launcher.isUnix();
-		String osFile = isShell ? Constants.SCM_DOWNLOADER_CLI_SH : Constants.SCM_DOWNLOADER_CLI_BAT;
+		String osFile = launcher.isUnix() ? Constants.SCM_DOWNLOADER_CLI_SH : Constants.SCM_DOWNLOADER_CLI_BAT;
         
-		String cliScriptFile = m_ispwConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
+		String cliScriptFile = globalConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
-		String host = escapeForScript(m_ispwConfig.getHost(), isShell);
-		String port = escapeForScript(m_ispwConfig.getPort(), isShell);
-		StandardUsernamePasswordCredentials credentials = m_ispwConfig.getLoginInformation(build.getParent());
-		String userId = escapeForScript(credentials.getUsername(), isShell);
-		String password = escapeForScript(credentials.getPassword().getPlainText(), isShell);
-		String codePage = m_ispwConfig.getCodePage();
-		String targetFolder = escapeForScript(workspaceFilePath.getRemote(), isShell);
+		HostConnection connection = globalConfig.getHostConnection(m_ispwConfig.getConnectionId());
+		String host = ArgumentUtils.escapeForScript(connection.getHost());
+		String port = ArgumentUtils.escapeForScript(connection.getPort());
+		String codePage = connection.getCodePage();
+		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
+		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
+				m_ispwConfig.getCredentialsId());
+		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
+		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
+		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;
 		logger.println("TopazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
-		String serverStream = escapeForScript(m_ispwConfig.getServerStream(), isShell);
-		String serverApp = escapeForScript(m_ispwConfig.getServerApplication(), isShell);
-		String serverLevel = escapeForScript(m_ispwConfig.getServerLevel(), isShell);
-		String levelOption = escapeForScript(m_ispwConfig.getLevelOption(), isShell);
-				
+		String serverStream = ArgumentUtils.escapeForScript(m_ispwConfig.getServerStream());
+		String serverApp = ArgumentUtils.escapeForScript(m_ispwConfig.getServerApplication());
+		String serverLevel = ArgumentUtils.escapeForScript(m_ispwConfig.getServerLevel());
+		String levelOption = ArgumentUtils.escapeForScript(m_ispwConfig.getLevelOption());
+		
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
 		args.add(cliScriptFileRemote);
@@ -90,6 +99,7 @@ public class IspwDownloader extends AbstractDownloader
 		args.add(Constants.PW_PARM);
 		args.add(password, true);
 		args.add(Constants.CODE_PAGE_PARM, codePage);
+		args.add(Constants.TIMEOUT_PARM, timeout);
 		args.add(Constants.SCM_TYPE_PARM, Constants.ISPW);
 		args.add(Constants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);
@@ -101,21 +111,21 @@ public class IspwDownloader extends AbstractDownloader
 		String runtimeConfig = m_ispwConfig.getServerConfig();
 		if (!runtimeConfig.isEmpty())
 		{
-			runtimeConfig = escapeForScript(runtimeConfig, isShell);
+			runtimeConfig = ArgumentUtils.escapeForScript(runtimeConfig);
 			args.add(Constants.ISPW_SERVER_CONFIG_PARAM, runtimeConfig);
 		}
 		
 		String componentName = m_ispwConfig.getFilterName();
 		if (!componentName.isEmpty())
 		{
-			componentName = escapeForScript(componentName, isShell);
+			componentName = ArgumentUtils.escapeForScript(componentName);
 			args.add(Constants.ISPW_FILTER_NAME_PARAM, componentName);
 		}
 		
 		String componentType = m_ispwConfig.getFilterType();
 		if (!componentType.isEmpty())
 		{
-			componentType = escapeForScript(componentType, isShell);
+			componentType = ArgumentUtils.escapeForScript(componentType);
 			args.add(Constants.ISPW_FILTER_TYPE_PARAM, componentType);
 		}
 		

@@ -46,7 +46,8 @@ public class Constants
 	public static final String SCM_TYPE_PARM = "-scm";
 	public static final String USERID_PARM = "-id";
 	public static final String TARGET_FOLDER_PARM = "-targetFolder";
-	
+	public static final String TIMEOUT_PARM = "-timeout";
+
 	public static final String ISPW = "ispw";
 	public static final String ISPW_SERVER_CONFIG_PARAM = "-ispwServerConfig";
 	public static final String ISPW_SERVER_STREAM_PARAM = "-ispwServerStream";
