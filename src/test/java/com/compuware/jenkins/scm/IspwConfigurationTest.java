@@ -109,11 +109,11 @@ public class IspwConfigurationTest
 		assertThat(String.format("Expected IspwConfiguration.getFolderName() to return %s", EXPECTED_FOLDER_NAME),
 				scm.getFolderName(), is(equalTo(EXPECTED_FOLDER_NAME)));
 		
-		 assertThat(String.format("Expected IspwConfiguration.getGetFiles() to return %s", EXPECTED_GET_FILES + ""),
-		 		scm.getGetFiles(), is(equalTo(EXPECTED_GET_FILES + "")));
+		assertThat(String.format("Expected IspwConfiguration.getGetFiles() to return %s", EXPECTED_GET_FILES + ""),
+				scm.getGetFiles(), is(equalTo(EXPECTED_GET_FILES + "")));
 		
-		 assertThat(String.format("Expected IspwConfiguration.getGetFolders() to return %s", EXPECTED_GET_FOLDERS + ""),
-		 		scm.getGetFolders(), is(equalTo(EXPECTED_GET_FOLDERS + "")));
+		assertThat(String.format("Expected IspwConfiguration.getGetFolders() to return %s", EXPECTED_GET_FOLDERS + ""),
+				scm.getGetFolders(), is(equalTo(EXPECTED_GET_FOLDERS + "")));
 	}
 
 	/**
@@ -183,11 +183,11 @@ public class IspwConfigurationTest
 				assertThat(String.format("Expected log to contain folder name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
 						containsString(EXPECTED_FOLDER_NAME));
 				
-				 assertThat(String.format("Expected log to contain get files: \"%s\".", EXPECTED_GET_FILES + ""), logFileOutput,
-				 		containsString(EXPECTED_GET_FILES + ""));
+				assertThat(String.format("Expected log to contain get files: \"%s\".", EXPECTED_GET_FILES + ""), logFileOutput,
+						containsString(EXPECTED_GET_FILES + ""));
 				
-				 assertThat(String.format("Expected log to contain get folders: \"%s\".", EXPECTED_GET_FOLDERS + ""), logFileOutput,
-				 		containsString(EXPECTED_GET_FOLDERS + ""));
+				assertThat(String.format("Expected log to contain get folders: \"%s\".", EXPECTED_GET_FOLDERS + ""), logFileOutput,
+						containsString(EXPECTED_GET_FOLDERS + ""));
 			}
 		}
 		catch (Exception e)
