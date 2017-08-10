@@ -20,7 +20,6 @@ package com.compuware.jenkins.scm;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-import org.apache.commons.lang.StringUtils;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -98,13 +97,6 @@ public class IspwDownloader extends AbstractDownloader
 		String serverLevel = ArgumentUtils.escapeForScript(m_ispwConfig.getServerLevel());
 		String levelOption = ArgumentUtils.escapeForScript(m_ispwConfig.getLevelOption());
 
-		String targetFolder = workspaceFilePath.getRemote();
-		String pdsConfigTargetFolder = ArgumentUtils.escapeForScript(m_ispwConfig.getTargetFolder());
-		if (StringUtils.isNotEmpty(pdsConfigTargetFolder))
-		{
-			targetFolder = pdsConfigTargetFolder;
-		}
-
 		args.add(Constants.HOST_PARM, host);
 		args.add(Constants.PORT_PARM, port);
 		args.add(Constants.CODE_PAGE_PARM, codePage);
@@ -139,7 +131,7 @@ public class IspwDownloader extends AbstractDownloader
 			args.add(Constants.ISPW_FILTER_TYPE_PARAM, componentType);
 		}
 
-		args.add(Constants.TARGET_FOLDER_PARM, targetFolder);
+		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
 		args.add(Constants.SCM_TYPE_PARM, Constants.ISPW);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);
 

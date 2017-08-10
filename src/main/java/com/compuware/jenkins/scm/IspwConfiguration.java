@@ -67,7 +67,6 @@ public class IspwConfiguration extends SCM
 	private String m_levelOption;
 	private String m_filterType;
 	private String m_filterName;
-	private String m_targetFolder;
 
 	// Backward compatibility
 	private transient @Deprecated String m_hostPort;
@@ -75,7 +74,7 @@ public class IspwConfiguration extends SCM
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String filterType, String filterName, String targetFolder)
+			String serverApplication, String serverLevel, String levelOption, String filterType, String filterName)
 	{
 		m_connectionId = getTrimmedValue(connectionId);
 		m_credentialsId = getTrimmedValue(credentialsId);
@@ -86,7 +85,6 @@ public class IspwConfiguration extends SCM
 		m_levelOption = getTrimmedValue(levelOption);
 		m_filterType = getTrimmedValue(filterType);
 		m_filterName = getTrimmedValue(filterName);
-		m_targetFolder = getTrimmedValue(targetFolder);
 	}
 
 	/**
@@ -206,16 +204,6 @@ public class IspwConfiguration extends SCM
 	public String getCredentialsId()
 	{
 		return m_credentialsId;
-	}
-
-	/**
-	 * Gets the value of the 'Source download location'
-	 * 
-	 * @return <code>String</code> value of m_targetFolder
-	 */
-	public String getTargetFolder()
-	{
-		return m_targetFolder;
 	}
 
 	/**
@@ -346,12 +334,6 @@ public class IspwConfiguration extends SCM
 		else
 		{
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostConnection()));
-		}
-
-		String targetFolder = getTargetFolder();
-		if (!StringUtils.isEmpty(targetFolder))
-		{
-			listener.getLogger().println(Messages.targetFolder() + " = " + targetFolder); //$NON-NLS-1$
 		}
 
 		if (getServerConfig() != null)
