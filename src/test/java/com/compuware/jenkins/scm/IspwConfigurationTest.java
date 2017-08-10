@@ -74,7 +74,7 @@ public class IspwConfigurationTest
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
-				EXPECTED_FILTER_NAME);
+				EXPECTED_FILTER_NAME, TestConstants.EXPECTED_TARGET_FOLDER);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -106,6 +106,11 @@ public class IspwConfigurationTest
 
 		assertThat(String.format("Expected IspwConfiguration.getFilterName() to return %s", EXPECTED_FILTER_NAME),
 				scm.getFilterName(), is(equalTo(EXPECTED_FILTER_NAME)));
+
+		assertThat(
+				String.format("Expected IspwConfiguration.getTargetFolder() to return %s",
+						TestConstants.EXPECTED_TARGET_FOLDER),
+				scm.getTargetFolder(), is(equalTo(TestConstants.EXPECTED_TARGET_FOLDER)));
 	}
 
 	/**
@@ -122,7 +127,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE, EXPECTED_FILTER_NAME));
+					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE, EXPECTED_FILTER_NAME, TestConstants.EXPECTED_TARGET_FOLDER));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -154,26 +159,37 @@ public class IspwConfigurationTest
 				assertThat("Expected log to contain Login credentials: " + expectedCredentialsStr + '.', logFileOutput,
 						containsString(expectedCredentialsStr));
 
-				assertThat(String.format("Expected log to contain server config: \"%s\".", EXPECTED_SERVER_CONFIG),
-						logFileOutput, containsString(EXPECTED_SERVER_CONFIG));
+				String expectedServerConfigStr = String.format("-ispwServerConfig \"%s\"", EXPECTED_SERVER_CONFIG);
+				assertThat("Expected log to contain server config: " + expectedServerConfigStr + '.', logFileOutput,
+						containsString(EXPECTED_SERVER_CONFIG));
 
-				assertThat(String.format("Expected log to contain server stream: \"%s\".", EXPECTED_SERVER_STREAM),
-						logFileOutput, containsString(EXPECTED_SERVER_STREAM));
+				String expectedServerStreamStr = String.format("-ispwServerStream \"%s\"", EXPECTED_SERVER_STREAM);
+				assertThat("Expected log to contain server stream: " + expectedServerStreamStr + '.', logFileOutput,
+						containsString(EXPECTED_SERVER_STREAM));
 
-				assertThat(String.format("Expected log to contain server application: \"%s\".", EXPECTED_SERVER_APPLICATION),
-						logFileOutput, containsString(EXPECTED_SERVER_APPLICATION));
+				String expectedServerAppStr = String.format("-ispwServerApp \"%s\"", EXPECTED_SERVER_APPLICATION);
+				assertThat("Expected log to contain server application: " + expectedServerAppStr + '.', logFileOutput,
+						containsString(EXPECTED_SERVER_APPLICATION));
 
-				assertThat(String.format("Expected log to contain server level: \"%s\".", EXPECTED_SERVER_LEVEL), logFileOutput,
+				String expectedServerLevelStr = String.format("-ispwServerLevel \"%s\"", EXPECTED_SERVER_LEVEL);
+				assertThat("Expected log to contain server level: " + expectedServerLevelStr + '.', logFileOutput,
 						containsString(EXPECTED_SERVER_LEVEL));
 
-				assertThat(String.format("Expected log to contain level option: \"%s\".", EXPECTED_LEVEL_OPTION), logFileOutput,
+				String expectedLevelOptionStr = String.format("-ispwLevelOption \"%s\"", EXPECTED_LEVEL_OPTION);
+				assertThat("Expected log to contain level option: " + expectedLevelOptionStr + '.', logFileOutput,
 						containsString(EXPECTED_LEVEL_OPTION));
 
-				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_FILTER_TYPE), logFileOutput,
+				String expectedFilterTypeStr = String.format("-ispwFilterType \"%s\"", EXPECTED_FILTER_TYPE);
+				assertThat("Expected log to contain filter type: " + expectedFilterTypeStr + '.', logFileOutput,
 						containsString(EXPECTED_FILTER_TYPE));
 
-				assertThat(String.format("Expected log to contain filter name: \"%s\".", EXPECTED_FILTER_NAME), logFileOutput,
+				String expectedFilterNameStr = String.format("-ispwFilterName \"%s\"", EXPECTED_FILTER_NAME);
+				assertThat("Expected log to contain filter name: " + expectedFilterNameStr + '.', logFileOutput,
 						containsString(EXPECTED_FILTER_NAME));
+
+				String expectedTargetFolderStr = String.format("-targetFolder \"%s\"", TestConstants.EXPECTED_TARGET_FOLDER);
+				assertThat("Expected log to contain target folder: " + expectedTargetFolderStr + '.', logFileOutput,
+						containsString(expectedTargetFolderStr));
 			}
 		}
 		catch (Exception e)
@@ -199,9 +215,9 @@ public class IspwConfigurationTest
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
-					EXPECTED_FILTER_NAME);
+					EXPECTED_FILTER_NAME, TestConstants.EXPECTED_TARGET_FOLDER);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,filterName");
+					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,filterName,targetFolder");
 		}
 		catch (Exception e)
 		{
