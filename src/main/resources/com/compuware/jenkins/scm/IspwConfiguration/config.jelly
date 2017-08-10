@@ -16,19 +16,19 @@
 		<h3 style="margin-bottom:0px">${%filter}</h3>
 		<h4 style="margin-left:14px; margin-bottom:0px;"><div style="display:inline-block width:2%"></div>${%pathFilter}</h4>
 	</f:block>
-	<f:entry title="${%serverStream}" field="serverStream">
+	<f:entry title="${%serverStream}" field="serverStream" help="/plugin/compuware-scm-downloader/ispw/help-serverStream.html">
 		<f:textbox/>
 	</f:entry>
 
-	<f:entry title="${%serverApplication}" field="serverApplication">
+	<f:entry title="${%serverApplication}" field="serverApplication" help="/plugin/compuware-scm-downloader/ispw/help-serverApplication.html">
 		<f:textbox/>
 	</f:entry>
 
-	<f:entry title="${%serverLevel}" field="serverLevel">
+	<f:entry title="${%serverLevel}" field="serverLevel" help="/plugin/compuware-scm-downloader/ispw/help-serverLevel.html">
 		<f:textbox/>
 	</f:entry>
 
-	<f:entry title="${%levelOption}" field="levelOption">
+	<f:entry title="${%levelOption}" field="levelOption" help="/plugin/compuware-scm-downloader/ispw/help-levelOption.html">
 		<f:select default="0"/>
 	</f:entry>
 	<f:block>
@@ -37,12 +37,12 @@
 	<f:block>
 		<table>
 			<f:optionalBlock name="componentType" value=" " title="${%components}" checked="false">
-				<f:entry title="${%filterType}" field="filterType">
+				<f:entry title="${%filterType}" field="filterType" help="/plugin/compuware-scm-downloader/ispw/help-filterType.html">
 					<f:textbox/>
 				</f:entry>
 			</f:optionalBlock>
 			<f:optionalBlock name="componentType" value=" " title="${%folders}" checked="false">
-				<f:entry title="${%folderName}" field="folderName">
+				<f:entry title="${%folderName}" field="folderName" help="/plugin/compuware-scm-downloader/ispw/help-folderName.html">
 					<f:textbox/>
 				</f:entry>
 			</f:optionalBlock>
