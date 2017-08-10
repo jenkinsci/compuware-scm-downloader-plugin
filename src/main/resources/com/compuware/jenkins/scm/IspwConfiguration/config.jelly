@@ -1,6 +1,8 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:cc="/lib/compuware">
-	<f:section title="Server">
+	<f:block>
+		<h3 style="margin-bottom:0px">${%server}</h3>
+	</f:block>
     	<f:entry title="${%hostConnection}" field="connectionId" help="/plugin/compuware-scm-downloader/help-connectionId.html">
         	<cc:hostSelect default=""/>
 		</f:entry>
@@ -10,26 +12,44 @@
 		<f:entry title="${%loginCredentials}" field="credentialsId" help="/plugin/compuware-scm-downloader/help-credentialsId.html">
 			<c:select/>
 		</f:entry>
-	</f:section>
-	<f:section title="Filter"> 
-		<f:entry title="${%serverStream}" field="serverStream" help="/plugin/compuware-scm-downloader/ispw/help-serverStream.html">
-			<f:textbox/>
-		</f:entry>
-		<f:entry title="${%serverApplication}" field="serverApplication" help="/plugin/compuware-scm-downloader/ispw/help-serverApplication.html">
-			<f:textbox/>
-		</f:entry>
-		<f:entry title="${%serverLevel}" field="serverLevel" help="/plugin/compuware-scm-downloader/ispw/help-serverLevel.html">
-			<f:textbox/>
-		</f:entry>
-		<f:entry title="${%levelOption}" field="levelOption" help="/plugin/compuware-scm-downloader/ispw/help-serverOption.html">
-			<f:select default="0"/>
-		</f:entry>
-		<f:entry title="${%filterName}" field="filterName" help="/plugin/compuware-scm-downloader/ispw/help-filterName.html">
-			<f:textbox/>
-		</f:entry>
-		<f:entry title="${%filterType}" field="filterType" help="/plugin/compuware-scm-downloader/ispw/help-filterType.html">
-			<f:textbox/>
-		</f:entry>
-	</f:section>
+	<f:block>
+		<h3 style="margin-bottom:0px">${%filter}</h3>
+		<h4 style="margin-left:14px; margin-bottom:0px;"><div style="display:inline-block width:2%"></div>${%pathFilter}</h4>
+	</f:block>
+	<f:entry title="${%serverStream}" field="serverStream">
+		<f:textbox/>
+	</f:entry>
+
+	<f:entry title="${%serverApplication}" field="serverApplication">
+		<f:textbox/>
+	</f:entry>
+
+	<f:entry title="${%serverLevel}" field="serverLevel">
+		<f:textbox/>
+	</f:entry>
+
+	<f:entry title="${%levelOption}" field="levelOption">
+		<f:select default="0"/>
+	</f:entry>
+	<f:block>
+		<h4 style="margin-left:14px; margin-bottom:0px;">${%rootLevelFiltering}</h4>
+	</f:block>
+	<f:block>
+		<table>
+			<f:optionalBlock name="componentType" value=" " title="${%components}" checked="false">
+				<f:entry title="${%filterType}" field="filterType">
+					<f:textbox/>
+				</f:entry>
+			</f:optionalBlock>
+			<f:optionalBlock name="componentType" value=" " title="${%folders}" checked="false">
+				<f:entry title="${%folderName}" field="folderName">
+					<f:textbox/>
+				</f:entry>
+			</f:optionalBlock>
+		</table>
+	</f:block>
+	<f:block>
+		<hr size="1" color="Gainsboro"/>
+	</f:block>
 </j:jelly>
 
