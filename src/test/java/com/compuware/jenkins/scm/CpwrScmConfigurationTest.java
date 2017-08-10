@@ -68,7 +68,7 @@ public class CpwrScmConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
-					TestConstants.EXPECTED_CREDENTIALS_ID);
+					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
 			project.setScm(scmConfig);
 
 			// Test passing a null project and still find credentials
@@ -87,7 +87,7 @@ public class CpwrScmConfigurationTest
 
 			// Test unable to find credentials
 			PdsConfiguration scmConfig2 = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
-					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION, "blah");
+					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION, "blah", TestConstants.EXPECTED_TARGET_FOLDER);
 			project.setScm(scmConfig2);
 
 			credential = scmConfig2.getLoginInformation(project);

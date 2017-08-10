@@ -12,5 +12,8 @@
       <f:entry title="${%fileExtension}" field="fileExtension" help="/plugin/compuware-scm-downloader/help-fileExtension.html">
             <f:textbox/>
       </f:entry>      
+      <f:entry title="${%targetFolder}" field="targetFolder" help="/plugin/compuware-scm-downloader/help-targetFolder.html">
+            <f:textbox/>
+      </f:entry>      
 </j:jelly>
 

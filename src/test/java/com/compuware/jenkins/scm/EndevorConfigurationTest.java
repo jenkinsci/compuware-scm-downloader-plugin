@@ -59,7 +59,7 @@ public class EndevorConfigurationTest
 	{
 		EndevorConfiguration endevorScm = new EndevorConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
-				TestConstants.EXPECTED_CREDENTIALS_ID);
+				TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
 		CpwrScmConfigTestUtils.validateCpwrScmConfigurationConstruction(endevorScm);
 	}
 
@@ -76,7 +76,7 @@ public class EndevorConfigurationTest
 		{
 			EndevorConfiguration scmConfig = new EndevorConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
-					TestConstants.EXPECTED_CREDENTIALS_ID);
+					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
 			CpwrScmConfigTestUtils.executionTest(m_jenkinsRule, scmConfig);
 		}
 		catch (Exception e)
@@ -101,7 +101,7 @@ public class EndevorConfigurationTest
 		{
 			EndevorConfiguration scmConfig = new EndevorConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
-					TestConstants.EXPECTED_CREDENTIALS_ID);
+					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig, "connectionId,filterPattern,fileExtension,credentialsId");
 		}
 		catch (Exception e)

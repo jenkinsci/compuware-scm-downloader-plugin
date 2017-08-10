@@ -43,6 +43,7 @@ public abstract class CpwrScmConfiguration extends SCM
 	private String m_credentialsId;
 	private String m_filterPattern;
 	private String m_fileExtension;
+	private String m_targetFolder;
 
 	// Backward compatibility
 	private transient @Deprecated String m_hostPort;
@@ -59,13 +60,16 @@ public abstract class CpwrScmConfiguration extends SCM
 	 *            file extension for the incoming datasets
 	 * @param credentialsId
 	 *            unique id of the selected credential
+	 * @param targetFolder
+	 *            source download location
 	 */
-	protected CpwrScmConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId)
+	protected CpwrScmConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId, String targetFolder)
 	{
 		m_connectionId = StringUtils.trimToEmpty(connectionId);
 		m_filterPattern = StringUtils.trimToEmpty(filterPattern);
 		m_fileExtension = StringUtils.trimToEmpty(fileExtension);
 		m_credentialsId = StringUtils.trimToEmpty(credentialsId);
+		m_targetFolder = StringUtils.trimToEmpty(targetFolder);
 	}
 
 	/**
@@ -144,6 +148,16 @@ public abstract class CpwrScmConfiguration extends SCM
 	public String getCredentialsId()
 	{
 		return m_credentialsId;
+	}
+
+	/**
+	 * Gets the value of the 'Source download location'
+	 * 
+	 * @return <code>String</code> value of m_targetFolder
+	 */
+	public String getTargetFolder()
+	{
+		return m_targetFolder;
 	}
 
 	/**
@@ -226,6 +240,12 @@ public abstract class CpwrScmConfiguration extends SCM
 		else
 		{
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
+		}
+
+		String targetFolder = getTargetFolder();
+		if (!StringUtils.isEmpty(targetFolder))
+		{
+			logger.println(Messages.targetFolder() + " = " + targetFolder); //$NON-NLS-1$
 		}
 
 		String cliLocation = globalConfig.getTopazCLILocation(launcher);

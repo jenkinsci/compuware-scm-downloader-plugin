@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+import org.apache.commons.lang.StringUtils;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -92,6 +93,13 @@ public class PdsDownloader extends AbstractDownloader
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;
 		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
 
+		String targetFolder = workspaceFilePath.getRemote();
+		String pdsConfigTargetFolder = ArgumentUtils.escapeForScript(m_pdsConfig.getTargetFolder());
+		if (StringUtils.isNotEmpty(pdsConfigTargetFolder))
+		{
+			targetFolder = pdsConfigTargetFolder;
+		}
+
 		args.add(cliScriptFileRemote);
 		args.add(Constants.HOST_PARM, host);
 		args.add(Constants.PORT_PARM, port);
@@ -101,7 +109,7 @@ public class PdsDownloader extends AbstractDownloader
 		args.add(Constants.PW_PARM);
 		args.add(password, true);
 		args.add(Constants.FILTER_PARM, cdDatasets);
-		args.add(Constants.TARGET_FOLDER_PARM, workspaceFilePath.getRemote());
+		args.add(Constants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(Constants.SCM_TYPE_PARM, Constants.PDS);
 		args.add(Constants.FILE_EXT_PARM, fileExtension);
 		args.add(Constants.DATA_PARM, topazCliWorkspace);

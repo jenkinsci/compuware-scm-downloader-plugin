@@ -68,11 +68,13 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 	 *            file extension for the incoming datasets
 	 * @param credentialsId
 	 *            unique id of the selected credential
+	 * @param targetFolder
+	 *            source download location
 	 */
 	@DataBoundConstructor
-	public EndevorConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId)
+	public EndevorConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId, String targetFolder)
 	{
-		super(connectionId, filterPattern, fileExtension, credentialsId);
+		super(connectionId, filterPattern, fileExtension, credentialsId, targetFolder);
 	}
 
 	/**

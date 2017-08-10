@@ -66,12 +66,21 @@ public class CpwrScmConfigTestUtils
 		assertThat(
 				String.format("Expected %s.getFileExtension() to return %s", className, TestConstants.EXPECTED_FILE_EXTENSION),
 				scmConfig.getFileExtension(), is(equalTo(TestConstants.EXPECTED_FILE_EXTENSION)));
+
+		assertThat(
+				String.format("Expected %s.getTargetFolder() to return %s", className, TestConstants.EXPECTED_TARGET_FOLDER),
+				scmConfig.getTargetFolder(), is(equalTo(TestConstants.EXPECTED_TARGET_FOLDER)));
 	}
 
 	/**
 	 * Tests the results of a SCM download execution.
 	 * <p>
 	 * A project is created, configured and executed where the log is examined to verify results.
+	 * 
+	 * @param jenkinsRule
+	 *            the Jenkins rule
+	 * @param scmConfig
+	 *            the SCM configuration
 	 */
 	public static void executionTest(JenkinsRule jenkinsRule, CpwrScmConfiguration scmConfig)
 	{
@@ -110,13 +119,18 @@ public class CpwrScmConfigTestUtils
 				assertThat("Expected log to contain Login credentials: " + expectedCredentialsStr + '.', logFileOutput,
 						containsString(expectedCredentialsStr));
 
-				assertThat(
-						String.format("Expected log to contain filter pattern: \"%s\".", TestConstants.EXPECTED_FILTER_PATTERN),
-						logFileOutput, containsString(TestConstants.EXPECTED_FILTER_PATTERN));
+				String expectedFilterPatternStr = String.format("-filter \"%s\"", TestConstants.EXPECTED_FILTER_PATTERN);
+				assertThat("Expected log to contain filter pattern: " + expectedFilterPatternStr + '.', logFileOutput,
+						containsString(expectedFilterPatternStr));
 
-				assertThat(
-						String.format("Expected log to contain file extension: \"%s\".", TestConstants.EXPECTED_FILE_EXTENSION),
-						logFileOutput, containsString(TestConstants.EXPECTED_FILE_EXTENSION));
+				String expectedFileExtensionStr = String.format("-ext \"%s\"", TestConstants.EXPECTED_FILE_EXTENSION);
+				assertThat("Expected log to contain file extension: " + expectedFileExtensionStr + '.', logFileOutput,
+						containsString(expectedFileExtensionStr));						
+
+				String expectedTargetFolderStr = String.format("-targetFolder \"%s\"",
+						TestConstants.EXPECTED_TARGET_FOLDER);
+				assertThat("Expected log to contain target folder: " + expectedTargetFolderStr + '.', logFileOutput,
+						containsString(expectedTargetFolderStr));
 			}
 		}
 		catch (Exception e)
@@ -130,6 +144,7 @@ public class CpwrScmConfigTestUtils
 
 	/**
 	 * Test migration of the host connection.
+	 * 
 	 * @param jenkinsRule
 	 *            the Jenkins rule
 	 */
@@ -154,6 +169,7 @@ public class CpwrScmConfigTestUtils
 	 * 
 	 * @param proj
 	 *            project being migrated
+	 * 
 	 * @throws IOException
 	 */
 	private static void assertDataMigrated(TopLevelItem proj) throws IOException
