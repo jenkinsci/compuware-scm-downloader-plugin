@@ -102,7 +102,7 @@ public class PdsConfigurationTest
 			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
 					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
-			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig, "connectionId,filterPattern,fileExtension,credentialsId");
+			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig, "connectionId,filterPattern,fileExtension,credentialsId,targetFolder");
 		}
 		catch (Exception e)
 		{
