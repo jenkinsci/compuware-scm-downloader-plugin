@@ -19,7 +19,7 @@ package com.compuware.jenkins.scm;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
-import com.compuware.jenkins.scm.utils.Constants;
+import com.compuware.jenkins.common.utils.CommonConstants;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Run;
@@ -45,7 +45,7 @@ public abstract class AbstractDownloader
 		if (filterPattern != null)
 		{
 			cdDatasets = StringUtils.normalizeSpace(filterPattern);
-			cdDatasets = StringUtils.replace(cdDatasets, Constants.SPACE, Constants.COMMA);
+			cdDatasets = StringUtils.replace(cdDatasets, CommonConstants.SPACE, CommonConstants.COMMA);
 		}
 
 		return cdDatasets;
