@@ -87,19 +87,18 @@ public class PdsDownloader extends AbstractDownloader
 		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
-		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
-		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
-		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(m_pdsConfig.getFilterPattern()));
-		String fileExtension = ArgumentUtils.escapeForScript(m_pdsConfig.getFileExtension());
-		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + Constants.TOPAZ_CLI_WORKSPACE;
-		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
 
-		String targetFolder = workspaceFilePath.getRemote();
 		String configTargetFolder = ArgumentUtils.escapeForScript(m_pdsConfig.getTargetFolder());
 		if (StringUtils.isNotEmpty(configTargetFolder))
 		{
-			targetFolder = pdsConfigTargetFolder;
+			targetFolder = configTargetFolder;
 		}
+
+		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
+		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
+
+		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(m_pdsConfig.getFilterPattern()));
+		String fileExtension = ArgumentUtils.escapeForScript(m_pdsConfig.getFileExtension());
 
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
