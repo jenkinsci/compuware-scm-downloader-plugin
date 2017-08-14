@@ -68,11 +68,13 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 *            file extension for the incoming datasets
 	 * @param credentialsId
 	 *            unique id of the selected credential
+	 * @param targetFolder
+	 *            source download location
 	 */
 	@DataBoundConstructor
-	public PdsConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId)
+	public PdsConfiguration(String connectionId, String filterPattern, String fileExtension, String credentialsId, String targetFolder)
 	{
-		super(connectionId, filterPattern, fileExtension, credentialsId);
+		super(connectionId, filterPattern, fileExtension, credentialsId, targetFolder);
 	}
 
 	/**

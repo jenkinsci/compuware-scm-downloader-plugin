@@ -37,6 +37,7 @@ public class TestConstants
 	public static final String EXPECTED_TIMEOUT = "123";
 	public static final String EXPECTED_USER_ID = "xdevreg";
 	public static final String EXPECTED_PASSWORD = "********";
+	public static final String EXPECTED_TARGET_FOLDER = "../sources";
 
 	public static final String HOST_PORT_OPEN_TAG = "<m__hostPort>";
 	public static final String HOST_PORT_CLOSE_TAG = "</m__hostPort>";
