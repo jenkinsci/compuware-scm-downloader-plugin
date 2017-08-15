@@ -271,9 +271,9 @@ public class IspwConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Filter Name'
+	 * Gets the value of the 'Folder Name'
 	 * 
-	 * @return <code>String</code> value of m_filterName
+	 * @return <code>String</code> value of m_folderName
 	 */
 	public String getFolderName()
 	{

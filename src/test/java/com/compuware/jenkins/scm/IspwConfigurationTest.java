@@ -44,8 +44,8 @@ public class IspwConfigurationTest
 	private static final String EXPECTED_LEVEL_OPTION = "Selected level only";
 	private static final String EXPECTED_FILTER_TYPE = "COB";
 	private static final String EXPECTED_FOLDER_NAME = "TREXX12";
-	private static final boolean EXPECTED_GET_FILES = true;
-	private static final boolean EXPECTED_GET_FOLDERS = true;
+	private static final boolean EXPECTED_FILTER_FILES = true;
+	private static final boolean EXPECTED_FILTER_FOLDERS = true;
 
 	// Member Variables
 	@Rule
@@ -76,7 +76,7 @@ public class IspwConfigurationTest
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
-				EXPECTED_FOLDER_NAME, EXPECTED_GET_FILES, EXPECTED_GET_FOLDERS);
+				EXPECTED_FOLDER_NAME, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -108,12 +108,6 @@ public class IspwConfigurationTest
 
 		assertThat(String.format("Expected IspwConfiguration.getFolderName() to return %s", EXPECTED_FOLDER_NAME),
 				scm.getFolderName(), is(equalTo(EXPECTED_FOLDER_NAME)));
-		
-		assertThat(String.format("Expected IspwConfiguration.getGetFiles() to return %s", EXPECTED_GET_FILES + ""),
-				scm.getFilterFiles(), is(equalTo(EXPECTED_GET_FILES + "")));
-		
-		assertThat(String.format("Expected IspwConfiguration.getGetFolders() to return %s", EXPECTED_GET_FOLDERS + ""),
-				scm.getFilterFolders(), is(equalTo(EXPECTED_GET_FOLDERS + "")));
 	}
 
 	/**
@@ -130,7 +124,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_GET_FILES, EXPECTED_GET_FOLDERS));
+					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -180,14 +174,8 @@ public class IspwConfigurationTest
 				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_FILTER_TYPE), logFileOutput,
 						containsString(EXPECTED_FILTER_TYPE));
 
-				assertThat(String.format("Expected log to contain folder name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
+				assertThat(String.format("Expected log to contain filter name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
 						containsString(EXPECTED_FOLDER_NAME));
-				
-				assertThat(String.format("Expected log to contain get files: \"%s\".", EXPECTED_GET_FILES + ""), logFileOutput,
-						containsString(EXPECTED_GET_FILES + ""));
-				
-				assertThat(String.format("Expected log to contain get folders: \"%s\".", EXPECTED_GET_FOLDERS + ""), logFileOutput,
-						containsString(EXPECTED_GET_FOLDERS + ""));
 			}
 		}
 		catch (Exception e)
@@ -213,9 +201,9 @@ public class IspwConfigurationTest
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
-					EXPECTED_FOLDER_NAME, EXPECTED_GET_FILES, EXPECTED_GET_FOLDERS);
+					EXPECTED_FOLDER_NAME, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,folderName,getFiles,getFolders");
+					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,folderName");
 		}
 		catch (Exception e)
 		{
