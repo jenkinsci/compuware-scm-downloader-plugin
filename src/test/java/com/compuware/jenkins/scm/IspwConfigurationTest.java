@@ -108,6 +108,12 @@ public class IspwConfigurationTest
 
 		assertThat(String.format("Expected IspwConfiguration.getFolderName() to return %s", EXPECTED_FOLDER_NAME),
 				scm.getFolderName(), is(equalTo(EXPECTED_FOLDER_NAME)));
+		
+		assertThat(String.format("Expected IspwConfiguration.getFilterFiles() to return %s", EXPECTED_FILTER_FILES + ""),
+				scm.getFilterFiles(), is(equalTo(EXPECTED_FILTER_FILES + "")));
+		
+		assertThat(String.format("Expected IspwConfiguration.getFilterFolders() to return %s", EXPECTED_FILTER_FOLDERS + ""),
+				scm.getFilterFolders(), is(equalTo(EXPECTED_FILTER_FOLDERS + "")));
 	}
 
 	/**
@@ -174,8 +180,14 @@ public class IspwConfigurationTest
 				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_FILTER_TYPE), logFileOutput,
 						containsString(EXPECTED_FILTER_TYPE));
 
-				assertThat(String.format("Expected log to contain filter name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
+				assertThat(String.format("Expected log to contain folder name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
 						containsString(EXPECTED_FOLDER_NAME));
+				
+				assertThat(String.format("Expected log to contain filter files: \"%s\".", EXPECTED_FILTER_FILES + ""), logFileOutput,
+						containsString(EXPECTED_FILTER_FILES + ""));
+
+				assertThat(String.format("Expected log to contain filter folders: \"%s\".", EXPECTED_FILTER_FOLDERS + ""), logFileOutput,
+						containsString(EXPECTED_FILTER_FOLDERS + ""));
 			}
 		}
 		catch (Exception e)
@@ -203,7 +215,7 @@ public class IspwConfigurationTest
 					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
 					EXPECTED_FOLDER_NAME, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,folderName");
+					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,folderName,filterFiles,filterFolders");
 		}
 		catch (Exception e)
 		{

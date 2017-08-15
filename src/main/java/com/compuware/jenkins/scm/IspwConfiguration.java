@@ -76,7 +76,8 @@ public class IspwConfiguration extends SCM
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String filterType, String folderName, boolean filterFiles, boolean filterFolders)
+			String serverApplication, String serverLevel, String levelOption, String filterType, String folderName,
+			boolean filterFiles, boolean filterFolders)
 	{
 		m_connectionId = getTrimmedValue(connectionId);
 		m_credentialsId = getTrimmedValue(credentialsId);
@@ -134,33 +135,33 @@ public class IspwConfiguration extends SCM
 		}
 	}
 
-    /**
-     *  Handle data migration
-     *  
-     *  In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is 
-     *  a global and created with the Global Configuration page. If old hostPort and codePage properties exist, then 
-     *  a an attempt is made to create a new host connection with these properties and add it to the list of global 
-     *  host connections, as long as there is no other host connection already existing with the same properties. 
-     * 
-     * @return the configuration 
-     */
-    protected Object readResolve() 
-    {
-    	// Migrate from 1.X to 2.0
-        if (m_hostPort != null && m_codePage != null) 
-        {
-    		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-    		if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
-    		{
-    			String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-    			HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
-    			globalConfig.addHostConnection(connection);
-    			m_connectionId = connection.getConnectionId();
-    		}
-        }
+	/**
+	 * Handle data migration
+	 * 
+	 * In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is a global and
+	 * created with the Global Configuration page. If old hostPort and codePage properties exist, then a an attempt is made to
+	 * create a new host connection with these properties and add it to the list of global host connections, as long as there is
+	 * no other host connection already existing with the same properties.
+	 * 
+	 * @return the configuration
+	 */
+	protected Object readResolve()
+	{
+		// Migrate from 1.X to 2.0
+		if (m_hostPort != null && m_codePage != null)
+		{
+			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
+			{
+				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
+				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
+				globalConfig.addHostConnection(connection);
+				m_connectionId = connection.getConnectionId();
+			}
+		}
 
-        return this;
-    }
+		return this;
+	}
 
 	/* (non-Javadoc)
 	 * @see hudson.scm.SCM#createChangeLogParser()
@@ -261,7 +262,7 @@ public class IspwConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Filter Type'
+	 * Gets the value of the 'Component type'
 	 * 
 	 * @return <code>String</code> value of m_filterType
 	 */
@@ -280,12 +281,24 @@ public class IspwConfiguration extends SCM
 		return m_folderName;
 	}
 
-	public String getFilterFiles() {
-		return m_filterFiles;
+	/**
+	 * Gets the value of the 'Components' checkbox
+	 * 
+	 * @return <code>String</code> value of m_filterFiles
+	 */
+	public String getFilterFiles()
+	{
+		return m_filterFiles.toLowerCase();
 	}
 
-	public String getFilterFolders() {
-		return m_filterFolders;
+	/**
+	 * Gets the value of the 'Folders' checkbox
+	 * 
+	 * @return <code>String</code> value of m_filterFolders
+	 */
+	public String getFilterFolders()
+	{
+		return m_filterFolders.toLowerCase();
 	}
 
 	/**
@@ -393,22 +406,22 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
 		}
 
-		if (getFolderName() != null)
+		if (!getFolderName().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwfolderName() + " = " + getFolderName()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwFolderName() + " = " + getFolderName()); //$NON-NLS-1$
 		}
-		else
+		else if ("true".equals(getFilterFolders()) && getFolderName().isEmpty()) //$NON-NLS-1$
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfolderName()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwFolderName()));
 		}
 
-		if (getFilterType() != null)
+		if (!getFilterType().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwfilterType() + " = " + getFilterType()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwFilterType() + " = " + getFilterType()); //$NON-NLS-1$
 		}
-		else
+		else if ("true".equals(getFilterFiles()) && getFilterType().isEmpty()) //$NON-NLS-1$
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterType()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwFilterType()));
 		}
 
 		String cliLocation = globalConfig.getTopazCLILocation(launcher);
@@ -626,7 +639,7 @@ public class IspwConfiguration extends SCM
 
 			return FormValidation.ok();
 		}
-		
+
 		/**
 		 * Validator for the 'Component type' text field.
 		 * 
@@ -645,7 +658,7 @@ public class IspwConfiguration extends SCM
 
 			return FormValidation.ok();
 		}
-		
+
 		/**
 		 * Validator for the 'Folder name' text field.
 		 * 

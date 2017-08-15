@@ -16,7 +16,7 @@
 		<h3 style="margin-bottom:0px">${%filter}</h3>
 	</f:block>
 	<f:block>
-		<table style="margin-top:0px">
+		<table style="margin-top:0px width:100%">
 			<f:nested>
 				<f:entry title="${%serverStream}" field="serverStream" help="/plugin/compuware-scm-downloader/ispw/help-serverStream.html">
 					<f:textbox/>
@@ -34,12 +34,12 @@
 					<f:select default="0"/>
 				</f:entry>
 			</f:nested>
-			<f:optionalBlock name="componentType" field="filterFiles" title="${%components}" checked="false">
+			<f:optionalBlock name="componentType" field="filterFiles" title="${%components}" checked="${%filterFiles}">
 				<f:entry title="${%filterType}" field="filterType" help="/plugin/compuware-scm-downloader/ispw/help-filterType.html">
 					<f:textbox/>
 				</f:entry>
 			</f:optionalBlock>
-			<f:optionalBlock name="componentType" field="filterFolders" title="${%baseFolders}" checked="false">
+			<f:optionalBlock name="componentType" field="filterFolders" title="${%baseFolders}" checked="${%filterFolders}">
 				<f:entry title="${%folderName}" field="folderName" help="/plugin/compuware-scm-downloader/ispw/help-folderName.html">
 					<f:textbox/>
 				</f:entry>
