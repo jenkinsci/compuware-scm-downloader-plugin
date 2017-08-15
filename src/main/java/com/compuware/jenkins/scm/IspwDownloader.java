@@ -116,7 +116,7 @@ public class IspwDownloader extends AbstractDownloader
 			args.add(ScmConstants.ISPW_SERVER_CONFIG_PARAM, runtimeConfig);
 		}
 		
-		String componentName = m_ispwConfig.getFilterName();
+		String componentName = m_ispwConfig.getFolderName();
 		if (!componentName.isEmpty())
 		{
 			componentName = ArgumentUtils.escapeForScript(componentName);

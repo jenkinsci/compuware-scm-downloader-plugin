@@ -66,7 +66,9 @@ public class IspwConfiguration extends SCM
 	private String m_serverLevel;
 	private String m_levelOption;
 	private String m_filterType;
-	private String m_filterName;
+	private String m_folderName;
+	private String m_filterFiles;
+	private String m_filterFolders;
 
 	// Backward compatibility
 	private transient @Deprecated String m_hostPort;
@@ -74,7 +76,7 @@ public class IspwConfiguration extends SCM
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String filterType, String filterName)
+			String serverApplication, String serverLevel, String levelOption, String filterType, String folderName, boolean filterFiles, boolean filterFolders)
 	{
 		m_connectionId = getTrimmedValue(connectionId);
 		m_credentialsId = getTrimmedValue(credentialsId);
@@ -84,7 +86,9 @@ public class IspwConfiguration extends SCM
 		m_serverLevel = getTrimmedValue(serverLevel);
 		m_levelOption = getTrimmedValue(levelOption);
 		m_filterType = getTrimmedValue(filterType);
-		m_filterName = getTrimmedValue(filterName);
+		m_folderName = getTrimmedValue(folderName);
+		m_filterFiles = filterFiles + StringUtils.EMPTY;
+		m_filterFolders = filterFolders + StringUtils.EMPTY;
 	}
 
 	/**
@@ -271,9 +275,17 @@ public class IspwConfiguration extends SCM
 	 * 
 	 * @return <code>String</code> value of m_filterName
 	 */
-	public String getFilterName()
+	public String getFolderName()
 	{
-		return m_filterName;
+		return m_folderName;
+	}
+
+	public String getFilterFiles() {
+		return m_filterFiles;
+	}
+
+	public String getFilterFolders() {
+		return m_filterFolders;
 	}
 
 	/**
@@ -381,13 +393,13 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
 		}
 
-		if (getFilterName() != null)
+		if (getFolderName() != null)
 		{
-			listener.getLogger().println(Messages.ispwfilterName() + " = " + getFilterName()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwfolderName() + " = " + getFolderName()); //$NON-NLS-1$
 		}
 		else
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterName()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfolderName()));
 		}
 
 		if (getFilterType() != null)

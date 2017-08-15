@@ -110,10 +110,10 @@ public class IspwConfigurationTest
 				scm.getFolderName(), is(equalTo(EXPECTED_FOLDER_NAME)));
 		
 		assertThat(String.format("Expected IspwConfiguration.getGetFiles() to return %s", EXPECTED_GET_FILES + ""),
-				scm.getGetFiles(), is(equalTo(EXPECTED_GET_FILES + "")));
+				scm.getFilterFiles(), is(equalTo(EXPECTED_GET_FILES + "")));
 		
 		assertThat(String.format("Expected IspwConfiguration.getGetFolders() to return %s", EXPECTED_GET_FOLDERS + ""),
-				scm.getGetFolders(), is(equalTo(EXPECTED_GET_FOLDERS + "")));
+				scm.getFilterFolders(), is(equalTo(EXPECTED_GET_FOLDERS + "")));
 	}
 
 	/**
