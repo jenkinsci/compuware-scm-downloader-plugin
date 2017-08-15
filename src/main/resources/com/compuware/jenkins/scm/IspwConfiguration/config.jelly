@@ -39,7 +39,7 @@
 					<f:textbox/>
 				</f:entry>
 			</f:optionalBlock>
-			<f:optionalBlock name="componentType" field="filterFolders" title="${%parentFolders}" checked="false">
+			<f:optionalBlock name="componentType" field="filterFolders" title="${%baseFolders}" checked="false">
 				<f:entry title="${%folderName}" field="folderName" help="/plugin/compuware-scm-downloader/ispw/help-folderName.html">
 					<f:textbox/>
 				</f:entry>

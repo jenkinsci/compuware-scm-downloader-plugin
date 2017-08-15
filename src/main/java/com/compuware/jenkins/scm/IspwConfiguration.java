@@ -626,6 +626,44 @@ public class IspwConfiguration extends SCM
 
 			return FormValidation.ok();
 		}
+		
+		/**
+		 * Validator for the 'Component type' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "filterType" field
+		 * 
+		 * @return validation message
+		 */
+		public FormValidation doCheckFilterType(@QueryParameter String value)
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty())
+			{
+				return FormValidation.error(Messages.checkIspwFilterTypeError());
+			}
+
+			return FormValidation.ok();
+		}
+		
+		/**
+		 * Validator for the 'Folder name' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "folderName" field
+		 * 
+		 * @return validation message
+		 */
+		public FormValidation doCheckFolderName(@QueryParameter String value)
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty())
+			{
+				return FormValidation.error(Messages.checkIspwFolderNameError());
+			}
+
+			return FormValidation.ok();
+		}
 
 		/**
 		 * Fills in the Login Credential selection box with applicable Jenkins credentials

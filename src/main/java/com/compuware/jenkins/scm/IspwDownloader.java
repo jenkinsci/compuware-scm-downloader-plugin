@@ -90,6 +90,8 @@ public class IspwDownloader extends AbstractDownloader
 		String serverApp = ArgumentUtils.escapeForScript(m_ispwConfig.getServerApplication());
 		String serverLevel = ArgumentUtils.escapeForScript(m_ispwConfig.getServerLevel());
 		String levelOption = ArgumentUtils.escapeForScript(m_ispwConfig.getLevelOption());
+		String filterFiles = ArgumentUtils.escapeForScript(m_ispwConfig.getFilterFiles());
+		String filterFolders = ArgumentUtils.escapeForScript(m_ispwConfig.getFilterFolders());
 		
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
@@ -108,6 +110,8 @@ public class IspwDownloader extends AbstractDownloader
 		args.add(ScmConstants.ISPW_SERVER_APP_PARAM, serverApp);
 		args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
 		args.add(ScmConstants.ISPW_LEVEL_OPTION_PARAM, levelOption);
+		args.add(ScmConstants.ISPW_FILTER_FILES_PARAM, filterFiles);
+		args.add(ScmConstants.ISPW_FILTER_FOLDERS_PARAM, filterFolders);
 
 		String runtimeConfig = m_ispwConfig.getServerConfig();
 		if (!runtimeConfig.isEmpty())
@@ -120,7 +124,7 @@ public class IspwDownloader extends AbstractDownloader
 		if (!componentName.isEmpty())
 		{
 			componentName = ArgumentUtils.escapeForScript(componentName);
-			args.add(ScmConstants.ISPW_FILTER_NAME_PARAM, componentName);
+			args.add(ScmConstants.ISPW_FOLDER_NAME_PARAM, componentName);
 		}
 		
 		String componentType = m_ispwConfig.getFilterType();
