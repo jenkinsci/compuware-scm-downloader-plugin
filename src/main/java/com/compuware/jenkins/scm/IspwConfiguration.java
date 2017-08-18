@@ -58,44 +58,45 @@ import net.sf.json.JSONObject;
  */
 public class IspwConfiguration extends SCM
 {
-	private String connectionId;
-	private String credentialsId;
-	private String serverConfig;
-	private String serverStream;
-	private String serverApplication;
-	private String serverLevel;
-	private String levelOption;
-	private String componentType = StringUtils.EMPTY;
-	private String folderName = StringUtils.EMPTY;
-	private String filterFiles = "false"; //$NON-NLS-1$
-	private String filterFolders = "false"; //$NON-NLS-1$
+	private String m_connectionId;
+	private String m_credentialsId;
+	private String m_serverConfig;
+	private String m_serverStream;
+	private String m_serverApplication;
+	private String m_serverLevel;
+	private String m_levelOption;
+	private String m_componentType = StringUtils.EMPTY;
+	private String m_folderName = StringUtils.EMPTY;
+	private String m_filterFiles = "false"; //$NON-NLS-1$
+	private String m_filterFolders = "false"; //$NON-NLS-1$
 
 	// Backward compatibility
-	private transient @Deprecated String hostPort;
-	private transient @Deprecated String codePage;
+	private transient @Deprecated String m_hostPort;
+	private transient @Deprecated String m_codePage;
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, EnableComponents filterFiles, EnableFolders filterFolders)
+			String serverApplication, String serverLevel, String levelOption, EnableComponents filterFiles,
+			EnableFolders filterFolders)
 	{
-		this.connectionId = getTrimmedValue(connectionId);
-		this.credentialsId = getTrimmedValue(credentialsId);
-		this.serverConfig = getTrimmedValue(serverConfig);
-		this.serverStream = getTrimmedValue(serverStream);
-		this.serverApplication = getTrimmedValue(serverApplication);
-		this.serverLevel = getTrimmedValue(serverLevel);
-		this.levelOption = getTrimmedValue(levelOption);
-		
+		m_connectionId = getTrimmedValue(connectionId);
+		m_credentialsId = getTrimmedValue(credentialsId);
+		m_serverConfig = getTrimmedValue(serverConfig);
+		m_serverStream = getTrimmedValue(serverStream);
+		m_serverApplication = getTrimmedValue(serverApplication);
+		m_serverLevel = getTrimmedValue(serverLevel);
+		m_levelOption = getTrimmedValue(levelOption);
+
 		if (filterFiles != null)
 		{
-			this.filterFiles = "true"; //$NON-NLS-1$
-			this.componentType = filterFiles.getComponentType();
+			m_filterFiles = "true"; //$NON-NLS-1$
+			m_componentType = filterFiles.getComponentType();
 		}
-		
+
 		if (filterFolders != null)
 		{
-			this.filterFolders = "true"; //$NON-NLS-1$
-			this.folderName= filterFolders.getFolderName();
+			m_filterFolders = "true"; //$NON-NLS-1$
+			m_folderName = filterFolders.getFolderName();
 		}
 	}
 
@@ -155,15 +156,15 @@ public class IspwConfiguration extends SCM
 	protected Object readResolve()
 	{
 		// Migrate from 1.X to 2.0
-		if (hostPort != null && codePage != null)
+		if (m_hostPort != null && m_codePage != null)
 		{
 			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-			if (!globalConfig.hostConnectionExists(hostPort, codePage))
+			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
 			{
-				String description = hostPort + " " + codePage; //$NON-NLS-1$
-				HostConnection connection = new HostConnection(description, hostPort, codePage, null, null);
+				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
+				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
 				globalConfig.addHostConnection(connection);
-				connectionId = connection.getConnectionId();
+				m_connectionId = connection.getConnectionId();
 			}
 		}
 
@@ -201,111 +202,111 @@ public class IspwConfiguration extends SCM
 	/**
 	 * Gets the unique identifier of the 'Host connection'.
 	 * 
-	 * @return <code>String</code> value of connectionId
+	 * @return <code>String</code> value of m_connectionId
 	 */
 	public String getConnectionId()
 	{
-		return connectionId;
+		return m_connectionId;
 	}
 
 	/**
 	 * Gets the value of the 'Login Credentials'
 	 * 
-	 * @return <code>String</code> value of credentialsId
+	 * @return <code>String</code> value of m_credentialsId
 	 */
 	public String getCredentialsId()
 	{
-		return credentialsId;
+		return m_credentialsId;
 	}
 
 	/**
 	 * Gets the value of the 'Config'
 	 * 
-	 * @return <code>String</code> value of serverConfig
+	 * @return <code>String</code> value of m_serverConfig
 	 */
 	public String getServerConfig()
 	{
-		return serverConfig;
+		return m_serverConfig;
 	}
 
 	/**
 	 * Gets the value of the 'Stream'
 	 * 
-	 * @return <code>String</code> value of serverStream
+	 * @return <code>String</code> value of m_serverStream
 	 */
 	public String getServerStream()
 	{
-		return serverStream;
+		return m_serverStream;
 	}
 
 	/**
 	 * Gets the value of the 'Application'
 	 * 
-	 * @return <code>String</code> value of serverApplication
+	 * @return <code>String</code> value of m_serverApplication
 	 */
 	public String getServerApplication()
 	{
-		return serverApplication;
+		return m_serverApplication;
 	}
 
 	/**
 	 * Gets the value of the 'Level'
 	 * 
-	 * @return <code>String</code> value of serverLevel
+	 * @return <code>String</code> value of m_serverLevel
 	 */
 	public String getServerLevel()
 	{
-		return serverLevel;
+		return m_serverLevel;
 	}
 
 	/**
 	 * Gets the value of the 'Level Option'
 	 * 
-	 * @return <code>String</code> value of levelOption
+	 * @return <code>String</code> value of m_levelOption
 	 */
 	public String getLevelOption()
 	{
-		return levelOption;
+		return m_levelOption;
 	}
 
 	/**
 	 * Gets the value of the 'Component type'
 	 * 
-	 * @return <code>String</code> value of componentType
+	 * @return <code>String</code> value of m_componentType
 	 */
 	public String getComponentType()
 	{
-		return componentType;
+		return m_componentType;
 	}
 
 	/**
 	 * Gets the value of the 'Folder Name'
 	 * 
-	 * @return <code>String</code> value of folderName
+	 * @return <code>String</code> value of m_folderName
 	 */
 	public String getFolderName()
 	{
-		return folderName;
+		return m_folderName;
 	}
 
 	/**
 	 * Gets the value of the 'Components' checkbox
 	 * 
-	 * @return <code>String</code> value of filterFiles
+	 * @return <code>String</code> value of m_filterFiles
 	 */
 	public String getFilterFiles()
 	{
-		return filterFiles.toLowerCase();
+		return m_filterFiles.toLowerCase();
 	}
 
 	/**
 	 * Gets the value of the 'Folders' checkbox
 	 * 
-	 * @return <code>String</code> value of filterFolders
+	 * @return <code>String</code> value of m_filterFolders
 	 */
 	public String getFilterFolders()
 	{
-		return filterFolders.toLowerCase();
+		return m_filterFolders.toLowerCase();
 	}
 
 	/**
@@ -358,7 +359,7 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
 		}
 
-		HostConnection connection = globalConfig.getHostConnection(connectionId);
+		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
 		if (connection != null)
 		{
 			listener.getLogger().println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -736,45 +737,87 @@ public class IspwConfiguration extends SCM
 			return levelOptionModel;
 		}
 	}
-	
+
+	/**
+	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFiles</code> in the
+	 * jelly.config file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been
+	 * selected. The data from the optionalBlock is sent over in the format:<p>
+	 * filterFiles : {componentType : " " }<p>
+	 * Where the value of componentType is the text entered in the text field of the form.
+	 */
 	public static class EnableComponents
 	{
-	    private String componentType;
+		private String componentType;
 
-	    @DataBoundConstructor
-	    public EnableComponents(String componentType)
-	    {
-	        this.componentType = componentType;
-	    }
-	    
-	    public String getComponentType()
-	    {
-	    	return componentType;
-	    }
-	    public String toString()
-	    {
-			return Boolean.toString(componentType != null); //$NON-NLS-1$
-	    }
+		/**
+		 *
+		 * @param componentType The text enter in the Component type field of the form
+		 */
+		@DataBoundConstructor
+		public EnableComponents(String componentType)
+		{
+			this.componentType = componentType;
+		}
+
+		/**
+		 * 
+		 * @return the component type entered in the text field within the optional block
+		 */
+		public String getComponentType()
+		{
+			return componentType;
+		}
+
+		/**
+		 * Method that overrides the default .toString() method to return "true if the box has been checked or "false" if the
+		 * box has not been checked
+		 * @return "true" or "false" ased on whether the componentType eists or not
+		 */
+		public String toString()
+		{
+			return Boolean.toString(componentType != null);
+		}
 	}
 	
+	/**
+	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFolders</code> in the
+	 * jelly.config file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been
+	 * selected. The data from the optionalBlock is sent over in the format:<p>
+	 * filterFolders : {folderName : " " }<p>
+	 * Where the value of folderName is the text entered in the text field of the form.
+	 */
 	public static class EnableFolders
 	{
-	    private String folderName;
 
-	    @DataBoundConstructor
-	    public EnableFolders(String folderName)
-	    {
-	        this.folderName = folderName;
-	    }
-	    
-	    public String getFolderName()
-	    {
-	    	return folderName;
-	    }
-	    
-	    public String toString()
-	    {
-			return Boolean.toString(folderName != null); //$NON-NLS-1$
-	    }
+		private String folderName;
+
+		/**
+		 * 
+		 * @param folderName the text enter in the Folder name field of the form
+		 */
+		@DataBoundConstructor
+		public EnableFolders(String folderName)
+		{
+			this.folderName = folderName;
+		}
+
+		/**
+		 * 
+		 * @return the folder name entered in the text field within the optional block
+		 */
+		public String getFolderName()
+		{
+			return folderName;
+		}
+
+		/**
+		 * Method that overrides the default .toString() method to return "true" if the box has been checked or "false" if the
+		 * box has not been checked
+		 * @return "true" or "false" based on whether the folderName exists
+		 */
+		public String toString()
+		{
+			return Boolean.toString(folderName != null);
+		}
 	}
 }

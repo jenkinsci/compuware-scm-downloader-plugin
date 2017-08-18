@@ -77,7 +77,8 @@ public class IspwConfigurationTest
 	{
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS);
+				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,
+				EXPECTED_FILTER_FOLDERS);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -113,7 +114,8 @@ public class IspwConfigurationTest
 		assertThat(String.format("Expected IspwConfiguration.getFilterFiles() to return %s", EXPECTED_FILTER_FILES.toString()),
 				scm.getFilterFiles(), is(equalTo(EXPECTED_FILTER_FILES.toString())));
 
-		assertThat(String.format("Expected IspwConfiguration.getFilterFolders() to return %s", EXPECTED_FILTER_FOLDERS.toString()),
+		assertThat(
+				String.format("Expected IspwConfiguration.getFilterFolders() to return %s", EXPECTED_FILTER_FOLDERS.toString()),
 				scm.getFilterFolders(), is(equalTo(EXPECTED_FILTER_FOLDERS.toString())));
 	}
 
@@ -131,7 +133,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,EXPECTED_FILTER_FOLDERS));
+					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -213,7 +215,8 @@ public class IspwConfigurationTest
 		{
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS);
+					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,
+					EXPECTED_FILTER_FOLDERS);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
 					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterFiles,filterFolders");
 		}
