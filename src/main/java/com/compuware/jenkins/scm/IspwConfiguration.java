@@ -58,38 +58,45 @@ import net.sf.json.JSONObject;
  */
 public class IspwConfiguration extends SCM
 {
-	private String m_connectionId;
-	private String m_credentialsId;
-	private String m_serverConfig;
-	private String m_serverStream;
-	private String m_serverApplication;
-	private String m_serverLevel;
-	private String m_levelOption;
-	private String m_filterType;
-	private String m_folderName;
-	private String m_filterFiles;
-	private String m_filterFolders;
+	private String connectionId;
+	private String credentialsId;
+	private String serverConfig;
+	private String serverStream;
+	private String serverApplication;
+	private String serverLevel;
+	private String levelOption;
+	private String componentType = StringUtils.EMPTY;
+	private String folderName = StringUtils.EMPTY;
+	private String filterFiles = "false"; //$NON-NLS-1$
+	private String filterFolders = "false"; //$NON-NLS-1$
 
 	// Backward compatibility
-	private transient @Deprecated String m_hostPort;
-	private transient @Deprecated String m_codePage;
+	private transient @Deprecated String hostPort;
+	private transient @Deprecated String codePage;
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String filterType, String folderName,
-			boolean filterFiles, boolean filterFolders)
+			String serverApplication, String serverLevel, String levelOption, EnableComponents filterFiles, EnableFolders filterFolders)
 	{
-		m_connectionId = getTrimmedValue(connectionId);
-		m_credentialsId = getTrimmedValue(credentialsId);
-		m_serverConfig = getTrimmedValue(serverConfig);
-		m_serverStream = getTrimmedValue(serverStream);
-		m_serverApplication = getTrimmedValue(serverApplication);
-		m_serverLevel = getTrimmedValue(serverLevel);
-		m_levelOption = getTrimmedValue(levelOption);
-		m_filterType = getTrimmedValue(filterType);
-		m_folderName = getTrimmedValue(folderName);
-		m_filterFiles = filterFiles + StringUtils.EMPTY;
-		m_filterFolders = filterFolders + StringUtils.EMPTY;
+		this.connectionId = getTrimmedValue(connectionId);
+		this.credentialsId = getTrimmedValue(credentialsId);
+		this.serverConfig = getTrimmedValue(serverConfig);
+		this.serverStream = getTrimmedValue(serverStream);
+		this.serverApplication = getTrimmedValue(serverApplication);
+		this.serverLevel = getTrimmedValue(serverLevel);
+		this.levelOption = getTrimmedValue(levelOption);
+		
+		if (filterFiles != null)
+		{
+			this.filterFiles = "true"; //$NON-NLS-1$
+			this.componentType = filterFiles.getComponentType();
+		}
+		
+		if (filterFolders != null)
+		{
+			this.filterFolders = "true"; //$NON-NLS-1$
+			this.folderName= filterFolders.getFolderName();
+		}
 	}
 
 	/**
@@ -148,15 +155,15 @@ public class IspwConfiguration extends SCM
 	protected Object readResolve()
 	{
 		// Migrate from 1.X to 2.0
-		if (m_hostPort != null && m_codePage != null)
+		if (hostPort != null && codePage != null)
 		{
 			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
+			if (!globalConfig.hostConnectionExists(hostPort, codePage))
 			{
-				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
+				String description = hostPort + " " + codePage; //$NON-NLS-1$
+				HostConnection connection = new HostConnection(description, hostPort, codePage, null, null);
 				globalConfig.addHostConnection(connection);
-				m_connectionId = connection.getConnectionId();
+				connectionId = connection.getConnectionId();
 			}
 		}
 
@@ -194,111 +201,111 @@ public class IspwConfiguration extends SCM
 	/**
 	 * Gets the unique identifier of the 'Host connection'.
 	 * 
-	 * @return <code>String</code> value of m_connectionId
+	 * @return <code>String</code> value of connectionId
 	 */
 	public String getConnectionId()
 	{
-		return m_connectionId;
+		return connectionId;
 	}
 
 	/**
 	 * Gets the value of the 'Login Credentials'
 	 * 
-	 * @return <code>String</code> value of m_credentialsId
+	 * @return <code>String</code> value of credentialsId
 	 */
 	public String getCredentialsId()
 	{
-		return m_credentialsId;
+		return credentialsId;
 	}
 
 	/**
 	 * Gets the value of the 'Config'
 	 * 
-	 * @return <code>String</code> value of m_serverConfig
+	 * @return <code>String</code> value of serverConfig
 	 */
 	public String getServerConfig()
 	{
-		return m_serverConfig;
+		return serverConfig;
 	}
 
 	/**
 	 * Gets the value of the 'Stream'
 	 * 
-	 * @return <code>String</code> value of m_serverStream
+	 * @return <code>String</code> value of serverStream
 	 */
 	public String getServerStream()
 	{
-		return m_serverStream;
+		return serverStream;
 	}
 
 	/**
 	 * Gets the value of the 'Application'
 	 * 
-	 * @return <code>String</code> value of m_serverApplication
+	 * @return <code>String</code> value of serverApplication
 	 */
 	public String getServerApplication()
 	{
-		return m_serverApplication;
+		return serverApplication;
 	}
 
 	/**
 	 * Gets the value of the 'Level'
 	 * 
-	 * @return <code>String</code> value of m_serverLevel
+	 * @return <code>String</code> value of serverLevel
 	 */
 	public String getServerLevel()
 	{
-		return m_serverLevel;
+		return serverLevel;
 	}
 
 	/**
 	 * Gets the value of the 'Level Option'
 	 * 
-	 * @return <code>String</code> value of m_levelOption
+	 * @return <code>String</code> value of levelOption
 	 */
 	public String getLevelOption()
 	{
-		return m_levelOption;
+		return levelOption;
 	}
 
 	/**
 	 * Gets the value of the 'Component type'
 	 * 
-	 * @return <code>String</code> value of m_filterType
+	 * @return <code>String</code> value of componentType
 	 */
-	public String getFilterType()
+	public String getComponentType()
 	{
-		return m_filterType;
+		return componentType;
 	}
 
 	/**
 	 * Gets the value of the 'Folder Name'
 	 * 
-	 * @return <code>String</code> value of m_folderName
+	 * @return <code>String</code> value of folderName
 	 */
 	public String getFolderName()
 	{
-		return m_folderName;
+		return folderName;
 	}
 
 	/**
 	 * Gets the value of the 'Components' checkbox
 	 * 
-	 * @return <code>String</code> value of m_filterFiles
+	 * @return <code>String</code> value of filterFiles
 	 */
 	public String getFilterFiles()
 	{
-		return m_filterFiles.toLowerCase();
+		return filterFiles.toLowerCase();
 	}
 
 	/**
 	 * Gets the value of the 'Folders' checkbox
 	 * 
-	 * @return <code>String</code> value of m_filterFolders
+	 * @return <code>String</code> value of filterFolders
 	 */
 	public String getFilterFolders()
 	{
-		return m_filterFolders.toLowerCase();
+		return filterFolders.toLowerCase();
 	}
 
 	/**
@@ -351,7 +358,7 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.loginCredentials()));
 		}
 
-		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
+		HostConnection connection = globalConfig.getHostConnection(connectionId);
 		if (connection != null)
 		{
 			listener.getLogger().println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -415,13 +422,13 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwFolderName()));
 		}
 
-		if (!getFilterType().isEmpty())
+		if (!getComponentType().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwFilterType() + " = " + getFilterType()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwComponentType() + " = " + getComponentType()); //$NON-NLS-1$
 		}
-		else if ("true".equals(getFilterFiles()) && getFilterType().isEmpty()) //$NON-NLS-1$
+		else if ("true".equals(getFilterFiles()) && getComponentType().isEmpty()) //$NON-NLS-1$
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwFilterType()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwComponentType()));
 		}
 
 		String cliLocation = globalConfig.getTopazCLILocation(launcher);
@@ -644,16 +651,16 @@ public class IspwConfiguration extends SCM
 		 * Validator for the 'Component type' text field.
 		 * 
 		 * @param value
-		 *            value passed from the "filterType" field
+		 *            value passed from the "componentType" field
 		 * 
 		 * @return validation message
 		 */
-		public FormValidation doCheckFilterType(@QueryParameter String value)
+		public FormValidation doCheckComponentType(@QueryParameter String value)
 		{
 			String tempValue = StringUtils.trimToEmpty(value);
 			if (tempValue.isEmpty())
 			{
-				return FormValidation.error(Messages.checkIspwFilterTypeError());
+				return FormValidation.error(Messages.checkIspwComponentTypeError());
 			}
 
 			return FormValidation.ok();
@@ -728,5 +735,46 @@ public class IspwConfiguration extends SCM
 
 			return levelOptionModel;
 		}
+	}
+	
+	public static class EnableComponents
+	{
+	    private String componentType;
+
+	    @DataBoundConstructor
+	    public EnableComponents(String componentType)
+	    {
+	        this.componentType = componentType;
+	    }
+	    
+	    public String getComponentType()
+	    {
+	    	return componentType;
+	    }
+	    public String toString()
+	    {
+			return Boolean.toString(componentType != null); //$NON-NLS-1$
+	    }
+	}
+	
+	public static class EnableFolders
+	{
+	    private String folderName;
+
+	    @DataBoundConstructor
+	    public EnableFolders(String folderName)
+	    {
+	        this.folderName = folderName;
+	    }
+	    
+	    public String getFolderName()
+	    {
+	    	return folderName;
+	    }
+	    
+	    public String toString()
+	    {
+			return Boolean.toString(folderName != null); //$NON-NLS-1$
+	    }
 	}
 }

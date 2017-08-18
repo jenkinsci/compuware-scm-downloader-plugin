@@ -127,7 +127,7 @@ public class IspwDownloader extends AbstractDownloader
 			args.add(ScmConstants.ISPW_FOLDER_NAME_PARAM, componentName);
 		}
 
-		String componentType = m_ispwConfig.getFilterType();
+		String componentType = m_ispwConfig.getComponentType();
 		if (!componentType.isEmpty())
 		{
 			componentType = ArgumentUtils.escapeForScript(componentType);
