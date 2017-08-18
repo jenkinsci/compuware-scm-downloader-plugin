@@ -131,7 +131,7 @@ public class IspwDownloader extends AbstractDownloader
 		if (!componentType.isEmpty())
 		{
 			componentType = ArgumentUtils.escapeForScript(componentType);
-			args.add(ScmConstants.ISPW_FILTER_TYPE_PARAM, componentType);
+			args.add(ScmConstants.ISPW_COMPONENT_TYPE_PARAM, componentType);
 		}
 
 		// create the CLI workspace (in case it doesn't already exist)

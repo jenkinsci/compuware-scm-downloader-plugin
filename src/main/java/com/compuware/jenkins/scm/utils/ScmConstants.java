@@ -46,7 +46,7 @@ public class ScmConstants
 	public static final String ISPW_SERVER_LEVEL_PARAM = "-ispwServerLevel";
 	public static final String ISPW_LEVEL_OPTION_PARAM = "-ispwLevelOption";
 	public static final String ISPW_FOLDER_NAME_PARAM = "-ispwFolderName";
-	public static final String ISPW_FILTER_TYPE_PARAM = "-ispwFilterType";
+	public static final String ISPW_COMPONENT_TYPE_PARAM = "-ispwComponentType";
 	public static final String ISPW_FILTER_FILES_PARAM = "-ispwFilterFiles";
 	public static final String ISPW_FILTER_FOLDERS_PARAM = "-ispwFilterFolders";
 
