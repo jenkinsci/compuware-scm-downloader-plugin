@@ -739,10 +739,12 @@ public class IspwConfiguration extends SCM
 	}
 
 	/**
-	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFiles</code> in the
-	 * jelly.config file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been
-	 * selected. The data from the optionalBlock is sent over in the format:<p>
-	 * filterFiles : {componentType : " " }<p>
+	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFiles</code> in the jelly.config
+	 * file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been selected. The data
+	 * from the optionalBlock is sent over in the format:
+	 * <p>
+	 * filterFiles : {componentType : " " }
+	 * <p>
 	 * Where the value of componentType is the text entered in the text field of the form.
 	 */
 	public static class EnableComponents
@@ -751,7 +753,8 @@ public class IspwConfiguration extends SCM
 
 		/**
 		 *
-		 * @param componentType The text enter in the Component type field of the form
+		 * @param componentType
+		 *            The text enter in the Component type field of the form
 		 */
 		@DataBoundConstructor
 		public EnableComponents(String componentType)
@@ -771,6 +774,7 @@ public class IspwConfiguration extends SCM
 		/**
 		 * Method that overrides the default .toString() method to return "true if the box has been checked or "false" if the
 		 * box has not been checked
+		 * 
 		 * @return "true" or "false" ased on whether the componentType eists or not
 		 */
 		public String toString()
@@ -778,12 +782,14 @@ public class IspwConfiguration extends SCM
 			return Boolean.toString(componentType != null);
 		}
 	}
-	
+
 	/**
-	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFolders</code> in the
-	 * jelly.config file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been
-	 * selected. The data from the optionalBlock is sent over in the format:<p>
-	 * filterFolders : {folderName : " " }<p>
+	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFolders</code> in the jelly.config
+	 * file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been selected. The data
+	 * from the optionalBlock is sent over in the format:
+	 * <p>
+	 * filterFolders : {folderName : " " }
+	 * <p>
 	 * Where the value of folderName is the text entered in the text field of the form.
 	 */
 	public static class EnableFolders
@@ -793,7 +799,8 @@ public class IspwConfiguration extends SCM
 
 		/**
 		 * 
-		 * @param folderName the text enter in the Folder name field of the form
+		 * @param folderName
+		 *            the text enter in the Folder name field of the form
 		 */
 		@DataBoundConstructor
 		public EnableFolders(String folderName)
@@ -813,6 +820,7 @@ public class IspwConfiguration extends SCM
 		/**
 		 * Method that overrides the default .toString() method to return "true" if the box has been checked or "false" if the
 		 * box has not been checked
+		 * 
 		 * @return "true" or "false" based on whether the folderName exists
 		 */
 		public String toString()
