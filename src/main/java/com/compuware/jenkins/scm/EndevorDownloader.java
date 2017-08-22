@@ -28,6 +28,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
 import com.compuware.jenkins.common.utils.ArgumentUtils;
+import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
 import hudson.AbortException;
@@ -70,6 +71,10 @@ public class EndevorDownloader extends AbstractDownloader
 		PrintStream logger = listener.getLogger();
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
         VirtualChannel vChannel = launcher.getChannel();
+        
+        //Check CLI compatibility
+        CLIVersionUtils.checkCLICompatibility(vChannel, globalConfig.getTopazCLILocation(launcher), ScmConstants.ENDEVOR_MINIMUM_CLI_VERSION);    
+        
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
 		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;

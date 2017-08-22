@@ -101,36 +101,22 @@ public class CpwrScmConfigTestUtils
 				FreeStyleBuild build = project.getLastCompletedBuild();
 				String logFileOutput = JenkinsRule.getLog(build);
 
-				String expectedConnectionStr = String.format("-host \"%s\" -port \"%s\"", TestConstants.EXPECTED_HOST,
+				String expectedConnectionStr = String.format("Host connection = %s:%s", TestConstants.EXPECTED_HOST,
 						TestConstants.EXPECTED_PORT);
 				assertThat("Expected log to contain Host connection: " + expectedConnectionStr + '.', logFileOutput,
 						containsString(expectedConnectionStr));
 
-				String expectedCodePageStr = String.format("-code %s", TestConstants.EXPECTED_CODE_PAGE);
-				assertThat("Expected log to contain Host code page: " + expectedCodePageStr + '.', logFileOutput,
-						containsString(expectedCodePageStr));
-
-				String expectedTimeoutStr = String.format("-timeout \"%s\"", TestConstants.EXPECTED_TIMEOUT);
-				assertThat("Expected log to contain Host timeout: " + expectedTimeoutStr + '.', logFileOutput,
-						containsString(expectedTimeoutStr));
-
-				String expectedCredentialsStr = String.format("-id \"%s\" -pass %s", TestConstants.EXPECTED_USER_ID,
-						TestConstants.EXPECTED_PASSWORD);
+				String expectedCredentialsStr = String.format("Username = %s", TestConstants.EXPECTED_USER_ID);
 				assertThat("Expected log to contain Login credentials: " + expectedCredentialsStr + '.', logFileOutput,
 						containsString(expectedCredentialsStr));
 
-				String expectedFilterPatternStr = String.format("-filter \"%s\"", TestConstants.EXPECTED_FILTER_PATTERN);
+				String expectedFilterPatternStr = String.format("Filter pattern = %s", TestConstants.EXPECTED_FILTER_PATTERN);
 				assertThat("Expected log to contain filter pattern: " + expectedFilterPatternStr + '.', logFileOutput,
 						containsString(expectedFilterPatternStr));
 
-				String expectedFileExtensionStr = String.format("-ext \"%s\"", TestConstants.EXPECTED_FILE_EXTENSION);
+				String expectedFileExtensionStr = String.format("File extension = %s", TestConstants.EXPECTED_FILE_EXTENSION);
 				assertThat("Expected log to contain file extension: " + expectedFileExtensionStr + '.', logFileOutput,
-						containsString(expectedFileExtensionStr));						
-
-				String expectedTargetFolderStr = String.format("-targetFolder \"%s\"",
-						TestConstants.EXPECTED_TARGET_FOLDER);
-				assertThat("Expected log to contain target folder: " + expectedTargetFolderStr + '.', logFileOutput,
-						containsString(expectedTargetFolderStr));
+						containsString(expectedFileExtensionStr));
 			}
 		}
 		catch (Exception e)

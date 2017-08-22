@@ -22,13 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
 import com.compuware.jenkins.common.utils.ArgumentUtils;
+import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -69,6 +73,10 @@ public class PdsDownloader extends AbstractDownloader
 		PrintStream logger = listener.getLogger();
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
         VirtualChannel vChannel = launcher.getChannel();
+        
+        //Check CLI compatibility
+        CLIVersionUtils.checkCLICompatibility(vChannel, globalConfig.getTopazCLILocation(launcher), ScmConstants.PDS_MINIMUM_CLI_VERSION);     
+        
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
 		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;
@@ -133,4 +141,8 @@ public class PdsDownloader extends AbstractDownloader
 			return true;
 		}
 	}
+	
+
+	
+	
 }
