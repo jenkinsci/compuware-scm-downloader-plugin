@@ -32,6 +32,8 @@ public class ScmConstants
 	}
 
 	// Constants
+	public static final String DOWNLOADER_MINIMUM_CLI_VERSION = "18.2.3";
+	
 	public static final String FILE_EXT_PARM = "-ext";
 	public static final String FILTER_PARM = "-filter";
 	public static final String SCM_TYPE_PARM = "-scm";
