@@ -65,8 +65,10 @@ public class IspwConfiguration extends SCM
 	private String m_serverApplication;
 	private String m_serverLevel;
 	private String m_levelOption;
-	private String m_filterType;
-	private String m_filterName;
+	private String m_componentType = StringUtils.EMPTY;
+	private String m_folderName = StringUtils.EMPTY;
+	private String m_filterFiles = "false"; //$NON-NLS-1$
+	private String m_filterFolders = "false"; //$NON-NLS-1$
 
 	// Backward compatibility
 	private transient @Deprecated String m_hostPort;
@@ -74,7 +76,8 @@ public class IspwConfiguration extends SCM
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String filterType, String filterName)
+			String serverApplication, String serverLevel, String levelOption, EnableComponents filterFiles,
+			EnableFolders filterFolders)
 	{
 		m_connectionId = getTrimmedValue(connectionId);
 		m_credentialsId = getTrimmedValue(credentialsId);
@@ -83,8 +86,18 @@ public class IspwConfiguration extends SCM
 		m_serverApplication = getTrimmedValue(serverApplication);
 		m_serverLevel = getTrimmedValue(serverLevel);
 		m_levelOption = getTrimmedValue(levelOption);
-		m_filterType = getTrimmedValue(filterType);
-		m_filterName = getTrimmedValue(filterName);
+
+		if (filterFiles != null)
+		{
+			m_filterFiles = "true"; //$NON-NLS-1$
+			m_componentType = filterFiles.getComponentType();
+		}
+
+		if (filterFolders != null)
+		{
+			m_filterFolders = "true"; //$NON-NLS-1$
+			m_folderName = filterFolders.getFolderName();
+		}
 	}
 
 	/**
@@ -130,33 +143,33 @@ public class IspwConfiguration extends SCM
 		}
 	}
 
-    /**
-     *  Handle data migration
-     *  
-     *  In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is 
-     *  a global and created with the Global Configuration page. If old hostPort and codePage properties exist, then 
-     *  a an attempt is made to create a new host connection with these properties and add it to the list of global 
-     *  host connections, as long as there is no other host connection already existing with the same properties. 
-     * 
-     * @return the configuration 
-     */
-    protected Object readResolve() 
-    {
-    	// Migrate from 1.X to 2.0
-        if (m_hostPort != null && m_codePage != null) 
-        {
-    		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-    		if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
-    		{
-    			String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-    			HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
-    			globalConfig.addHostConnection(connection);
-    			m_connectionId = connection.getConnectionId();
-    		}
-        }
+	/**
+	 * Handle data migration
+	 * 
+	 * In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is a global and
+	 * created with the Global Configuration page. If old hostPort and codePage properties exist, then a an attempt is made to
+	 * create a new host connection with these properties and add it to the list of global host connections, as long as there is
+	 * no other host connection already existing with the same properties.
+	 * 
+	 * @return the configuration
+	 */
+	protected Object readResolve()
+	{
+		// Migrate from 1.X to 2.0
+		if (m_hostPort != null && m_codePage != null)
+		{
+			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
+			{
+				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
+				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
+				globalConfig.addHostConnection(connection);
+				m_connectionId = connection.getConnectionId();
+			}
+		}
 
-        return this;
-    }
+		return this;
+	}
 
 	/* (non-Javadoc)
 	 * @see hudson.scm.SCM#createChangeLogParser()
@@ -257,23 +270,43 @@ public class IspwConfiguration extends SCM
 	}
 
 	/**
-	 * Gets the value of the 'Filter Type'
+	 * Gets the value of the 'Component type'
 	 * 
-	 * @return <code>String</code> value of m_filterType
+	 * @return <code>String</code> value of m_componentType
 	 */
-	public String getFilterType()
+	public String getComponentType()
 	{
-		return m_filterType;
+		return m_componentType;
 	}
 
 	/**
-	 * Gets the value of the 'Filter Name'
+	 * Gets the value of the 'Folder Name'
 	 * 
-	 * @return <code>String</code> value of m_filterName
+	 * @return <code>String</code> value of m_folderName
 	 */
-	public String getFilterName()
+	public String getFolderName()
 	{
-		return m_filterName;
+		return m_folderName;
+	}
+
+	/**
+	 * Gets the value of the 'Components' checkbox
+	 * 
+	 * @return <code>String</code> value of m_filterFiles
+	 */
+	public String getFilterFiles()
+	{
+		return m_filterFiles.toLowerCase();
+	}
+
+	/**
+	 * Gets the value of the 'Folders' checkbox
+	 * 
+	 * @return <code>String</code> value of m_filterFolders
+	 */
+	public String getFilterFolders()
+	{
+		return m_filterFolders.toLowerCase();
 	}
 
 	/**
@@ -381,22 +414,22 @@ public class IspwConfiguration extends SCM
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
 		}
 
-		if (getFilterName() != null)
+		if (!getFolderName().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwfilterName() + " = " + getFilterName()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwFolderName() + " = " + getFolderName()); //$NON-NLS-1$
 		}
-		else
+		else if ("true".equals(getFilterFolders()) && getFolderName().isEmpty()) //$NON-NLS-1$
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterName()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwFolderName()));
 		}
 
-		if (getFilterType() != null)
+		if (!getComponentType().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwfilterType() + " = " + getFilterType()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwComponentType() + " = " + getComponentType()); //$NON-NLS-1$
 		}
-		else
+		else if ("true".equals(getFilterFiles()) && getComponentType().isEmpty()) //$NON-NLS-1$
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwfilterType()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwComponentType()));
 		}
 
 		String cliLocation = globalConfig.getTopazCLILocation(launcher);
@@ -616,6 +649,44 @@ public class IspwConfiguration extends SCM
 		}
 
 		/**
+		 * Validator for the 'Component type' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "componentType" field
+		 * 
+		 * @return validation message
+		 */
+		public FormValidation doCheckComponentType(@QueryParameter String value)
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty())
+			{
+				return FormValidation.error(Messages.checkIspwComponentTypeError());
+			}
+
+			return FormValidation.ok();
+		}
+
+		/**
+		 * Validator for the 'Folder name' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "folderName" field
+		 * 
+		 * @return validation message
+		 */
+		public FormValidation doCheckFolderName(@QueryParameter String value)
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty())
+			{
+				return FormValidation.error(Messages.checkIspwFolderNameError());
+			}
+
+			return FormValidation.ok();
+		}
+
+		/**
 		 * Fills in the Login Credential selection box with applicable Jenkins credentials
 		 * 
 		 * @param context
@@ -664,6 +735,97 @@ public class IspwConfiguration extends SCM
 			levelOptionModel.add(Messages.ispwDropLevelAbove(), "1"); //$NON-NLS-1$
 
 			return levelOptionModel;
+		}
+	}
+
+	/**
+	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFiles</code> in the jelly.config
+	 * file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been selected. The data
+	 * from the optionalBlock is sent over in the format:
+	 * <p>
+	 * filterFiles : {componentType : " " }
+	 * <p>
+	 * Where the value of componentType is the text entered in the text field of the form.
+	 */
+	public static class EnableComponents
+	{
+		private String componentType;
+
+		/**
+		 *
+		 * @param componentType
+		 *            The text enter in the Component type field of the form
+		 */
+		@DataBoundConstructor
+		public EnableComponents(String componentType)
+		{
+			this.componentType = componentType;
+		}
+
+		/**
+		 * 
+		 * @return the component type entered in the text field within the optional block
+		 */
+		public String getComponentType()
+		{
+			return componentType;
+		}
+
+		/**
+		 * Method that overrides the default .toString() method to return "true if the box has been checked or "false" if the
+		 * box has not been checked
+		 * 
+		 * @return "true" or "false" ased on whether the componentType eists or not
+		 */
+		public String toString()
+		{
+			return Boolean.toString(componentType != null);
+		}
+	}
+
+	/**
+	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFolders</code> in the jelly.config
+	 * file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been selected. The data
+	 * from the optionalBlock is sent over in the format:
+	 * <p>
+	 * filterFolders : {folderName : " " }
+	 * <p>
+	 * Where the value of folderName is the text entered in the text field of the form.
+	 */
+	public static class EnableFolders
+	{
+
+		private String folderName;
+
+		/**
+		 * 
+		 * @param folderName
+		 *            the text enter in the Folder name field of the form
+		 */
+		@DataBoundConstructor
+		public EnableFolders(String folderName)
+		{
+			this.folderName = folderName;
+		}
+
+		/**
+		 * 
+		 * @return the folder name entered in the text field within the optional block
+		 */
+		public String getFolderName()
+		{
+			return folderName;
+		}
+
+		/**
+		 * Method that overrides the default .toString() method to return "true" if the box has been checked or "false" if the
+		 * box has not been checked
+		 * 
+		 * @return "true" or "false" based on whether the folderName exists
+		 */
+		public String toString()
+		{
+			return Boolean.toString(folderName != null);
 		}
 	}
 }

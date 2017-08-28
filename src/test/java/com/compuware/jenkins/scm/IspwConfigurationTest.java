@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import com.compuware.jenkins.scm.IspwConfiguration.EnableComponents;
+import com.compuware.jenkins.scm.IspwConfiguration.EnableFolders;
 import com.compuware.jenkins.scm.util.ScmTestUtils;
 import com.compuware.jenkins.scm.util.TestConstants;
 import hudson.model.FreeStyleBuild;
@@ -42,8 +44,10 @@ public class IspwConfigurationTest
 	private static final String EXPECTED_SERVER_APPLICATION = "PLAY";
 	private static final String EXPECTED_SERVER_LEVEL = "DEV1";
 	private static final String EXPECTED_LEVEL_OPTION = "Selected level only";
-	private static final String EXPECTED_FILTER_TYPE = "COB";
-	private static final String EXPECTED_FILTER_NAME = "TREXX12";
+	private static final String EXPECTED_COMPONENT_TYPE = "COB";
+	private static final String EXPECTED_FOLDER_NAME = "TREXX12";
+	private static final EnableComponents EXPECTED_FILTER_FILES = new EnableComponents(EXPECTED_COMPONENT_TYPE);
+	private static final EnableFolders EXPECTED_FILTER_FOLDERS = new EnableFolders(EXPECTED_FOLDER_NAME);
 
 	// Member Variables
 	@Rule
@@ -73,8 +77,8 @@ public class IspwConfigurationTest
 	{
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
-				EXPECTED_FILTER_NAME);
+				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,
+				EXPECTED_FILTER_FOLDERS);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -101,11 +105,18 @@ public class IspwConfigurationTest
 		assertThat(String.format("Expected IspwConfiguration.getLevelOption() to return %s", EXPECTED_LEVEL_OPTION),
 				scm.getLevelOption(), is(equalTo(EXPECTED_LEVEL_OPTION)));
 
-		assertThat(String.format("Expected IspwConfiguration.getFilterType() to return %s", EXPECTED_FILTER_TYPE),
-				scm.getFilterType(), is(equalTo(EXPECTED_FILTER_TYPE)));
+		assertThat(String.format("Expected IspwConfiguration.getComponentType() to return %s", EXPECTED_COMPONENT_TYPE),
+				scm.getComponentType(), is(equalTo(EXPECTED_COMPONENT_TYPE)));
 
-		assertThat(String.format("Expected IspwConfiguration.getFilterName() to return %s", EXPECTED_FILTER_NAME),
-				scm.getFilterName(), is(equalTo(EXPECTED_FILTER_NAME)));
+		assertThat(String.format("Expected IspwConfiguration.getFolderName() to return %s", EXPECTED_FOLDER_NAME),
+				scm.getFolderName(), is(equalTo(EXPECTED_FOLDER_NAME)));
+
+		assertThat(String.format("Expected IspwConfiguration.getFilterFiles() to return %s", EXPECTED_FILTER_FILES.toString()),
+				scm.getFilterFiles(), is(equalTo(EXPECTED_FILTER_FILES.toString())));
+
+		assertThat(
+				String.format("Expected IspwConfiguration.getFilterFolders() to return %s", EXPECTED_FILTER_FOLDERS.toString()),
+				scm.getFilterFolders(), is(equalTo(EXPECTED_FILTER_FOLDERS.toString())));
 	}
 
 	/**
@@ -122,7 +133,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE, EXPECTED_FILTER_NAME));
+					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -169,11 +180,17 @@ public class IspwConfigurationTest
 				assertThat(String.format("Expected log to contain level option: \"%s\".", EXPECTED_LEVEL_OPTION), logFileOutput,
 						containsString(EXPECTED_LEVEL_OPTION));
 
-				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_FILTER_TYPE), logFileOutput,
-						containsString(EXPECTED_FILTER_TYPE));
+				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_COMPONENT_TYPE),
+						logFileOutput, containsString(EXPECTED_COMPONENT_TYPE));
 
-				assertThat(String.format("Expected log to contain filter name: \"%s\".", EXPECTED_FILTER_NAME), logFileOutput,
-						containsString(EXPECTED_FILTER_NAME));
+				assertThat(String.format("Expected log to contain folder name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
+						containsString(EXPECTED_FOLDER_NAME));
+
+				assertThat(String.format("Expected log to contain filter files: \"%s\".", EXPECTED_FILTER_FILES.toString()),
+						logFileOutput, containsString(EXPECTED_FILTER_FILES.toString()));
+
+				assertThat(String.format("Expected log to contain filter folders: \"%s\".", EXPECTED_FILTER_FOLDERS.toString()),
+						logFileOutput, containsString(EXPECTED_FILTER_FOLDERS.toString()));
 			}
 		}
 		catch (Exception e)
@@ -198,10 +215,10 @@ public class IspwConfigurationTest
 		{
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_TYPE,
-					EXPECTED_FILTER_NAME);
+					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,
+					EXPECTED_FILTER_FOLDERS);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterType,filterName");
+					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterFiles,filterFolders");
 		}
 		catch (Exception e)
 		{

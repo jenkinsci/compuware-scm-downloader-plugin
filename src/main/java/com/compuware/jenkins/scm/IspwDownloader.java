@@ -53,7 +53,7 @@ public class IspwDownloader extends AbstractDownloader
 	{
 		m_ispwConfig = config;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.compuware.jenkins.scm.AbstractDownloader#getSource(hudson.model.Run, hudson.Launcher, hudson.FilePath, hudson.model.TaskListener, java.io.File)
@@ -69,7 +69,7 @@ public class IspwDownloader extends AbstractDownloader
 		Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
 		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;
-        
+
 		String cliScriptFile = globalConfig.getTopazCLILocation(launcher) + remoteFileSeparator + osFile;
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
@@ -90,7 +90,9 @@ public class IspwDownloader extends AbstractDownloader
 		String serverApp = ArgumentUtils.escapeForScript(m_ispwConfig.getServerApplication());
 		String serverLevel = ArgumentUtils.escapeForScript(m_ispwConfig.getServerLevel());
 		String levelOption = ArgumentUtils.escapeForScript(m_ispwConfig.getLevelOption());
-		
+		String filterFiles = ArgumentUtils.escapeForScript(m_ispwConfig.getFilterFiles());
+		String filterFolders = ArgumentUtils.escapeForScript(m_ispwConfig.getFilterFolders());
+
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
 		args.add(cliScriptFileRemote);
@@ -108,6 +110,8 @@ public class IspwDownloader extends AbstractDownloader
 		args.add(ScmConstants.ISPW_SERVER_APP_PARAM, serverApp);
 		args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
 		args.add(ScmConstants.ISPW_LEVEL_OPTION_PARAM, levelOption);
+		args.add(ScmConstants.ISPW_FILTER_FILES_PARAM, filterFiles);
+		args.add(ScmConstants.ISPW_FILTER_FOLDERS_PARAM, filterFolders);
 
 		String runtimeConfig = m_ispwConfig.getServerConfig();
 		if (!runtimeConfig.isEmpty())
@@ -115,24 +119,24 @@ public class IspwDownloader extends AbstractDownloader
 			runtimeConfig = ArgumentUtils.escapeForScript(runtimeConfig);
 			args.add(ScmConstants.ISPW_SERVER_CONFIG_PARAM, runtimeConfig);
 		}
-		
-		String componentName = m_ispwConfig.getFilterName();
+
+		String componentName = m_ispwConfig.getFolderName();
 		if (!componentName.isEmpty())
 		{
 			componentName = ArgumentUtils.escapeForScript(componentName);
-			args.add(ScmConstants.ISPW_FILTER_NAME_PARAM, componentName);
+			args.add(ScmConstants.ISPW_FOLDER_NAME_PARAM, componentName);
 		}
-		
-		String componentType = m_ispwConfig.getFilterType();
+
+		String componentType = m_ispwConfig.getComponentType();
 		if (!componentType.isEmpty())
 		{
 			componentType = ArgumentUtils.escapeForScript(componentType);
-			args.add(ScmConstants.ISPW_FILTER_TYPE_PARAM, componentType);
+			args.add(ScmConstants.ISPW_COMPONENT_TYPE_PARAM, componentType);
 		}
-		
+
 		// create the CLI workspace (in case it doesn't already exist)
 		EnvVars env = build.getEnvironment(listener);
-		FilePath workDir = new FilePath (vChannel, workspaceFilePath.getRemote());
+		FilePath workDir = new FilePath(vChannel, workspaceFilePath.getRemote());
 		workDir.mkdirs();
 
 		// invoke the CLI (execute the batch/shell script)
