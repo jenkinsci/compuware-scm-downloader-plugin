@@ -22,9 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
-
 import org.apache.commons.lang.StringUtils;
-
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -32,7 +30,6 @@ import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
-
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -76,7 +73,7 @@ public class PdsDownloader extends AbstractDownloader
         
         //Check CLI compatibility
         FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
-        CLIVersionUtils.checkCLICompatibility(cliDirectory, ScmConstants.PDS_MINIMUM_CLI_VERSION);     
+		CLIVersionUtils.checkCLICompatibility(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
         
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
@@ -142,8 +139,4 @@ public class PdsDownloader extends AbstractDownloader
 			return true;
 		}
 	}
-	
-
-	
-	
 }

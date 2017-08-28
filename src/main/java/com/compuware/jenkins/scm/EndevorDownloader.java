@@ -74,7 +74,7 @@ public class EndevorDownloader extends AbstractDownloader
         
         //Check CLI compatibility
         FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
-        CLIVersionUtils.checkCLICompatibility(cliDirectory, ScmConstants.ENDEVOR_MINIMUM_CLI_VERSION);    
+		CLIVersionUtils.checkCLICompatibility(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
         
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
