@@ -30,24 +30,18 @@ import hudson.Launcher;
 import hudson.model.Item;
 import hudson.model.TaskListener;
 import hudson.scm.ChangeLogParser;
-import hudson.scm.SCM;
 import hudson.security.ACL;
 
 /**
- * Abstsract class containing common data and methods for SCM configurations.
+ * Abstract class containing common data and methods for SCM configurations.
  */
-public abstract class CpwrScmConfiguration extends SCM
+public abstract class CpwrScmConfiguration extends AbstractConfiguration
 {
 	// Member Variables
-	private String m_connectionId;
 	private String m_credentialsId;
 	private String m_filterPattern;
 	private String m_fileExtension;
 	private String m_targetFolder;
-
-	// Backward compatibility
-	private transient @Deprecated String m_hostPort;
-	private transient @Deprecated String m_codePage;
 
 	/**
 	 * Constructor.
@@ -70,34 +64,6 @@ public abstract class CpwrScmConfiguration extends SCM
 		m_fileExtension = StringUtils.trimToEmpty(fileExtension);
 		m_credentialsId = StringUtils.trimToEmpty(credentialsId);
 		m_targetFolder = StringUtils.trimToEmpty(targetFolder);
-	}
-
-	/**
-	 * Handle data migration
-	 * 
-	 * In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is a global and
-	 * created with the Global Configuration page. If old hostPort and codePage properties exist, then a an attempt is made to
-	 * create a new host connection with these properties and add it to the list of global host connections, as long as there is
-	 * no other host connection already existing with the same properties.
-	 * 
-	 * @return the configuration
-	 */
-	protected Object readResolve()
-	{
-		// Migrate from 1.X to 2.0
-		if (m_hostPort != null && m_codePage != null)
-		{
-			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
-			{
-				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
-				globalConfig.addHostConnection(connection);
-				m_connectionId = connection.getConnectionId();
-			}
-		}
-
-		return this;
 	}
 
 	/* 

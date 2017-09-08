@@ -21,12 +21,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.LocalData;
-import com.compuware.jenkins.scm.util.CpwrScmConfigTestUtils;
 
 /**
- * Endevor data migration unit test.
+ * All types data migration unit test.
  */
-public class EndevorMigrateDataTest
+public class AllMigrateDataTest
 {
 	// Member Variables
 	@Rule
@@ -47,7 +46,10 @@ public class EndevorMigrateDataTest
 	{
 		try
 		{
-			CpwrScmConfigTestUtils.migrateDataTest(m_jenkinsRule);
+			// Load and migrate the specified project from the test resource .zip file
+			m_jenkinsRule.jenkins.getItem("TestEndevorProject"); //$NON-NLS-1$
+			m_jenkinsRule.jenkins.getItem("TestIspwProject"); //$NON-NLS-1$
+			m_jenkinsRule.jenkins.getItem("TestPdsProject"); //$NON-NLS-1$
 		}
 		catch (Exception e)
 		{
