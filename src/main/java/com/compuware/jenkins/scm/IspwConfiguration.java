@@ -43,7 +43,6 @@ import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.scm.ChangeLogParser;
-import hudson.scm.SCM;
 import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
 import hudson.security.ACL;
@@ -56,9 +55,8 @@ import net.sf.json.JSONObject;
 /**
  * Captures the configuration information for a ISPW SCM.
  */
-public class IspwConfiguration extends SCM
+public class IspwConfiguration extends AbstractConfiguration
 {
-	private String m_connectionId;
 	private String m_credentialsId;
 	private String m_serverConfig;
 	private String m_serverStream;
@@ -69,10 +67,6 @@ public class IspwConfiguration extends SCM
 	private String m_folderName = StringUtils.EMPTY;
 	private String m_filterFiles = "false"; //$NON-NLS-1$
 	private String m_filterFolders = "false"; //$NON-NLS-1$
-
-	// Backward compatibility
-	private transient @Deprecated String m_hostPort;
-	private transient @Deprecated String m_codePage;
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
@@ -141,34 +135,6 @@ public class IspwConfiguration extends SCM
 			listener.getLogger().println(e.getMessage());
 			throw new AbortException();
 		}
-	}
-
-	/**
-	 * Handle data migration
-	 * 
-	 * In 2.0 "hostPort" and "codePage" were removed and replaced by a list of host connections. This list is a global and
-	 * created with the Global Configuration page. If old hostPort and codePage properties exist, then a an attempt is made to
-	 * create a new host connection with these properties and add it to the list of global host connections, as long as there is
-	 * no other host connection already existing with the same properties.
-	 * 
-	 * @return the configuration
-	 */
-	protected Object readResolve()
-	{
-		// Migrate from 1.X to 2.0
-		if (m_hostPort != null && m_codePage != null)
-		{
-			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
-			if (!globalConfig.hostConnectionExists(m_hostPort, m_codePage))
-			{
-				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-				HostConnection connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
-				globalConfig.addHostConnection(connection);
-				m_connectionId = connection.getConnectionId();
-			}
-		}
-
-		return this;
 	}
 
 	/* (non-Javadoc)

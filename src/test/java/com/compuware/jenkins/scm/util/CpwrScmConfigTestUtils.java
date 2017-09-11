@@ -129,7 +129,13 @@ public class CpwrScmConfigTestUtils
 	}
 
 	/**
-	 * Test migration of the host connection.
+	 * Utility to aid in performing a round trip migration test on a <code>CpwrScmConfiguration</code> configuration.
+	 * <p>
+	 * An existing project is loaded, migrated, saved, and reloaded where the original configuration is compared against
+	 * the reloaded configuration. The test project is loaded from a .zip file that mimics a Jenkins project's
+	 * layout within.
+	 * 
+	 * See test resource for the migration test: src/test/resources/com.compuware.jenkins.scm/<test>/<test method>.zip
 	 * 
 	 * @param jenkinsRule
 	 *            the Jenkins rule
@@ -138,6 +144,7 @@ public class CpwrScmConfigTestUtils
 	{
 		try
 		{
+			// Load and migrate the specified project from the test resource .zip file
 			TopLevelItem item = jenkinsRule.jenkins.getItem("TestProject");
 			assertDataMigrated(item);
 		}

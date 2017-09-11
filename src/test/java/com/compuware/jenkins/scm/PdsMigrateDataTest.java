@@ -33,10 +33,13 @@ public class PdsMigrateDataTest
 	public JenkinsRule m_jenkinsRule = new JenkinsRule();
 
 	/**
-	 * Perform a round trip test on the configuration.
+	 * Perform a round trip migration test on the configuration.
 	 * <p>
-	 * A project is created, configured, submitted / saved, and reloaded where the original configuration is compared against
-	 * the reloaded configuration for equality.
+	 * An existing project is loaded, migrated, saved, and reloaded where the original configuration is compared against
+	 * the reloaded configuration. The test project is loaded from a .zip file that mimics a Jenkins project's
+	 * layout within.
+	 * 
+	 * See test resource for the migration test: src/test/resources/com.compuware.jenkins.scm/<test>/<test method>.zip
 	 */
 	@Test
 	@LocalData
