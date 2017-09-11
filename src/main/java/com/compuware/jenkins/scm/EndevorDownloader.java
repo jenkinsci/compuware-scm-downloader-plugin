@@ -98,7 +98,7 @@ public class EndevorDownloader extends AbstractDownloader
 		String configTargetFolder = ArgumentUtils.escapeForScript(m_endevorConfig.getTargetFolder());
 		if (StringUtils.isNotEmpty(configTargetFolder))
 		{
-			targetFolder = configTargetFolder;
+			ArgumentUtils.resolvePath(configTargetFolder, workspaceFilePath.getRemote(), launcher.isUnix());
 		}
 
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
