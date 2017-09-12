@@ -25,8 +25,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-import com.compuware.jenkins.scm.IspwConfiguration.EnableComponents;
-import com.compuware.jenkins.scm.IspwConfiguration.EnableFolders;
 import com.compuware.jenkins.scm.util.ScmTestUtils;
 import com.compuware.jenkins.scm.util.TestConstants;
 import hudson.model.FreeStyleBuild;
@@ -46,8 +44,6 @@ public class IspwConfigurationTest
 	private static final String EXPECTED_LEVEL_OPTION = "Selected level only";
 	private static final String EXPECTED_COMPONENT_TYPE = "COB";
 	private static final String EXPECTED_FOLDER_NAME = "TREXX12";
-	private static final EnableComponents EXPECTED_FILTER_FILES = new EnableComponents(EXPECTED_COMPONENT_TYPE);
-	private static final EnableFolders EXPECTED_FILTER_FOLDERS = new EnableFolders(EXPECTED_FOLDER_NAME);
 
 	// Member Variables
 	@Rule
@@ -77,8 +73,8 @@ public class IspwConfigurationTest
 	{
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,
-				EXPECTED_FILTER_FOLDERS);
+				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
+				EXPECTED_FOLDER_NAME);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -110,13 +106,6 @@ public class IspwConfigurationTest
 
 		assertThat(String.format("Expected IspwConfiguration.getFolderName() to return %s", EXPECTED_FOLDER_NAME),
 				scm.getFolderName(), is(equalTo(EXPECTED_FOLDER_NAME)));
-
-		assertThat(String.format("Expected IspwConfiguration.getFilterFiles() to return %s", EXPECTED_FILTER_FILES.toString()),
-				scm.getFilterFiles(), is(equalTo(EXPECTED_FILTER_FILES.toString())));
-
-		assertThat(
-				String.format("Expected IspwConfiguration.getFilterFolders() to return %s", EXPECTED_FILTER_FOLDERS.toString()),
-				scm.getFilterFolders(), is(equalTo(EXPECTED_FILTER_FOLDERS.toString())));
 	}
 
 	/**
@@ -133,7 +122,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES, EXPECTED_FILTER_FOLDERS));
+					EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE, EXPECTED_FOLDER_NAME));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -185,12 +174,6 @@ public class IspwConfigurationTest
 
 				assertThat(String.format("Expected log to contain folder name: \"%s\".", EXPECTED_FOLDER_NAME), logFileOutput,
 						containsString(EXPECTED_FOLDER_NAME));
-
-				assertThat(String.format("Expected log to contain filter files: \"%s\".", EXPECTED_FILTER_FILES.toString()),
-						logFileOutput, containsString(EXPECTED_FILTER_FILES.toString()));
-
-				assertThat(String.format("Expected log to contain filter folders: \"%s\".", EXPECTED_FILTER_FOLDERS.toString()),
-						logFileOutput, containsString(EXPECTED_FILTER_FOLDERS.toString()));
 			}
 		}
 		catch (Exception e)
@@ -215,8 +198,8 @@ public class IspwConfigurationTest
 		{
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_FILTER_FILES,
-					EXPECTED_FILTER_FOLDERS);
+					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
+					EXPECTED_FOLDER_NAME);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
 					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterFiles,filterFolders");
 		}
