@@ -15,34 +15,26 @@
 	<f:block>
 		<h3 style="margin-bottom:0px">${%filter}</h3>
 	</f:block>
-	<j:set var="files" value="${instance.filterFiles}" />
-	<j:set var="folders" value="${instance.filterFolders}" />
 	<f:block>
 		<table style="margin-top:0px">
 			<f:entry title="${%serverStream}" field="serverStream" help="/plugin/compuware-scm-downloader/ispw/help-serverStream.html">
 				<f:textbox/>
 			</f:entry>
-
 			<f:entry title="${%serverApplication}" field="serverApplication" help="/plugin/compuware-scm-downloader/ispw/help-serverApplication.html">
 				<f:textbox/>
 			</f:entry>
-
 			<f:entry title="${%serverLevel}" field="serverLevel" help="/plugin/compuware-scm-downloader/ispw/help-serverLevel.html">
 				<f:textbox/>
 			</f:entry>
 			<f:entry title="${%levelOption}" field="levelOption" help="/plugin/compuware-scm-downloader/ispw/help-levelOption.html">
 				<f:select default="0"/>
 			</f:entry>
-			<f:optionalBlock field="filterFiles" title="${%components}" checked="${files == 'true'}">
-				<f:entry title="${%componentType}" field="componentType" help="/plugin/compuware-scm-downloader/ispw/help-componentType.html">
-					<f:textbox/>
-				</f:entry>
-			</f:optionalBlock>
-			<f:optionalBlock field="filterFolders" title="${%baseFolders}" checked="${folders == 'true'}">
-				<f:entry title="${%folderName}" field="folderName" help="/plugin/compuware-scm-downloader/ispw/help-folderName.html">
-					<f:textbox/>
-				</f:entry>
-			</f:optionalBlock>
+			<f:entry title="${%componentTypes}" field="componentType" help="/plugin/compuware-scm-downloader/ispw/help-componentType.html">
+				<f:textbox/>
+			</f:entry>
+			<f:entry title="${%folderNames}" field="folderName" help="/plugin/compuware-scm-downloader/ispw/help-folderName.html">
+				<f:textbox/>
+			</f:entry>
 		</table>
 	</f:block>
 	<f:block>

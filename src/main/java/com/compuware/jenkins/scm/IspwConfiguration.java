@@ -57,6 +57,8 @@ import net.sf.json.JSONObject;
  */
 public class IspwConfiguration extends AbstractConfiguration
 {
+	private static final String TRUE = "true"; //$NON-NLS-1$
+	private static final String FALSE = "false"; //$NON-NLS-1$
 	private String m_credentialsId;
 	private String m_serverConfig;
 	private String m_serverStream;
@@ -65,13 +67,12 @@ public class IspwConfiguration extends AbstractConfiguration
 	private String m_levelOption;
 	private String m_componentType = StringUtils.EMPTY;
 	private String m_folderName = StringUtils.EMPTY;
-	private String m_filterFiles = "false"; //$NON-NLS-1$
-	private String m_filterFolders = "false"; //$NON-NLS-1$
+	private String m_filterFiles = FALSE;
+	private String m_filterFolders = FALSE;
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, EnableComponents filterFiles,
-			EnableFolders filterFolders)
+			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName)
 	{
 		m_connectionId = getTrimmedValue(connectionId);
 		m_credentialsId = getTrimmedValue(credentialsId);
@@ -80,17 +81,16 @@ public class IspwConfiguration extends AbstractConfiguration
 		m_serverApplication = getTrimmedValue(serverApplication);
 		m_serverLevel = getTrimmedValue(serverLevel);
 		m_levelOption = getTrimmedValue(levelOption);
-
-		if (filterFiles != null)
+		
+		if (componentType != null && !componentType.isEmpty())
 		{
-			m_filterFiles = "true"; //$NON-NLS-1$
-			m_componentType = filterFiles.getComponentType();
+			m_filterFiles = TRUE;
+			m_componentType = getTrimmedValue(componentType);
 		}
-
-		if (filterFolders != null)
-		{
-			m_filterFolders = "true"; //$NON-NLS-1$
-			m_folderName = filterFolders.getFolderName();
+		if (folderName != null && !folderName.isEmpty())
+		{	
+			m_filterFolders = TRUE;
+			m_folderName = getTrimmedValue(folderName);
 		}
 	}
 
@@ -615,44 +615,6 @@ public class IspwConfiguration extends AbstractConfiguration
 		}
 
 		/**
-		 * Validator for the 'Component type' text field.
-		 * 
-		 * @param value
-		 *            value passed from the "componentType" field
-		 * 
-		 * @return validation message
-		 */
-		public FormValidation doCheckComponentType(@QueryParameter String value)
-		{
-			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty())
-			{
-				return FormValidation.error(Messages.checkIspwComponentTypeError());
-			}
-
-			return FormValidation.ok();
-		}
-
-		/**
-		 * Validator for the 'Folder name' text field.
-		 * 
-		 * @param value
-		 *            value passed from the "folderName" field
-		 * 
-		 * @return validation message
-		 */
-		public FormValidation doCheckFolderName(@QueryParameter String value)
-		{
-			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty())
-			{
-				return FormValidation.error(Messages.checkIspwFolderNameError());
-			}
-
-			return FormValidation.ok();
-		}
-
-		/**
 		 * Fills in the Login Credential selection box with applicable Jenkins credentials
 		 * 
 		 * @param context
@@ -703,95 +665,5 @@ public class IspwConfiguration extends AbstractConfiguration
 			return levelOptionModel;
 		}
 	}
-
-	/**
-	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFiles</code> in the jelly.config
-	 * file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been selected. The data
-	 * from the optionalBlock is sent over in the format:
-	 * <p>
-	 * filterFiles : {componentType : " " }
-	 * <p>
-	 * Where the value of componentType is the text entered in the text field of the form.
-	 */
-	public static class EnableComponents
-	{
-		private String componentType;
-
-		/**
-		 *
-		 * @param componentType
-		 *            The text enter in the Component type field of the form
-		 */
-		@DataBoundConstructor
-		public EnableComponents(String componentType)
-		{
-			this.componentType = componentType;
-		}
-
-		/**
-		 * 
-		 * @return the component type entered in the text field within the optional block
-		 */
-		public String getComponentType()
-		{
-			return componentType;
-		}
-
-		/**
-		 * Method that overrides the default .toString() method to return "true if the box has been checked or "false" if the
-		 * box has not been checked
-		 * 
-		 * @return "true" or "false" ased on whether the componentType eists or not
-		 */
-		public String toString()
-		{
-			return Boolean.toString(componentType != null);
-		}
-	}
-
-	/**
-	 * This class is a nullable object that binds the data from the optionalBlock <code>filterFolders</code> in the jelly.config
-	 * file. If an object of this type is null it means the checkbox to enable the optionalBlock has not been selected. The data
-	 * from the optionalBlock is sent over in the format:
-	 * <p>
-	 * filterFolders : {folderName : " " }
-	 * <p>
-	 * Where the value of folderName is the text entered in the text field of the form.
-	 */
-	public static class EnableFolders
-	{
-
-		private String folderName;
-
-		/**
-		 * 
-		 * @param folderName
-		 *            the text enter in the Folder name field of the form
-		 */
-		@DataBoundConstructor
-		public EnableFolders(String folderName)
-		{
-			this.folderName = folderName;
-		}
-
-		/**
-		 * 
-		 * @return the folder name entered in the text field within the optional block
-		 */
-		public String getFolderName()
-		{
-			return folderName;
-		}
-
-		/**
-		 * Method that overrides the default .toString() method to return "true" if the box has been checked or "false" if the
-		 * box has not been checked
-		 * 
-		 * @return "true" or "false" based on whether the folderName exists
-		 */
-		public String toString()
-		{
-			return Boolean.toString(folderName != null);
-		}
-	}
+	
 }
