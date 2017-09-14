@@ -21,9 +21,6 @@ package com.compuware.jenkins.scm;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map.Entry;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
@@ -37,8 +34,6 @@ import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.Node;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
@@ -99,10 +94,11 @@ public class PdsDownloader extends AbstractDownloader
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
-		String configTargetFolder = m_pdsConfig.getTargetFolder();
-		if (StringUtils.isNotEmpty(configTargetFolder))
+		String sourceLocation = m_pdsConfig.getTargetFolder();
+		if (StringUtils.isNotEmpty(sourceLocation))
 		{
-			ArgumentUtils.resolvePath(configTargetFolder, workspaceFilePath.getRemote(), launcher.isUnix());
+			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());;
+			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 		}
 
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;

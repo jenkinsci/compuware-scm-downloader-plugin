@@ -95,10 +95,11 @@ public class EndevorDownloader extends AbstractDownloader
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
-		String configTargetFolder = ArgumentUtils.escapeForScript(m_endevorConfig.getTargetFolder());
-		if (StringUtils.isNotEmpty(configTargetFolder))
+		String sourceLocation = m_endevorConfig.getTargetFolder();
+		if (StringUtils.isNotEmpty(sourceLocation))
 		{
-			ArgumentUtils.resolvePath(configTargetFolder, workspaceFilePath.getRemote(), launcher.isUnix());
+			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());;
+			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 		}
 
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;

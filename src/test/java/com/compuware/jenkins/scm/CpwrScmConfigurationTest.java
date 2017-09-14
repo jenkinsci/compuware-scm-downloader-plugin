@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +38,8 @@ import hudson.model.FreeStyleProject;
 @SuppressWarnings("nls")
 public class CpwrScmConfigurationTest
 {
+	private static char ILLEGAL_FILE_CHAR_WIN = '*';
+
 	// Member Variables
 	@Rule
 	public JenkinsRule m_jenkinsRule = new JenkinsRule();
@@ -101,5 +104,70 @@ public class CpwrScmConfigurationTest
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+
+	/**
+	 * Test the validation of the target folder.
+	 */
+	@Test
+	public void validateTargetFolderTest()
+	{
+		// valid folder
+		try
+		{
+			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
+					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
+					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
+			scmConfig.validateTargetFolder(System.out);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+		// invalid folder - NOTE: this test will fail on Linux because Linux accepts any character for a folder name
+		try
+		{
+			String invalidFolderName = "sou" + ILLEGAL_FILE_CHAR_WIN + "rce";
+			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
+					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
+					TestConstants.EXPECTED_CREDENTIALS_ID, invalidFolderName);
+			scmConfig.validateTargetFolder(System.out);
+			fail("Expected an IllegalArgumentException for a source directory with an invalid folder name.");
+		}
+		catch (Exception e)
+		{
+			// expected exception
+		}
+
+		// empty
+		try
+		{
+			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
+					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
+					TestConstants.EXPECTED_CREDENTIALS_ID, StringUtils.EMPTY);
+			scmConfig.validateTargetFolder(System.out);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+		// multiple subfolders
+		try
+		{
+			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
+					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
+					TestConstants.EXPECTED_CREDENTIALS_ID, "source/a/b");
+			scmConfig.validateTargetFolder(System.out);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
 	}
 }

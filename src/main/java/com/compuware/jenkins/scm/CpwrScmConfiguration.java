@@ -17,6 +17,8 @@
 package com.compuware.jenkins.scm;
 
 import java.io.PrintStream;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -208,11 +210,7 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.fileExtension()));
 		}
 
-		String targetFolder = getTargetFolder();
-		if (!StringUtils.isEmpty(targetFolder))
-		{
-			logger.println(Messages.targetFolder() + " = " + targetFolder); //$NON-NLS-1$
-		}
+		validateTargetFolder(logger);
 
 		String cliLocation = globalConfig.getTopazCLILocation(launcher);
 		if (!StringUtils.isEmpty(cliLocation))
@@ -222,6 +220,29 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 		else
 		{
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.topazCLILocation()));
+		}
+	}
+
+	/**
+	 * Validates that the source download location is a valid path name.
+	 * 
+	 * @param logger
+	 *            used to log any messages
+	 */
+	protected void validateTargetFolder(PrintStream logger)
+	{
+		String targetFolder = getTargetFolder();
+		if (StringUtils.isNotEmpty(targetFolder))
+		{
+			logger.println(Messages.targetFolder() + " = " + targetFolder); //$NON-NLS-1$
+			try
+			{
+				Paths.get(targetFolder);
+			}
+			catch (InvalidPathException exc)
+			{
+				throw new IllegalArgumentException(Messages.invalidSourceDownloadLocation(exc.getLocalizedMessage()));
+			}
 		}
 	}
 }
