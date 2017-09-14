@@ -98,8 +98,12 @@ public class EndevorDownloader extends AbstractDownloader
 		String sourceLocation = m_endevorConfig.getTargetFolder();
 		if (StringUtils.isNotEmpty(sourceLocation))
 		{
+<<<<<<< HEAD
 			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());;
 			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
+=======
+			ArgumentUtils.resolvePath(configTargetFolder, workspaceFilePath.getRemote(), launcher.isUnix());
+>>>>>>> branch 'CWE-118441' of https://github.com/jenkinsci/compuware-scm-downloader-plugin.git
 		}
 
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
