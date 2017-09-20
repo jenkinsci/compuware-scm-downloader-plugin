@@ -94,10 +94,11 @@ public class PdsDownloader extends AbstractDownloader
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
-		String configTargetFolder = ArgumentUtils.escapeForScript(m_pdsConfig.getTargetFolder());
-		if (StringUtils.isNotEmpty(configTargetFolder))
+		String sourceLocation = m_pdsConfig.getTargetFolder();
+		if (StringUtils.isNotEmpty(sourceLocation))
 		{
-			targetFolder = configTargetFolder;
+			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());;
+			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 		}
 
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
