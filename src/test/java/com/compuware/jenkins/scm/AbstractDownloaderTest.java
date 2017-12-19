@@ -6,7 +6,7 @@
  * All Compuware products listed within the materials are trademarks of Compuware Corporation. All other company or product
  * names are trademarks of their respective owners.
  * 
- * Copyright (c) 2017 Compuware Corporation. All rights reserved.
+ * Copyright (c) 2015 - 2018 Compuware Corporation. All rights reserved.
  */
 package com.compuware.jenkins.scm;
 
