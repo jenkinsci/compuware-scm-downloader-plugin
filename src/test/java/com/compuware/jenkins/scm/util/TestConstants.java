@@ -29,6 +29,7 @@ public class TestConstants
 	public static final String CODE_PAGE = "codePage";
 	public static final String TIMEOUT = "timeout";
 	public static final String CONNECTION_ID = "connectionId";
+	public static final String CES_URL = "cesUrl";
 	public static final String TOPAZ_CLI_LOCATION_LINUX = "topazCLILocationLinux";
 	public static final String TOPAZ_CLI_LOCATION_WINDOWS = "topazCLILocationWindows";
 
@@ -44,6 +45,7 @@ public class TestConstants
 	public static final String EXPECTED_USER_ID = "xdevreg";
 	public static final String EXPECTED_PASSWORD = "********";
 	public static final String EXPECTED_TARGET_FOLDER = "../sources";
+	public static final String EXPECTED_CES_URL = "https://expectedcesurl/";
 
 	public static final String HOST_PORT_OPEN_TAG = "<m__hostPort>";
 	public static final String HOST_PORT_CLOSE_TAG = "</m__hostPort>";

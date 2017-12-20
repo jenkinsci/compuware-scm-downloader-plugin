@@ -102,7 +102,7 @@ public abstract class AbstractConfiguration extends SCM
 			if (connection == null)
 			{
 				String description = m_hostPort + " " + m_codePage; //$NON-NLS-1$
-				connection = new HostConnection(description, m_hostPort, m_codePage, null, null);
+				connection = new HostConnection(description, m_hostPort, m_codePage, null, null, null);
 				globalConfig.addHostConnection(connection);
 			}
 			else
