@@ -56,6 +56,7 @@ public class ScmTestUtils
 		hostConnection.put(TestConstants.CODE_PAGE, TestConstants.EXPECTED_CODE_PAGE);
 		hostConnection.put(TestConstants.TIMEOUT, TestConstants.EXPECTED_TIMEOUT);
 		hostConnection.put(TestConstants.CONNECTION_ID, TestConstants.EXPECTED_CONNECTION_ID);
+		hostConnection.put(TestConstants.CES_URL, TestConstants.EXPECTED_CES_URL);
 
 		JSONArray hostConnections = new JSONArray();
 		hostConnections.add(hostConnection);
