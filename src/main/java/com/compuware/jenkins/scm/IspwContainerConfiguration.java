@@ -47,125 +47,68 @@ import net.sf.json.JSONObject;
 /**
  * Captures the configuration information for a ISPW SCM.
  */
-public class IspwConfiguration extends AbstractIspwConfiguration
+public class IspwContainerConfiguration extends AbstractIspwConfiguration
 {
-	private static final String TRUE = "true"; //$NON-NLS-1$
-	private static final String FALSE = "false"; //$NON-NLS-1$
-	private String m_serverStream;
-	private String m_serverApplication;
-	private String m_serverLevel;
-	private String m_levelOption;
-	private String m_componentType = StringUtils.EMPTY;
-	private String m_folderName = StringUtils.EMPTY;
-	private String m_filterFiles = FALSE;
-	private String m_filterFolders = FALSE;
+	private String ispwContainerName;
+	private String ispwContainerType;
+	private String ispwServerLevel = StringUtils.EMPTY;
+	private String ispwComponentType = StringUtils.EMPTY;
 
 	@DataBoundConstructor
-	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName)
+	public IspwContainerConfiguration(String connectionId, String credentialsId, String serverConfig, String containerName,
+			String containerType, String serverLevel, String componentType)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
-		m_serverStream = getTrimmedValue(serverStream);
-		m_serverApplication = getTrimmedValue(serverApplication);
-		m_serverLevel = getTrimmedValue(serverLevel);
-		m_levelOption = getTrimmedValue(levelOption);
-
-		if (componentType != null && !componentType.isEmpty())
-		{
-			m_filterFiles = TRUE;
-			m_componentType = getTrimmedValue(componentType);
-		}
-		if (folderName != null && !folderName.isEmpty())
-		{
-			m_filterFolders = TRUE;
-			m_folderName = getTrimmedValue(folderName);
-		}
+		ispwContainerType = getTrimmedValue(containerType);
+		ispwContainerName = getTrimmedValue(containerName);
+		ispwServerLevel = getTrimmedValue(serverLevel);
+		ispwComponentType = getTrimmedValue(componentType);
 	}
 
 	/**
-	 * Gets the value of the 'Stream'
+	 * Gets the value of the 'Container name'
 	 * 
-	 * @return <code>String</code> value of m_serverStream
+	 * @return <code>String</code> value of containerName
 	 */
-	public String getServerStream()
+	public String getContainerName()
 	{
-		return m_serverStream;
+		return ispwContainerName;
 	}
 
 	/**
-	 * Gets the value of the 'Application'
+	 * Gets the value of the 'Container type'
 	 * 
-	 * @return <code>String</code> value of m_serverApplication
+	 * @return <code>String</code> value of containerType
 	 */
-	public String getServerApplication()
+	public String getContainerType()
 	{
-		return m_serverApplication;
+		return ispwContainerType;
 	}
 
 	/**
 	 * Gets the value of the 'Level'
 	 * 
-	 * @return <code>String</code> value of m_serverLevel
+	 * @return <code>String</code> value of serverLevel
 	 */
 	public String getServerLevel()
 	{
-		return m_serverLevel;
-	}
-
-	/**
-	 * Gets the value of the 'Level Option'
-	 * 
-	 * @return <code>String</code> value of m_levelOption
-	 */
-	public String getLevelOption()
-	{
-		return m_levelOption;
+		return ispwServerLevel;
 	}
 
 	/**
 	 * Gets the value of the 'Component type'
 	 * 
-	 * @return <code>String</code> value of m_componentType
+	 * @return <code>String</code> value of componentType
 	 */
 	public String getComponentType()
 	{
-		return m_componentType;
+		return ispwComponentType;
 	}
 
 	/**
-	 * Gets the value of the 'Folder Name'
+	 * Validates the configuration parameters
 	 * 
-	 * @return <code>String</code> value of m_folderName
-	 */
-	public String getFolderName()
-	{
-		return m_folderName;
-	}
-
-	/**
-	 * Gets the value of the 'Components' checkbox
-	 * 
-	 * @return <code>String</code> value of m_filterFiles
-	 */
-	public String getFilterFiles()
-	{
-		return m_filterFiles.toLowerCase();
-	}
-
-	/**
-	 * Gets the value of the 'Folders' checkbox
-	 * 
-	 * @return <code>String</code> value of m_filterFolders
-	 */
-	public String getFilterFolders()
-	{
-		return m_filterFolders.toLowerCase();
-	}
-
-	/**
-	 * Validates the configuration parameters.
-	 *
 	 * @param launcher
 	 *            The machine that the files will be checked out.
 	 * @param listener
@@ -182,78 +125,49 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		validateCliLocation(globalConfig, launcher, listener);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.compuware.jenkins.scm.AbstractIspwConfiguration#validateFilterParameters(hudson.Launcher, hudson.model.TaskListener, hudson.model.Item)
+	/**
+	 * Validates the configuration filter parameters.
+	 *
+	 * @param launcher
+	 *            The machine that the files will be checked out.
+	 * @param listener
+	 *            Build listener
+	 * @param project
+	 *            the Jenkins project
 	 */
-	@Override
 	public void validateFilterParameters(Launcher launcher, TaskListener listener, Item project)
 	{
-		if (!getServerStream().isEmpty())
+		if (!getContainerName().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwServerStream() + " = " + getServerStream()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwContainerName() + " = " + getContainerName()); //$NON-NLS-1$
 		}
 		else
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerStream()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwContainerName()));
 		}
 
-		if (!getServerApplication().isEmpty())
+		if (!getContainerType().isEmpty())
 		{
-			listener.getLogger().println(Messages.ispwServerApp() + " = " + getServerApplication()); //$NON-NLS-1$
+			listener.getLogger().println(Messages.ispwContainerType() + " = " + getContainerType()); //$NON-NLS-1$
 		}
 		else
 		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerApp()));
-		}
-
-		if (!getServerLevel().isEmpty())
-		{
-			listener.getLogger().println(Messages.ispwServerLevel() + " = " + getServerLevel()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerLevel()));
-		}
-
-		if (!getLevelOption().isEmpty())
-		{
-			listener.getLogger().println(Messages.ispwLevelOption() + " = " + getLevelOption()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwLevelOption()));
-		}
-
-		if (!getFolderName().isEmpty())
-		{
-			listener.getLogger().println(Messages.ispwFolderName() + " = " + getFolderName()); //$NON-NLS-1$
-		}
-		else if ("true".equals(getFilterFolders()) && getFolderName().isEmpty()) //$NON-NLS-1$
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwFolderName()));
-		}
-
-		if (!getComponentType().isEmpty())
-		{
-			listener.getLogger().println(Messages.ispwComponentType() + " = " + getComponentType()); //$NON-NLS-1$
-		}
-		else if ("true".equals(getFilterFiles()) && getComponentType().isEmpty()) //$NON-NLS-1$
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwComponentType()));
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwContainerType()));
 		}
 
 	}
 	
 	/**
-	 * DescriptorImpl is used to create instances of <code>IspwConfiguration</code>. It also contains the global configuration
-	 * options as fields, just like the <code>IspwConfiguration</code> contains the configuration options for a job
+	 * DescriptorImpl is used to create instances of <code>IspwContainerConfiguration</code>. It also contains the global
+	 * configuration options as fields, just like the <code>IspwContainerConfiguration</code> contains the configuration options
+	 * for a job
 	 */
 	@Extension
-	public static class DescriptorImpl extends SCMDescriptor<IspwConfiguration>
+	public static class DescriptorImpl extends SCMDescriptor<IspwContainerConfiguration>
 	{
 		public DescriptorImpl()
 		{
-			super(IspwConfiguration.class, null);
+			super(IspwContainerConfiguration.class, null);
 			load();
 		}
 
@@ -275,7 +189,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		@Override
 		public String getDisplayName()
 		{
-			return Messages.displayNameIspwRepository();
+			return Messages.displayNameIspwContainer();
 		}
 
 		/**
@@ -374,57 +288,38 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		}
 
 		/**
-		 * Validator for the 'Stream' text field.
+		 * Validator for the 'Container name' field
 		 * 
 		 * @param value
-		 *            value passed from the "serverStream" field
+		 *            value passed from the config.jelly "containerName" field
 		 * 
 		 * @return validation message
 		 */
-		public FormValidation doCheckServerStream(@QueryParameter String value)
+		public FormValidation doCheckContainerName(@QueryParameter String value)
 		{
 			String tempValue = StringUtils.trimToEmpty(value);
 			if (tempValue.isEmpty())
 			{
-				return FormValidation.error(Messages.checkIspwServerStreamError());
+				return FormValidation.error(Messages.checkIspwContainerNameError());
 			}
 
 			return FormValidation.ok();
 		}
 
 		/**
-		 * Validator for the 'Application' text field.
+		 * Validator for the 'Container type' field
 		 * 
 		 * @param value
-		 *            value passed from the "serverApplication" field
+		 *            value passed from the config.jelly "containerType" field
 		 * 
 		 * @return validation message
 		 */
-		public FormValidation doCheckServerApplication(@QueryParameter String value)
+		public FormValidation doCheckContainerType(@QueryParameter String value)
 		{
 			String tempValue = StringUtils.trimToEmpty(value);
 			if (tempValue.isEmpty())
 			{
-				return FormValidation.error(Messages.checkIspwServerAppError());
-			}
-
-			return FormValidation.ok();
-		}
-
-		/**
-		 * Validator for the 'Level' text field.
-		 * 
-		 * @param value
-		 *            value passed from the "serverLevel" field
-		 * 
-		 * @return validation message
-		 */
-		public FormValidation doCheckServerLevel(@QueryParameter String value)
-		{
-			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty())
-			{
-				return FormValidation.error(Messages.checkIspwServerLevelError());
+				return FormValidation.error(Messages.checkIspwContainerTypeError());
 			}
 
 			return FormValidation.ok();
@@ -467,18 +362,19 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		}
 
 		/**
-		 * Fills in the Level option selection box with ISPW level options
+		 * Fills in the Container type selection box with ISPW container types
 		 *
-		 * @return level option selections
+		 * @return container type selections
 		 */
-		public ListBoxModel doFillLevelOptionItems()
+		public ListBoxModel doFillContainerTypeItems()
 		{
-			ListBoxModel levelOptionModel = new ListBoxModel();
+			ListBoxModel containerTypeModel = new ListBoxModel();
 
-			levelOptionModel.add(Messages.ispwDropLevelOnly(), "0"); //$NON-NLS-1$
-			levelOptionModel.add(Messages.ispwDropLevelAbove(), "1"); //$NON-NLS-1$
+			containerTypeModel.add(Messages.ispwAssignment(), "0"); //$NON-NLS-1$
+			containerTypeModel.add(Messages.ispwRelease(), "1"); //$NON-NLS-1$
+			containerTypeModel.add(Messages.ispwSet(), "2"); //$NON-NLS-1$
 
-			return levelOptionModel;
+			return containerTypeModel;
 		}
 	}
 

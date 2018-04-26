@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+import org.apache.commons.lang.StringUtils;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -41,17 +42,19 @@ import hudson.util.ArgumentListBuilder;
 public class IspwDownloader extends AbstractDownloader
 {
 	// Member Variables
-	private IspwConfiguration m_ispwConfig;
+	private AbstractIspwConfiguration ispwConfiguration;
+	private IspwConfiguration ispwRepositoryConfig;
+	private IspwContainerConfiguration ispwContainerConfig;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param config
-	 *            the <code>ISPWConfiguration</code> to use for the download
+	 *            the <code>AbstractIspwConfiguration</code> to use for the download
 	 */
-	public IspwDownloader(IspwConfiguration config)
+	public IspwDownloader(AbstractIspwConfiguration config)
 	{
-		m_ispwConfig = config;
+		ispwConfiguration = config;
 	}
 
 	/*
@@ -74,27 +77,53 @@ public class IspwDownloader extends AbstractDownloader
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
-		HostConnection connection = globalConfig.getHostConnection(m_ispwConfig.getConnectionId());
+
+		ArgumentListBuilder args = new ArgumentListBuilder();
+		
+		// server args
+		HostConnection connection = globalConfig.getHostConnection(ispwConfiguration.getConnectionId());
 		String host = ArgumentUtils.escapeForScript(connection.getHost());
 		String port = ArgumentUtils.escapeForScript(connection.getPort());
 		String codePage = connection.getCodePage();
 		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
 		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
-				m_ispwConfig.getCredentialsId());
+				ispwConfiguration.getCredentialsId());
 		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
 		logger.println("TopazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
-		String serverStream = ArgumentUtils.escapeForScript(m_ispwConfig.getServerStream());
-		String serverApp = ArgumentUtils.escapeForScript(m_ispwConfig.getServerApplication());
-		String serverLevel = ArgumentUtils.escapeForScript(m_ispwConfig.getServerLevel());
-		String levelOption = ArgumentUtils.escapeForScript(m_ispwConfig.getLevelOption());
-		String filterFiles = ArgumentUtils.escapeForScript(m_ispwConfig.getFilterFiles());
-		String filterFolders = ArgumentUtils.escapeForScript(m_ispwConfig.getFilterFolders());
+
+		// filter args
+		String serverStream = StringUtils.EMPTY;
+		String serverApp = StringUtils.EMPTY;
+		String serverLevel = StringUtils.EMPTY;
+		String levelOption = StringUtils.EMPTY;
+		String filterFiles = StringUtils.EMPTY;
+		String filterFolders = StringUtils.EMPTY;
+		String containerName = StringUtils.EMPTY;
+		String containerType = StringUtils.EMPTY;
+
+		if (ispwConfiguration instanceof IspwConfiguration)
+		{
+			ispwRepositoryConfig = (IspwConfiguration) ispwConfiguration;
+			
+			serverStream = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerStream());
+			serverApp = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerApplication());
+			serverLevel = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerLevel());
+			levelOption = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getLevelOption());
+			filterFiles = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFiles());
+			filterFolders = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFolders());
+		}
+		else if (ispwConfiguration instanceof IspwContainerConfiguration)
+		{
+			ispwContainerConfig = (IspwContainerConfiguration) ispwConfiguration;
+
+			containerName = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerName());
+			containerType = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerType());
+		}
 
 		// build the list of arguments to pass to the CLI
-		ArgumentListBuilder args = new ArgumentListBuilder();
 		args.add(cliScriptFileRemote);
 		args.add(CommonConstants.HOST_PARM, host);
 		args.add(CommonConstants.PORT_PARM, port);
@@ -103,35 +132,65 @@ public class IspwDownloader extends AbstractDownloader
 		args.add(password, true);
 		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
 		args.add(CommonConstants.TIMEOUT_PARM, timeout);
-		args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.ISPW);
 		args.add(CommonConstants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(CommonConstants.DATA_PARM, topazCliWorkspace);
-		args.add(ScmConstants.ISPW_SERVER_STREAM_PARAM, serverStream);
-		args.add(ScmConstants.ISPW_SERVER_APP_PARAM, serverApp);
-		args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
-		args.add(ScmConstants.ISPW_LEVEL_OPTION_PARAM, levelOption);
-		args.add(ScmConstants.ISPW_FILTER_FILES_PARAM, filterFiles);
-		args.add(ScmConstants.ISPW_FILTER_FOLDERS_PARAM, filterFolders);
 
-		String runtimeConfig = m_ispwConfig.getServerConfig();
+		// optional and filter-specific args
+		String runtimeConfig = ispwConfiguration.getServerConfig();
+		
 		if (!runtimeConfig.isEmpty())
 		{
 			runtimeConfig = ArgumentUtils.escapeForScript(runtimeConfig);
 			args.add(ScmConstants.ISPW_SERVER_CONFIG_PARAM, runtimeConfig);
 		}
 
-		String componentName = m_ispwConfig.getFolderName();
-		if (!componentName.isEmpty())
+		if (ispwRepositoryConfig != null)
 		{
-			componentName = ArgumentUtils.escapeForScript(componentName);
-			args.add(ScmConstants.ISPW_FOLDER_NAME_PARAM, componentName);
-		}
+			// ISPW Repo-specific args
+			args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.ISPW);
+			args.add(ScmConstants.ISPW_SERVER_STREAM_PARAM, serverStream);
+			args.add(ScmConstants.ISPW_SERVER_APP_PARAM, serverApp);
+			args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
+			args.add(ScmConstants.ISPW_LEVEL_OPTION_PARAM, levelOption);
+			args.add(ScmConstants.ISPW_FILTER_FILES_PARAM, filterFiles);
+			args.add(ScmConstants.ISPW_FILTER_FOLDERS_PARAM, filterFolders);
 
-		String componentType = m_ispwConfig.getComponentType();
-		if (!componentType.isEmpty())
+			// Optional args
+			String componentName = ispwRepositoryConfig.getFolderName();
+			if (!componentName.isEmpty())
+			{
+				componentName = ArgumentUtils.escapeForScript(componentName);
+				args.add(ScmConstants.ISPW_FOLDER_NAME_PARAM, componentName);
+			}
+
+			String componentType = ispwRepositoryConfig.getComponentType();
+			if (!componentType.isEmpty())
+			{
+				componentType = ArgumentUtils.escapeForScript(componentType);
+				args.add(ScmConstants.ISPW_COMPONENT_TYPE_PARAM, componentType);
+			}
+		}
+		else if (ispwContainerConfig != null)
 		{
-			componentType = ArgumentUtils.escapeForScript(componentType);
-			args.add(ScmConstants.ISPW_COMPONENT_TYPE_PARAM, componentType);
+			// ISPW Container-specific args
+			args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.ISPWC);
+			args.add(ScmConstants.ISPW_CONTAINER_NAME_PARAM, containerName);
+			args.add(ScmConstants.ISPW_CONTAINER_TYPE_PARAM, containerType);
+
+			// Optional args
+			serverLevel = ispwContainerConfig.getServerLevel();
+			if (!serverLevel.isEmpty())
+			{
+				serverLevel = ArgumentUtils.escapeForScript(serverLevel);
+				args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
+			}
+
+			String componentType = ispwContainerConfig.getComponentType();
+			if (!componentType.isEmpty())
+			{
+				componentType = ArgumentUtils.escapeForScript(componentType);
+				args.add(ScmConstants.ISPW_COMPONENT_TYPE_PARAM, componentType);
+			}
 		}
 
 		// create the CLI workspace (in case it doesn't already exist)

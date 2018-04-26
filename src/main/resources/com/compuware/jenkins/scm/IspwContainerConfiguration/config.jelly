@@ -17,22 +17,16 @@
 	</f:block>
 	<f:block>
 		<table style="margin-top:0px">
-			<f:entry title="${%serverStream}" field="serverStream" help="/plugin/compuware-scm-downloader/ispw/help-serverStream.html">
+			<f:entry title="${%containerName}" field="containerName" help="/plugin/compuware-scm-downloader/ispw/help-containerName.html">
 				<f:textbox/>
 			</f:entry>
-			<f:entry title="${%serverApplication}" field="serverApplication" help="/plugin/compuware-scm-downloader/ispw/help-serverApplication.html">
-				<f:textbox/>
+			<f:entry title="${%containerType}" field="containerType" help="/plugin/compuware-scm-downloader/ispw/help-containerType.html">
+				<f:select default="0"/>
 			</f:entry>
 			<f:entry title="${%serverLevel}" field="serverLevel" help="/plugin/compuware-scm-downloader/ispw/help-serverLevel.html">
 				<f:textbox/>
 			</f:entry>
-			<f:entry title="${%levelOption}" field="levelOption" help="/plugin/compuware-scm-downloader/ispw/help-levelOption.html">
-				<f:select default="0"/>
-			</f:entry>
-			<f:entry title="${%componentTypes}" field="componentType" help="/plugin/compuware-scm-downloader/ispw/help-componentTypes.html">
-				<f:textbox/>
-			</f:entry>
-			<f:entry title="${%folderNames}" field="folderName" help="/plugin/compuware-scm-downloader/ispw/help-folderName.html">
+			<f:entry title="${%componentType}" field="componentType" help="/plugin/compuware-scm-downloader/ispw/help-componentType.html">
 				<f:textbox/>
 			</f:entry>
 		</table>
