@@ -40,6 +40,7 @@ public class ScmConstants
 
 	public static final String ENDEVOR = "endevor";
 	public static final String ISPW = "ispw";
+	public static final String ISPWC = "ispwc";
 	public static final String PDS = "pds";
 
 	public static final String ISPW_SERVER_CONFIG_PARAM = "-ispwServerConfig";
@@ -49,6 +50,8 @@ public class ScmConstants
 	public static final String ISPW_LEVEL_OPTION_PARAM = "-ispwLevelOption";
 	public static final String ISPW_FOLDER_NAME_PARAM = "-ispwFolderName";
 	public static final String ISPW_COMPONENT_TYPE_PARAM = "-ispwComponentType";
+	public static final String ISPW_CONTAINER_NAME_PARAM = "-ispwContainerName";
+	public static final String ISPW_CONTAINER_TYPE_PARAM = "-ispwContainerType";
 	public static final String ISPW_FILTER_FILES_PARAM = "-ispwFilterFiles";
 	public static final String ISPW_FILTER_FOLDERS_PARAM = "-ispwFilterFolders";
 
