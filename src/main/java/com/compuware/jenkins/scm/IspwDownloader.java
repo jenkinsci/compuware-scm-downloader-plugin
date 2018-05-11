@@ -103,6 +103,7 @@ public class IspwDownloader extends AbstractDownloader
 		String filterFolders = StringUtils.EMPTY;
 		String containerName = StringUtils.EMPTY;
 		String containerType = StringUtils.EMPTY;
+		String downloadAll = StringUtils.EMPTY;
 
 		if (ispwConfiguration instanceof IspwConfiguration)
 		{
@@ -114,6 +115,7 @@ public class IspwDownloader extends AbstractDownloader
 			levelOption = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getLevelOption());
 			filterFiles = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFiles());
 			filterFolders = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFolders());
+			downloadAll = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadAll()));
 		}
 		else if (ispwConfiguration instanceof IspwContainerConfiguration)
 		{
@@ -121,8 +123,8 @@ public class IspwDownloader extends AbstractDownloader
 
 			containerName = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerName());
 			containerType = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerType());
+			downloadAll = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadAll()));
 		}
-
 		// build the list of arguments to pass to the CLI
 		args.add(cliScriptFileRemote);
 		args.add(CommonConstants.HOST_PARM, host);
@@ -193,6 +195,8 @@ public class IspwDownloader extends AbstractDownloader
 			}
 		}
 
+		args.add(ScmConstants.ISPW_DOWNLOAD_ALL_PARAM, downloadAll);
+		
 		// create the CLI workspace (in case it doesn't already exist)
 		EnvVars env = build.getEnvironment(listener);
 		FilePath workDir = new FilePath(vChannel, workspaceFilePath.getRemote());
