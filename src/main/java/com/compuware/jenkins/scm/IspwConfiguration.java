@@ -167,6 +167,9 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	}
 
 	/**
+	 * This field indicates whether to clear unmatched items from the workspace as well as whether to only download items when
+	 * the update date has changed.
+	 * 
 	 * @return the ispwDownloadAll
 	 */
 	public boolean getIspwDownloadAll()
