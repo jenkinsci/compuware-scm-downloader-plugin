@@ -31,7 +31,7 @@
 			</f:entry>
 		</table>
 	</f:block>
-	<f:entry title="Download unchanged source" field="ispwDownloadAll">
+	<f:entry title="${%downloadUnchangedSource}" field="ispwDownloadAll" help="/plugin/compuware-scm-downloader/ispw/help-downloadAll.html">
     	<f:checkbox checked="${ispwDownloadAll}"/>
 	</f:entry>
 	<f:block>
