@@ -42,6 +42,7 @@ public class IspwContainerConfigurationTest
 	private static final String EXPECTED_CONTAINER_TYPE = "0";
 	private static final String EXPECTED_SERVER_LEVEL = "DEV1";
 	private static final String EXPECTED_COMPONENT_TYPE = "COB";
+	private static final boolean EXPECTED_DOWNLOAD_ALL = true;
 
 	// Member Variables
 	@Rule
@@ -71,7 +72,7 @@ public class IspwContainerConfigurationTest
 	{
 		IspwContainerConfiguration scm = new IspwContainerConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_CONTAINER_NAME, EXPECTED_CONTAINER_TYPE,
-				EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE);
+				EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL);
 
 		assertThat(
 				String.format("Expected IspwContainerConfiguration.getConnectionId() to return %s",
@@ -98,6 +99,10 @@ public class IspwContainerConfigurationTest
 		assertThat(
 				String.format("Expected IspwContainerConfiguration.getComponentType() to return %s", EXPECTED_COMPONENT_TYPE),
 				scm.getComponentType(), is(equalTo(EXPECTED_COMPONENT_TYPE)));
+		
+		assertThat(
+				String.format("Expected IspwContainerConfiguration.getIspwDownloadAll() to return %s", EXPECTED_DOWNLOAD_ALL),
+				scm.getIspwDownloadAll(), is(equalTo(EXPECTED_DOWNLOAD_ALL)));
 	}
 
 	/**
@@ -114,7 +119,7 @@ public class IspwContainerConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwContainerConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_CONTAINER_NAME,
-					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE));
+					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -160,6 +165,9 @@ public class IspwContainerConfigurationTest
 
 				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_COMPONENT_TYPE),
 						logFileOutput, containsString(EXPECTED_COMPONENT_TYPE));
+				
+				assertThat(String.format("Expected log to contain filter type: \"%s\".", EXPECTED_DOWNLOAD_ALL), logFileOutput,
+						containsString(Boolean.toString(EXPECTED_DOWNLOAD_ALL)));
 			}
 		}
 		catch (Exception e)
@@ -184,9 +192,9 @@ public class IspwContainerConfigurationTest
 		{
 			IspwContainerConfiguration scmConfig = new IspwContainerConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_CONTAINER_NAME,
-					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE);
+					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,containerName,containerType,serverLevel,componentType");
+					"connectionId,credentialsId,serverConfig,containerName,containerType,serverLevel,componentType,ispwDownloadAll");
 		}
 		catch (Exception e)
 		{

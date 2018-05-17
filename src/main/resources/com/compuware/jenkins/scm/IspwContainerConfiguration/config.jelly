@@ -3,15 +3,15 @@
 	<f:block>
 		<h3 style="margin-bottom:0px">${%server}</h3>
 	</f:block>
-    	<f:entry title="${%hostConnection}" field="connectionId" help="/plugin/compuware-scm-downloader/help-connectionId.html">
-        	<cc:hostSelect default=""/>
-		</f:entry>
-		<f:entry title="${%serverConfig}" field="serverConfig" help="/plugin/compuware-scm-downloader/ispw/help-serverConfig.html">
-			<f:textbox/>
-		</f:entry>
-		<f:entry title="${%loginCredentials}" field="credentialsId" help="/plugin/compuware-scm-downloader/help-credentialsId.html">
-			<c:select/>
-		</f:entry>
+   	<f:entry title="${%hostConnection}" field="connectionId" help="/plugin/compuware-scm-downloader/help-connectionId.html">
+       	<cc:hostSelect default=""/>
+	</f:entry>
+	<f:entry title="${%serverConfig}" field="serverConfig" help="/plugin/compuware-scm-downloader/ispw/help-serverConfig.html">
+		<f:textbox/>
+	</f:entry>
+	<f:entry title="${%loginCredentials}" field="credentialsId" help="/plugin/compuware-scm-downloader/help-credentialsId.html">
+		<c:select/>
+	</f:entry>
 	<f:block>
 		<h3 style="margin-bottom:0px">${%filter}</h3>
 	</f:block>
@@ -31,6 +31,9 @@
 			</f:entry>
 		</table>
 	</f:block>
+	<f:entry title="${%downloadUnchangedSource}" field="ispwDownloadAll" help="/plugin/compuware-scm-downloader/ispw/help-downloadAll.html">
+    	<f:checkbox checked="${ispwDownloadAll}"/>
+	</f:entry>
 	<f:block>
 		<hr size="1" color="Gainsboro"/>
 	</f:block>

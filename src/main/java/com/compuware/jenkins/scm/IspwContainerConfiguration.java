@@ -53,10 +53,11 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private String ispwContainerType;
 	private String ispwServerLevel = StringUtils.EMPTY;
 	private String ispwComponentType = StringUtils.EMPTY;
+	private boolean ispwDownloadAll = false;
 
 	@DataBoundConstructor
 	public IspwContainerConfiguration(String connectionId, String credentialsId, String serverConfig, String containerName,
-			String containerType, String serverLevel, String componentType)
+			String containerType, String serverLevel, String componentType, boolean ispwDownloadAll)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -64,6 +65,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 		ispwContainerName = getTrimmedValue(containerName);
 		ispwServerLevel = getTrimmedValue(serverLevel);
 		ispwComponentType = getTrimmedValue(componentType);
+		this.ispwDownloadAll = ispwDownloadAll;
 	}
 
 	/**
@@ -106,6 +108,17 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 		return ispwComponentType;
 	}
 
+	/**
+	 * This field indicates whether to clear unmatched items from the workspace as well as whether to only download items when
+	 * the update date has changed.
+	 * 
+	 * @return the ispwDownloadAll
+	 */
+	public boolean getIspwDownloadAll()
+	{
+		return ispwDownloadAll;
+	}
+	
 	/**
 	 * Validates the configuration parameters
 	 * 

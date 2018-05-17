@@ -59,10 +59,11 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private String m_folderName = StringUtils.EMPTY;
 	private String m_filterFiles = FALSE;
 	private String m_filterFolders = FALSE;
+	private boolean ispwDownloadAll = false;
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName)
+			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName, boolean ispwDownloadAll)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -81,6 +82,8 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 			m_filterFolders = TRUE;
 			m_folderName = getTrimmedValue(folderName);
 		}
+		
+		this.ispwDownloadAll = ispwDownloadAll;
 	}
 
 	/**
@@ -161,6 +164,17 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	public String getFilterFolders()
 	{
 		return m_filterFolders.toLowerCase();
+	}
+
+	/**
+	 * This field indicates whether to clear unmatched items from the workspace as well as whether to only download items when
+	 * the update date has changed.
+	 * 
+	 * @return the ispwDownloadAll
+	 */
+	public boolean getIspwDownloadAll()
+	{
+		return ispwDownloadAll;
 	}
 
 	/**
