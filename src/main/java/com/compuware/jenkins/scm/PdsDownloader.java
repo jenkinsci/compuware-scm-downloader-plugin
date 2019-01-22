@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -86,6 +86,7 @@ public class PdsDownloader extends AbstractDownloader
 		HostConnection connection = globalConfig.getHostConnection(m_pdsConfig.getConnectionId());
 		String host = ArgumentUtils.escapeForScript(connection.getHost());
 		String port = ArgumentUtils.escapeForScript(connection.getPort());
+		String protocol = connection.getProtocol();
 		String codePage = connection.getCodePage();
 		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
 		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
@@ -115,6 +116,7 @@ public class PdsDownloader extends AbstractDownloader
 		args.add(CommonConstants.USERID_PARM, userId);
 		args.add(CommonConstants.PW_PARM);
 		args.add(password, true);
+		args.add(CommonConstants.PROTOCOL_PARM, protocol);
 		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
 		args.add(CommonConstants.TIMEOUT_PARM, timeout);
 		args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.PDS);

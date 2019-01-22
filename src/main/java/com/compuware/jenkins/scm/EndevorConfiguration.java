@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -92,8 +92,8 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 	 * @param baseline
 	 *            used for polling (we do not use this parameter)
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException if an I/O error occurs downloading source 
+	 * @throws InterruptedException if downloading source is interrupted by another thread
 	 */
 	@Override
 	public void checkout(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
@@ -198,7 +198,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 		 * 
 		 * @return <code>true</code> if able to configure and continue to next page
 		 * 
-		 * @throws FormException
+		 * @throws FormException if an error occurs submitting the form data
 		 */
 		@Override
 		public boolean configure(StaplerRequest req, JSONObject formData) throws FormException

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -53,6 +53,7 @@ public class ScmTestUtils
 		JSONObject hostConnection = new JSONObject();
 		hostConnection.put(TestConstants.DESCRIPTION, "TestConnection");
 		hostConnection.put(TestConstants.HOST_PORT, TestConstants.EXPECTED_HOST + ':' + TestConstants.EXPECTED_PORT);
+		hostConnection.put(TestConstants.PROTOCOL, TestConstants.EXPECTED_ENCRYPTION_PROTOCOL);
 		hostConnection.put(TestConstants.CODE_PAGE, TestConstants.EXPECTED_CODE_PAGE);
 		hostConnection.put(TestConstants.TIMEOUT, TestConstants.EXPECTED_TIMEOUT);
 		hostConnection.put(TestConstants.CONNECTION_ID, TestConstants.EXPECTED_CONNECTION_ID);
