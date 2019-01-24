@@ -64,31 +64,6 @@ public class PdsConfigurationTest
 	}
 
 	/**
-	 * Tests the results of an download execution.
-	 * <p>
-	 * A project is created, configured and executed where the log is examined to verify parameters being passed to the CLI. The
-	 * build is not expected to succeed since no CLI exists
-	 */
-	@Test
-	public void executionTest()
-	{
-		try
-		{
-			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
-					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
-					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
-			CpwrScmConfigTestUtils.executionTest(m_jenkinsRule, scmConfig);
-		}
-		catch (Exception e)
-		{
-			// Add the print of the stack trace because the exception message is not enough to troubleshoot the root issue. For
-			// example, if the exception is constructed without a message, you get no information from executing fail().
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	/**
 	 * Perform a round trip test on the configuration.
 	 * <p>
 	 * A project is created, configured, submitted / saved, and reloaded where the original configuration is compared against

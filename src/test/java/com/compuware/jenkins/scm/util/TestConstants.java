@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -27,6 +27,7 @@ public class TestConstants
 	public static final String DESCRIPTION = "description";
 	public static final String HOST_PORT = "hostPort";
 	public static final String CODE_PAGE = "codePage";
+	public static final String PROTOCOL = "protocol";
 	public static final String TIMEOUT = "timeout";
 	public static final String CONNECTION_ID = "connectionId";
 	public static final String CES_URL = "cesUrl";
@@ -40,6 +41,7 @@ public class TestConstants
 
 	public static final String EXPECTED_HOST = "cw01";
 	public static final String EXPECTED_PORT = "30947";
+	public static final String EXPECTED_ENCRYPTION_PROTOCOL = "TLSv1.2";
 	public static final String EXPECTED_CODE_PAGE = "1047";
 	public static final String EXPECTED_TIMEOUT = "123";
 	public static final String EXPECTED_USER_ID = "xdevreg";
