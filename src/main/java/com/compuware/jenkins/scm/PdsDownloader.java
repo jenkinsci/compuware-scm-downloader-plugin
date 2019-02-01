@@ -45,7 +45,7 @@ import hudson.util.ArgumentListBuilder;
 public class PdsDownloader extends AbstractDownloader
 {
 	// Member Variables
-	private PdsConfiguration m_pdsConfig;
+	private PdsConfiguration pdsConfig;
 
 	/**
 	 * Constructs the PDS downloader for the given configuration.
@@ -55,7 +55,7 @@ public class PdsDownloader extends AbstractDownloader
 	 */
 	public PdsDownloader(PdsConfiguration config)
 	{
-		m_pdsConfig = config;
+		pdsConfig = config;
 	}
 
 	/* 
@@ -70,11 +70,12 @@ public class PdsDownloader extends AbstractDownloader
 		PrintStream logger = listener.getLogger();
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
         VirtualChannel vChannel = launcher.getChannel();
-        
+
         //Check CLI compatibility
         FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
-		CLIVersionUtils.checkCLICompatibility(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
-        
+		String cliVersion = CLIVersionUtils.getCLIVersion(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
+		CLIVersionUtils.checkCLICompatibility(cliVersion, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
+
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
 		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;
@@ -83,30 +84,30 @@ public class PdsDownloader extends AbstractDownloader
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
-		HostConnection connection = globalConfig.getHostConnection(m_pdsConfig.getConnectionId());
+		HostConnection connection = globalConfig.getHostConnection(pdsConfig.getConnectionId());
 		String host = ArgumentUtils.escapeForScript(connection.getHost());
 		String port = ArgumentUtils.escapeForScript(connection.getPort());
 		String protocol = connection.getProtocol();
 		String codePage = connection.getCodePage();
 		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
 		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
-				m_pdsConfig.getCredentialsId());
+				pdsConfig.getCredentialsId());
 		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
-		String sourceLocation = m_pdsConfig.getTargetFolder();
+		String sourceLocation = pdsConfig.getTargetFolder();
 		if (StringUtils.isNotEmpty(sourceLocation))
 		{
-			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());;
+			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());
 			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 		}
 
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
 		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
 
-		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(m_pdsConfig.getFilterPattern()));
-		String fileExtension = ArgumentUtils.escapeForScript(m_pdsConfig.getFileExtension());
+		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(pdsConfig.getFilterPattern()));
+		String fileExtension = ArgumentUtils.escapeForScript(pdsConfig.getFileExtension());
 
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
@@ -116,7 +117,13 @@ public class PdsDownloader extends AbstractDownloader
 		args.add(CommonConstants.USERID_PARM, userId);
 		args.add(CommonConstants.PW_PARM);
 		args.add(password, true);
-		args.add(CommonConstants.PROTOCOL_PARM, protocol);
+
+		// do not pass protocol on command line if null, empty, blank, or 'None'
+		if (StringUtils.isNotBlank(protocol) && !StringUtils.equalsIgnoreCase(protocol, "none")) { //$NON-NLS-1$
+			CLIVersionUtils.checkProtocolSupported(cliVersion);
+			args.add(CommonConstants.PROTOCOL_PARM, protocol);
+		}
+
 		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
 		args.add(CommonConstants.TIMEOUT_PARM, timeout);
 		args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.PDS);

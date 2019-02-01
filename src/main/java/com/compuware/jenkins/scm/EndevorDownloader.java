@@ -71,11 +71,12 @@ public class EndevorDownloader extends AbstractDownloader
 		PrintStream logger = listener.getLogger();
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
         VirtualChannel vChannel = launcher.getChannel();
-        
+
         //Check CLI compatibility
         FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
-		CLIVersionUtils.checkCLICompatibility(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
-        
+		String cliVersion = CLIVersionUtils.getCLIVersion(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
+		CLIVersionUtils.checkCLICompatibility(cliVersion, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
+
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
 		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;
@@ -116,7 +117,13 @@ public class EndevorDownloader extends AbstractDownloader
 		args.add(CommonConstants.USERID_PARM, userId);
 		args.add(CommonConstants.PW_PARM);
 		args.add(password, true);
-		args.add(CommonConstants.PROTOCOL_PARM, protocol);
+
+		// do not pass protocol on command line if null, empty, blank, or 'None'
+		if (StringUtils.isNotBlank(protocol) && !StringUtils.equalsIgnoreCase(protocol, "none")) { //$NON-NLS-1$
+			CLIVersionUtils.checkProtocolSupported(cliVersion);
+			args.add(CommonConstants.PROTOCOL_PARM, protocol);
+		}
+
 		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
 		args.add(CommonConstants.TIMEOUT_PARM, timeout);
 		args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.ENDEVOR);
