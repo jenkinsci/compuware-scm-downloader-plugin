@@ -60,10 +60,11 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private String m_filterFiles = FALSE;
 	private String m_filterFolders = FALSE;
 	private boolean ispwDownloadAll = false;
+	private String m_targetFolder;
 
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName, boolean ispwDownloadAll)
+			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName, boolean ispwDownloadAll, String targetFolder)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -71,6 +72,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		m_serverApplication = getTrimmedValue(serverApplication);
 		m_serverLevel = getTrimmedValue(serverLevel);
 		m_levelOption = getTrimmedValue(levelOption);
+		m_targetFolder = getTrimmedValue(targetFolder);
 
 		if (componentType != null && !componentType.isEmpty())
 		{
@@ -175,6 +177,11 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	public boolean getIspwDownloadAll()
 	{
 		return ispwDownloadAll;
+	}
+	
+	public String getTargetFolder()
+	{
+		return m_targetFolder;
 	}
 
 	/**
