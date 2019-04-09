@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -60,10 +60,39 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private String m_filterFiles = FALSE;
 	private String m_filterFolders = FALSE;
 	private boolean ispwDownloadAll = false;
+	private String m_targetFolder;
 
+	/**
+	 * Gets the data from the configuration page. The parameter names must match the field names set by
+	 * <code>config.jelly</code>.
+	 * 
+	 * @param connectionId
+	 *            - a unique host connection identifier
+	 * @param credentialsId
+	 *            - unique id of the selected credential
+	 * @param serverConfig
+	 *            - runtime configuration
+	 * @param serverStream
+	 *            - selected ispw stream
+	 * @param serverApplication
+	 *            - selected ispw application
+	 * @param serverLevel
+	 *            - selected ispw level
+	 * @param levelOption
+	 *            - 0 (all in selected level only) or 1 (all in selected level and above)
+	 * @param componentType
+	 *            - The component type to filter for
+	 * @param folderName
+	 *            - comma-delimited folder names to filter on
+	 * @param ispwDownloadAll
+	 *            - whether to keep files in sync within the specified target Folder
+	 * @param targetFolder
+	 *            - source download location
+	 */
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName, boolean ispwDownloadAll)
+			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName,
+			boolean ispwDownloadAll, String targetFolder)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -71,6 +100,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		m_serverApplication = getTrimmedValue(serverApplication);
 		m_serverLevel = getTrimmedValue(serverLevel);
 		m_levelOption = getTrimmedValue(levelOption);
+		m_targetFolder = getTrimmedValue(targetFolder);
 
 		if (componentType != null && !componentType.isEmpty())
 		{
@@ -82,7 +112,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 			m_filterFolders = TRUE;
 			m_folderName = getTrimmedValue(folderName);
 		}
-		
+
 		this.ispwDownloadAll = ispwDownloadAll;
 	}
 
@@ -178,6 +208,16 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	}
 
 	/**
+	 * Gets the value of the targetFolder
+	 * 
+	 * @return string containing the targetFolder location
+	 */
+	public String getTargetFolder()
+	{
+		return m_targetFolder;
+	}
+
+	/**
 	 * Validates the configuration parameters.
 	 *
 	 * @param launcher
@@ -257,7 +297,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		}
 
 	}
-	
+
 	/**
 	 * DescriptorImpl is used to create instances of <code>IspwConfiguration</code>. It also contains the global configuration
 	 * options as fields, just like the <code>IspwConfiguration</code> contains the configuration options for a job

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -91,7 +91,6 @@ public class IspwDownloader extends AbstractDownloader
 		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
-		targetFolder = targetFolder.replaceAll("'", StringUtils.EMPTY); //$NON-NLS-1$
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
 		logger.println("TopazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
 
@@ -117,6 +116,14 @@ public class IspwDownloader extends AbstractDownloader
 			filterFiles = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFiles());
 			filterFolders = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFolders());
 			downloadAll = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadAll()));
+			
+			String sourceLocation = ispwRepositoryConfig.getTargetFolder();
+			if (StringUtils.isNotEmpty(sourceLocation))
+			{
+				targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());
+				targetFolder = targetFolder.replaceAll("'", StringUtils.EMPTY); //$NON-NLS-1$
+				logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
+			}
 		}
 		else if (ispwConfiguration instanceof IspwContainerConfiguration)
 		{

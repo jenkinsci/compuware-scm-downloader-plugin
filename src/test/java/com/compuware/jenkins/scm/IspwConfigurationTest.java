@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2018 Compuware Corporation
+ * Copyright (c) 2015 - 2019 Compuware Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -45,6 +45,7 @@ public class IspwConfigurationTest
 	private static final String EXPECTED_COMPONENT_TYPE = "COB";
 	private static final String EXPECTED_FOLDER_NAME = "TREXX12";
 	private static final boolean EXPECTED_DOWNLOAD_ALL = true;
+	private static final String EXPECTED_TARGET_FOLDER = "folder1\\folder2";
 
 	// Member Variables
 	@Rule
@@ -75,7 +76,7 @@ public class IspwConfigurationTest
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
-				EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL);
+				EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -110,6 +111,9 @@ public class IspwConfigurationTest
 		
 		assertThat(String.format("Expected IspwConfiguration.getIspwDownloadAll() to return %s", EXPECTED_DOWNLOAD_ALL),
 				scm.getIspwDownloadAll(), is(equalTo(EXPECTED_DOWNLOAD_ALL)));
+		
+		assertThat(String.format("Expected log to contain targetFolder value: \"%s\".", EXPECTED_TARGET_FOLDER),
+				scm.getTargetFolder(), is(equalTo(EXPECTED_TARGET_FOLDER)));
 	}
 
 	/**
@@ -126,7 +130,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL));
+					EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -181,6 +185,9 @@ public class IspwConfigurationTest
 				
 				assertThat(String.format("Expected log to contain downloadAll value: \"%s\".", EXPECTED_DOWNLOAD_ALL), logFileOutput,
 						containsString(Boolean.toString(EXPECTED_DOWNLOAD_ALL)));
+				
+				assertThat(String.format("Expected log to contain targetFolder value: \"%s\".", EXPECTED_TARGET_FOLDER), logFileOutput,
+						containsString(EXPECTED_TARGET_FOLDER));
 			}
 		}
 		catch (Exception e)
@@ -206,9 +213,9 @@ public class IspwConfigurationTest
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
-					EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL);
+					EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterFiles,filterFolders,ispwDownloadAll");
+					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterFiles,filterFolders,ispwDownloadAll,targetFolder");
 		}
 		catch (Exception e)
 		{
