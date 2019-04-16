@@ -84,6 +84,7 @@ public class IspwDownloader extends AbstractDownloader
 		HostConnection connection = globalConfig.getHostConnection(ispwConfiguration.getConnectionId());
 		String host = ArgumentUtils.escapeForScript(connection.getHost());
 		String port = ArgumentUtils.escapeForScript(connection.getPort());
+		String protocol = connection.getProtocol();
 		String codePage = connection.getCodePage();
 		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
 		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
@@ -140,6 +141,7 @@ public class IspwDownloader extends AbstractDownloader
 		args.add(CommonConstants.USERID_PARM, userId);
 		args.add(CommonConstants.PW_PARM);
 		args.add(password, true);
+		args.add(CommonConstants.PROTOCOL_PARM, protocol);
 		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
 		args.add(CommonConstants.TIMEOUT_PARM, timeout);
 		args.add(CommonConstants.TARGET_FOLDER_PARM, targetFolder);
