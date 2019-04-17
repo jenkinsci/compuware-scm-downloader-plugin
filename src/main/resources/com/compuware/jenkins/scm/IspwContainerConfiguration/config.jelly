@@ -13,8 +13,8 @@
 		<c:select/>
 	</f:entry>
 	<f:entry title="${%targetFolder}" field="targetFolder" help="/plugin/compuware-scm-downloader/help-targetFolder.html">
-+    	<f:textbox/>
-+	</f:entry>
+    	<f:textbox/>
+	</f:entry>
 	<f:block>
 		<h3 style="margin-bottom:0px">${%filter}</h3>
 	</f:block>
