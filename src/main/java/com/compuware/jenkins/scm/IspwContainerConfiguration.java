@@ -56,6 +56,29 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private boolean ispwDownloadAll = false;
 	private String ispwTargetFolder;
 
+	/**
+	 * Gets the data from the configuration page. The parameter names must match the field names set by
+	 * <code>config.jelly</code>.
+	 * 
+	 * @param connectionId
+	 *            - a unique host connection identifier
+	 * @param credentialsId
+	 *            - unique id of the selected credential
+	 * @param serverConfig
+	 *            - runtime configuration
+	 * @param containerName
+	 *            - selected ispw container name
+	 * @param containerType
+	 *            - selected ispw container type (assignment, release...)
+	 * @param serverLevel
+	 *            - selected ispw level
+	 * @param componentType
+	 *            - The component type to filter for
+	 * @param ispwDownloadAll
+	 *            - whether to keep files in sync within the specified target Folder
+	 * @param targetFolder
+	 *            - source download location
+	 */
 	@DataBoundConstructor
 	public IspwContainerConfiguration(String connectionId, String credentialsId, String serverConfig, String containerName,
 			String containerType, String serverLevel, String componentType, boolean ispwDownloadAll, String targetFolder)
