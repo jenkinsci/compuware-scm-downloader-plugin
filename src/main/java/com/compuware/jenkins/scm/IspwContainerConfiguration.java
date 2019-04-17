@@ -54,10 +54,11 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private String ispwServerLevel = StringUtils.EMPTY;
 	private String ispwComponentType = StringUtils.EMPTY;
 	private boolean ispwDownloadAll = false;
+	private String ispwTargetFolder;
 
 	@DataBoundConstructor
 	public IspwContainerConfiguration(String connectionId, String credentialsId, String serverConfig, String containerName,
-			String containerType, String serverLevel, String componentType, boolean ispwDownloadAll)
+			String containerType, String serverLevel, String componentType, boolean ispwDownloadAll, String targetFolder)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -65,6 +66,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 		ispwContainerName = getTrimmedValue(containerName);
 		ispwServerLevel = getTrimmedValue(serverLevel);
 		ispwComponentType = getTrimmedValue(componentType);
+		ispwTargetFolder = getTrimmedValue(targetFolder);
 		this.ispwDownloadAll = ispwDownloadAll;
 	}
 
@@ -117,6 +119,16 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	public boolean getIspwDownloadAll()
 	{
 		return ispwDownloadAll;
+	}
+	
+	/**
+	 * Gets the value of the targetFolder
+	 * 
+	 * @return string containing the targetFolder location
+	 */
+	public String getTargetFolder()
+	{
+		return ispwTargetFolder;
 	}
 	
 	/**

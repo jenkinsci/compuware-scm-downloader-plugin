@@ -129,6 +129,14 @@ public class IspwDownloader extends AbstractDownloader
 		else if (ispwConfiguration instanceof IspwContainerConfiguration)
 		{
 			ispwContainerConfig = (IspwContainerConfiguration) ispwConfiguration;
+			
+			String sourceLocation = ispwContainerConfig.getTargetFolder();
+			if (StringUtils.isNotEmpty(sourceLocation))
+			{
+				targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());
+				targetFolder = targetFolder.replaceAll("'", StringUtils.EMPTY); //$NON-NLS-1$
+				logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
+			}
 
 			containerName = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerName());
 			containerType = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerType());
