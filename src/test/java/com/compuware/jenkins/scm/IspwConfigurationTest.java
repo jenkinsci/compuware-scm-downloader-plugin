@@ -112,7 +112,7 @@ public class IspwConfigurationTest
 		assertThat(String.format("Expected IspwConfiguration.getIspwDownloadAll() to return %s", EXPECTED_DOWNLOAD_ALL),
 				scm.getIspwDownloadAll(), is(equalTo(EXPECTED_DOWNLOAD_ALL)));
 		
-		assertThat(String.format("Expected log to contain targetFolder value: \"%s\".", EXPECTED_TARGET_FOLDER),
+		assertThat(String.format("Expected IspwConfiguration.getTargetFolder() to return %s", EXPECTED_TARGET_FOLDER),
 				scm.getTargetFolder(), is(equalTo(EXPECTED_TARGET_FOLDER)));
 	}
 
