@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+import javax.annotation.CheckForNull;
 import org.apache.commons.lang.StringUtils;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
@@ -64,6 +65,7 @@ public class EndevorDownloader extends AbstractDownloader
 	 * @see com.compuware.jenkins.scm.AbstractDownloader#getSource(hudson.model.AbstractBuild, hudson.Launcher, hudson.FilePath, hudson.model.BuildListener, java.io.File, java.lang.String)
 	 */
 	@Override
+	@CheckForNull
 	public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
 			File changelogFile) throws InterruptedException, IOException
 	{
