@@ -101,7 +101,7 @@ public abstract class AbstractIspwConfiguration extends AbstractConfiguration
 	@Override
 	public ChangeLogParser createChangeLogParser()
 	{
-		return null;
+		return new CpwrChangeLogParser();
 	}
 
 	/**
