@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
-import javax.annotation.CheckForNull;
 import org.apache.commons.lang.StringUtils;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
@@ -64,13 +63,14 @@ public class PdsDownloader extends AbstractDownloader
 	 * @see com.compuware.jenkins.scm.AbstractDownloader#getSource(hudson.model.Run, hudson.Launcher, hudson.FilePath, hudson.model.TaskListener, java.io.File)
 	 */
 	@Override
-	@CheckForNull
 	public boolean getSource(Run<?, ?> build, Launcher launcher, FilePath workspaceFilePath, TaskListener listener,
 			File changelogFile) throws InterruptedException, IOException
 	{
 		// obtain argument values to pass to the CLI
 		PrintStream logger = listener.getLogger();
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
+		
+		assert launcher != null;
         VirtualChannel vChannel = launcher.getChannel();
 
         //Check CLI compatibility
@@ -78,6 +78,7 @@ public class PdsDownloader extends AbstractDownloader
 		String cliVersion = CLIVersionUtils.getCLIVersion(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
 		CLIVersionUtils.checkCLICompatibility(cliVersion, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
 
+		assert vChannel != null;
         Properties remoteProperties = vChannel.call(new RemoteSystemProperties());
 		String remoteFileSeparator = remoteProperties.getProperty(CommonConstants.FILE_SEPARATOR_PROPERTY_KEY);
 		String osFile = launcher.isUnix() ? ScmConstants.SCM_DOWNLOADER_CLI_SH : ScmConstants.SCM_DOWNLOADER_CLI_BAT;
