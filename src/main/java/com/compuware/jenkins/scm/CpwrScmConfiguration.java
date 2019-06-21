@@ -75,7 +75,7 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 	@Override
 	public ChangeLogParser createChangeLogParser()
 	{
-		return null;
+		return new CpwrChangeLogParser();
 	}
 
 	/**
