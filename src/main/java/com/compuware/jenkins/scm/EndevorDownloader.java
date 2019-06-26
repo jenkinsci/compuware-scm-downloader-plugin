@@ -23,7 +23,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -31,6 +34,7 @@ import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -46,7 +50,7 @@ import hudson.util.ArgumentListBuilder;
 public class EndevorDownloader extends AbstractDownloader
 {
 	// Member Variables
-	private EndevorConfiguration m_endevorConfig;
+	private EndevorConfiguration endevorConfig;
 
 	/**
 	 * Constructor.
@@ -56,7 +60,7 @@ public class EndevorDownloader extends AbstractDownloader
 	 */
 	public EndevorDownloader(EndevorConfiguration config)
 	{
-		m_endevorConfig = config;
+		endevorConfig = config;
 	}
 
 	/* 
@@ -88,29 +92,31 @@ public class EndevorDownloader extends AbstractDownloader
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
-		HostConnection connection = globalConfig.getHostConnection(m_endevorConfig.getConnectionId());
+		HostConnection connection = globalConfig.getHostConnection(endevorConfig.getConnectionId());
 		String host = ArgumentUtils.escapeForScript(connection.getHost());
 		String port = ArgumentUtils.escapeForScript(connection.getPort());
 		String protocol = connection.getProtocol();
 		String codePage = connection.getCodePage();
 		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
 		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
-				m_endevorConfig.getCredentialsId());
+				endevorConfig.getCredentialsId());
 		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
 		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
-		String sourceLocation = m_endevorConfig.getTargetFolder();
+		String sourceLocation = endevorConfig.getTargetFolder();
 		if (StringUtils.isNotEmpty(sourceLocation))
 		{
-			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());;
+			targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());
 			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 		}
 
-		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
+		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE
+				+ UUID.randomUUID().toString();
+		FilePath topazDataDir = new FilePath(vChannel, topazCliWorkspace);
 		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
-		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(m_endevorConfig.getFilterPattern()));
-		String fileExtension = ArgumentUtils.escapeForScript(m_endevorConfig.getFileExtension());
+		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(endevorConfig.getFilterPattern()));
+		String fileExtension = ArgumentUtils.escapeForScript(endevorConfig.getFileExtension());
 
 		// build the list of arguments to pass to the CLI
 		ArgumentListBuilder args = new ArgumentListBuilder();
@@ -149,6 +155,7 @@ public class EndevorDownloader extends AbstractDownloader
 		else
 		{
 			logger.println("Call " + osFile + " exited with value = " + exitValue); //$NON-NLS-1$ //$NON-NLS-2$
+			topazDataDir.deleteRecursive();
 			return true;
 		}
 	}

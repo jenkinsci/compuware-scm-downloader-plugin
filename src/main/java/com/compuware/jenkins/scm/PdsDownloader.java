@@ -22,7 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -30,6 +33,7 @@ import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -106,7 +110,9 @@ public class PdsDownloader extends AbstractDownloader
 			logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 		}
 
-		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
+		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE
+				+ UUID.randomUUID().toString();
+		FilePath topazDataDir = new FilePath(vChannel, topazCliWorkspace);
 		logger.println("topazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
 
 		String cdDatasets = ArgumentUtils.escapeForScript(convertFilterPattern(pdsConfig.getFilterPattern()));
@@ -149,6 +155,7 @@ public class PdsDownloader extends AbstractDownloader
 		else
 		{
 			logger.println("Call " + osFile + " exited with value = " + exitValue); //$NON-NLS-1$ //$NON-NLS-2$
+			topazDataDir.deleteRecursive();
 			return true;
 		}
 	}
