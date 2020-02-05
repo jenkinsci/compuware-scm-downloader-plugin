@@ -60,6 +60,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private String m_filterFiles = FALSE;
 	private String m_filterFolders = FALSE;
 	private boolean ispwDownloadAll = false;
+	private boolean ispwDownloadIncl = false;
 	private String m_targetFolder;
 
 	/**
@@ -88,11 +89,13 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	 *            - whether to keep files in sync within the specified target Folder
 	 * @param targetFolder
 	 *            - source download location
+	 * @param ispwDownloadIncl
+	 *            - whether to download the INCL impacts
 	 */
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
 			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName,
-			boolean ispwDownloadAll, String targetFolder)
+			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -114,6 +117,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		}
 
 		this.ispwDownloadAll = ispwDownloadAll;
+		this.ispwDownloadIncl = ispwDownloadIncl;
 	}
 
 	/**
@@ -215,6 +219,15 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	public String getTargetFolder()
 	{
 		return m_targetFolder;
+	}
+	
+	/**
+	 * This field determines whether or not to download the INCL impacts
+	 * 
+	 * @return the ispwDownloadAll
+	 */
+	public boolean getIspwDownloadIncl() {
+		return ispwDownloadIncl;
 	}
 
 	/**

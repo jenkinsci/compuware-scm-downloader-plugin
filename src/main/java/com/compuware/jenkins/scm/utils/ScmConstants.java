@@ -55,6 +55,7 @@ public class ScmConstants
 	public static final String ISPW_FILTER_FILES_PARAM = "-ispwFilterFiles";
 	public static final String ISPW_FILTER_FOLDERS_PARAM = "-ispwFilterFolders";
 	public static final String ISPW_DOWNLOAD_ALL_PARAM = "-ispwDownloadAll";
+	public static final String ISPW_DOWNLOAD_INCL_PARM = "-ispwDownloadIncl";
 
 	public static final String SCM_DOWNLOADER_CLI_BAT = "SCMDownloaderCLI.bat";
 	public static final String SCM_DOWNLOADER_CLI_SH = "SCMDownloaderCLI.sh";
