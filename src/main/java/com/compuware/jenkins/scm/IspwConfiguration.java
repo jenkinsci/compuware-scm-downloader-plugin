@@ -226,7 +226,8 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	 * 
 	 * @return the ispwDownloadAll
 	 */
-	public boolean getIspwDownloadIncl() {
+	public boolean getIspwDownloadIncl() 
+	{
 		return ispwDownloadIncl;
 	}
 
