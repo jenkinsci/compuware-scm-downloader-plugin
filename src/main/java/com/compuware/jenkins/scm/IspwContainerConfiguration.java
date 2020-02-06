@@ -54,7 +54,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private String ispwServerLevel = StringUtils.EMPTY;
 	private String ispwComponentType = StringUtils.EMPTY;
 	private boolean ispwDownloadAll = false;
-	private boolean ispwDownloadIncl = false;
+	private boolean ispwDownloadIncl = true;
 	private String ispwTargetFolder;
 
 	/**

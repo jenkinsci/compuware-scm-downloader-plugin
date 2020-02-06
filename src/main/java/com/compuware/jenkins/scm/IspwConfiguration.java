@@ -60,7 +60,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private String m_filterFiles = FALSE;
 	private String m_filterFolders = FALSE;
 	private boolean ispwDownloadAll = false;
-	private boolean ispwDownloadIncl = false;
+	private boolean ispwDownloadIncl = true;
 	private String m_targetFolder;
 
 	/**
