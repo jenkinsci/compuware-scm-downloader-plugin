@@ -147,7 +147,7 @@ public class IspwDownloader extends AbstractDownloader
 			containerName = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerName());
 			containerType = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerType());
 			downloadAll = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadAll()));
-			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadIncl()));
+			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadIncl()));
 		}
 		// build the list of arguments to pass to the CLI
 		args.add(cliScriptFileRemote);
