@@ -33,7 +33,10 @@ import com.compuware.jenkins.common.configuration.HostConnection;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
 import hudson.model.Item;
+import hudson.model.Items;
 import hudson.model.Job;
 import hudson.model.TaskListener;
 import hudson.scm.SCMDescriptor;
@@ -54,7 +57,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private String ispwServerLevel = StringUtils.EMPTY;
 	private String ispwComponentType = StringUtils.EMPTY;
 	private boolean ispwDownloadAll = false;
-	private boolean ispwDownloadIncl = true;
+	private boolean ispwDownloadIncl = DescriptorImpl.ispwDownloadIncl;
 	private String ispwTargetFolder;
 
 	/**
@@ -228,6 +231,8 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	@Extension
 	public static class DescriptorImpl extends SCMDescriptor<IspwContainerConfiguration>
 	{
+		public static final boolean ispwDownloadIncl = true;
+		
 		public DescriptorImpl()
 		{
 			super(IspwContainerConfiguration.class, null);
@@ -439,6 +444,11 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 
 			return containerTypeModel;
 		}
+	}
+	
+	@Initializer(before = InitMilestone.PLUGINS_STARTED)
+	public static void xStreamCompatibility() {
+		Items.XSTREAM2.aliasField("ispwDownloadIncl", IspwContainerConfiguration.class, "ispwDownloadIncl");		
 	}
 
 }
