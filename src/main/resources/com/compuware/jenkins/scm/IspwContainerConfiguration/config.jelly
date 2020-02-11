@@ -37,6 +37,9 @@
 	<f:entry title="${%downloadUnchangedSource}" field="ispwDownloadAll" help="/plugin/compuware-scm-downloader/ispw/help-downloadAll.html">
     	<f:checkbox checked="${ispwDownloadAll}"/>
 	</f:entry>
+	<f:entry title="${%downloadIncludedImpacts}" field="ispwDownloadIncl" help="/plugin/compuware-scm-downloader/ispw/help-downloadImpacts.html">
+    	<f:checkbox default="${descriptor.ispwDownloadIncl}"/>
+	</f:entry>
 	<f:block>
 		<hr size="1" color="Gainsboro"/>
 	</f:block>
