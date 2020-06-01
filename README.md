@@ -84,9 +84,9 @@ Do the following:
 
 Click **Save**.
 
-When the project or job runs, files are downloaded to the location in the **Source download location** field or, if that field was left blank, to the default location (the project workspace location).
+Run the job, which downloads files to the location in the **Source download location** field or, if that field was left blank, to the default location (the project workspace location).
 
-![](docs/images/info.svg) Optionally, to perform SonarQube analysis, install the SonarQube plugin and refer to the documentation for the SonarQube plugin at https://jenkins-ci.org/
+![](docs/images/info.svg) Optionally, to perform SonarQube analysis, install the SonarQube plugin and refer to the documentation for the SonarQube plugin at [https://jenkins-ci.org](https://jenkins-ci.org/).
 
 <img src="docs/images/download.pds.members.png" height="250"/>
 
@@ -108,7 +108,7 @@ This source code management action has following parameters:
 
 ![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
-Do the following in **Filter** section to identify ISPW members to be downloaded:
+Do the following in the **Filter** section to identify ISPW members to be downloaded:
 
 - **Container name** : Enter the name of the container to target for the download.
 
@@ -124,12 +124,11 @@ Do the following in **Filter** section to identify ISPW members to be downloaded
 
 Click **Save**.
 
-When the project or job runs, by default the following occurs:
+Run the job, which by default the following occurs:
 - Mainframe source is downloaded to the project's or job's workspace into an <ISPW Application name>/MF_Source folder.
 - Folder components are downloaded into an <ISPW Application name> folder.
 
-![](docs/images/info.svg) Optionally, to perform SonarQube analysis, install the SonarQube plugin and refer to the documentation for the SonarQube plugin at https://jenkins-ci.org/.
-Downl
+![](docs/images/info.svg) Optionally, to perform SonarQube analysis, install the SonarQube plugin and refer to the documentation for the SonarQube plugin at [https://jenkins-ci.org](https://jenkins-ci.org/).
 
 <img src="docs/images/download.ispw.container.members.png" height="350"/>
 
@@ -151,7 +150,7 @@ This source code management action has following parameters:
 
 ![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
-Do the following in **Filter** section to identify ISPW members to be downloaded:
+Do the following in the **Filter** section to identify ISPW members to be downloaded:
 
 - **Stream** : Enter the two- to eight-character code that defines the application structure with which the application is associated.
 - ** Application** : Enter the container's primary application code. Containers may include components from multiple applications.
@@ -161,19 +160,19 @@ Do the following in **Filter** section to identify ISPW members to be downloaded
      - **First found in level and above** : Select to display the first version found of each component at the selected level and above. In other words, if there are multiple versions in the life cycle, display one version of the component that is the first one found at the selected level and any levels in the path above it.
 - **Component types** and/or **Application root folder names** : Optionally use to identify components and application root folders to download.
       - To download a folder that matches the name specified (and all of its contents) and download all components outside of a folder that match the specified type, enter values in both the **Component types** and **Application root folder names** fields. Enter in the **Component types** field the component type (such as COB, COPY, or JOB) on which to filter. Enter in the **Application root folder names** field the name of the folder on which to filter. For example, entering **COB** in the Component types field and **FolderX** in the **Application root folder names** field will download FolderX and all of its contents, as well as all of the COB files that exist outside of folders.
-      - To download all components of a specified type regardless of whether they are within folders, use only the Component types field by entering the component type (such as COB, COPY, or JOB) on which to filter.
+      - To download all components of a specified type regardless of whether they are within folders, use only the **Component types** field by entering the component type (such as COB, COPY, or JOB) on which to filter.
       - To download a folder that matches the name specified (and all of its contents), as well as all components that are not within a folder, use only the **Application root folder names** field by entering the name of the folder on which to filter.
       - To download all components and folders in the application and level selected, leave both fields empty.
-![](docs/images/info.svg) To download multiple folders or types, comma-separate the values.
-- **Force download of unchanged source** : Optionally use to indicate that all source matching the current filter should be downloaded, regardless of whether it has been changed recently or not. If this box is left unchecked, it will delete any files in the workspace that no longer match the filter specified above. Leaving it unchecked will also only download source that has been changed since the last time the job was run.
+      ![](docs/images/info.svg) To download multiple folders or types, comma-separate the values.
+      - **Force download of unchanged source** : Optionally use to indicate that all source matching the current filter should be downloaded, regardless of whether it has been changed recently or not. If this box is left unchecked, it will delete any files in the workspace that no longer match the filter specified above. Leaving it unchecked will also only download source that has been changed since the last time the job was run.
 
 Click **Save**.
 
-When the project or job runs, by default the following occurs:
+Run the job, which by default the following occurs:
 - Mainframe source is downloaded to the project's or job's workspace into an <ISPW Application name>/MF_Source folder.
 - Folder components are downloaded into an <ISPW Application name> folder.
 
-![](docs/images/info.svg) Optionally, to perform SonarQube analysis, install the SonarQube plugin and refer to the documentation for the SonarQube plugin at https://jenkins-ci.org/.
+![](docs/images/info.svg) Optionally, to perform SonarQube analysis, install the SonarQube plugin and refer to the documentation for the SonarQube plugin at [https://jenkins-ci.org](https://jenkins-ci.org/).
 
 <img src="docs/images/download.ispw.repository.members.png" height="400"/>
 
