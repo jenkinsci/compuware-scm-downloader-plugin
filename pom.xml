@@ -21,7 +21,7 @@
 
   <name>Compuware Source Code Download for Endevor, PDS, and ISPW</name>
   <description>Compuware Source Code Download for Endevor, PDS, and ISPW</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Compuware+Source+Code+Download+for+Endevor%2C+PDS%2C+and+ISPW+Plugin</url>
+  <url>https://github.com/jenkinsci/compuware-scm-downloader-plugin</url>
   <licenses>
     <license>
       <name>MIT License</name>
