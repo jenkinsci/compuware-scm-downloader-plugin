@@ -1,6 +1,18 @@
 Change Log
 =========
 
+2.0.10
+------
+
+- Version history moved out of Wiki content and linked to CHANGELOG.MD; subsequent changes will not be tracked in this file, but in [GitHub releases](https://github.com/jenkinsci/compuware-scm-downloader-plugin/releases) instead.
+
+2.0.9
+------
+
+- Added option to download related Includes (Copybooks) for Source members on the ISPW Container and Repository download panels.
+
+- Known Issue: Nested Copybooks will not be downloaded. There will be a fix to ISPW on the mainframe for this. When it is available the fix number will be posted here.
+
 2.0.8
 ------
 
