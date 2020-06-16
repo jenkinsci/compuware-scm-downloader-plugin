@@ -1,10 +1,10 @@
 Change Log
 =========
 
-2.0.10
+2.0.9 and later versions
 ------
 
-- Version history moved out of Wiki content and linked to CHANGELOG.MD; subsequent changes will not be tracked in this file, but in [GitHub releases](https://github.com/jenkinsci/compuware-scm-downloader-plugin/releases) instead.
+- Changes are no longer tracked in this file; they are now tracked in [GitHub releases](https://github.com/jenkinsci/compuware-scm-downloader-plugin/releases) instead.
 
 2.0.9
 ------
