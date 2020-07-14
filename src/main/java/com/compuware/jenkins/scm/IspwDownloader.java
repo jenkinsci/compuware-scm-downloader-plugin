@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
+ * (c) Copyright 2019, 2020 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -109,7 +110,12 @@ public class IspwDownloader extends AbstractDownloader
 		String containerName = StringUtils.EMPTY;
 		String containerType = StringUtils.EMPTY;
 		String downloadAll = StringUtils.EMPTY;
+		
+		boolean ispwDownloadInclBool = false;
 		String ispwDownloadIncl = StringUtils.EMPTY;
+		
+		boolean ispwDownloadWithCompileOnlyBool = false;
+		String ispwDownloadWithCompileOnly = StringUtils.EMPTY;
 
 		if (ispwConfiguration instanceof IspwConfiguration)
 		{
@@ -122,7 +128,12 @@ public class IspwDownloader extends AbstractDownloader
 			filterFiles = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFiles());
 			filterFolders = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFolders());
 			downloadAll = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadAll()));
+			
+			ispwDownloadInclBool = ispwRepositoryConfig.getIspwDownloadIncl();
 			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadIncl()));
+			
+			ispwDownloadWithCompileOnlyBool = ispwRepositoryConfig.getIspwDownloadWithCompileOnly();
+			ispwDownloadWithCompileOnly = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadWithCompileOnly()));
 			
 			String sourceLocation = ispwRepositoryConfig.getTargetFolder();
 			if (StringUtils.isNotEmpty(sourceLocation))
@@ -147,6 +158,8 @@ public class IspwDownloader extends AbstractDownloader
 			containerName = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerName());
 			containerType = ArgumentUtils.escapeForScript(ispwContainerConfig.getContainerType());
 			downloadAll = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadAll()));
+			
+			ispwDownloadInclBool = ispwContainerConfig.getIspwDownloadIncl();
 			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadIncl()));
 		}
 		// build the list of arguments to pass to the CLI
@@ -196,6 +209,11 @@ public class IspwDownloader extends AbstractDownloader
 				componentType = ArgumentUtils.escapeForScript(componentType);
 				args.add(ScmConstants.ISPW_COMPONENT_TYPE_PARAM, componentType);
 			}
+			
+			if (ispwDownloadWithCompileOnlyBool)
+			{
+				args.add(ScmConstants.ISPW_DOWNLOAD_WITH_COMPILE_ONLY, ispwDownloadWithCompileOnly);
+			}
 		}
 		else if (ispwContainerConfig != null)
 		{
@@ -221,7 +239,12 @@ public class IspwDownloader extends AbstractDownloader
 		}
 
 		args.add(ScmConstants.ISPW_DOWNLOAD_ALL_PARAM, downloadAll);
-		args.add(ScmConstants.ISPW_DOWNLOAD_INCL_PARM, ispwDownloadIncl);
+		
+		//only add the option if true to keep compatible with older version
+		if(ispwDownloadInclBool)
+		{
+			args.add(ScmConstants.ISPW_DOWNLOAD_INCL_PARM, ispwDownloadIncl);
+		}
 		
 		// create the CLI workspace (in case it doesn't already exist)
 		EnvVars env = build.getEnvironment(listener);

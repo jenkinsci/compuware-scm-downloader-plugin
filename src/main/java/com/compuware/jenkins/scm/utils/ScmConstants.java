@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2018 Compuware Corporation
+ * (c) Copyright 2019, 2020 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -56,6 +57,7 @@ public class ScmConstants
 	public static final String ISPW_FILTER_FOLDERS_PARAM = "-ispwFilterFolders";
 	public static final String ISPW_DOWNLOAD_ALL_PARAM = "-ispwDownloadAll";
 	public static final String ISPW_DOWNLOAD_INCL_PARM = "-ispwDownloadIncl";
+	public static final String ISPW_DOWNLOAD_WITH_COMPILE_ONLY = "-ispwDownloadWithCompileOnly";
 
 	public static final String SCM_DOWNLOADER_CLI_BAT = "SCMDownloaderCLI.bat";
 	public static final String SCM_DOWNLOADER_CLI_SH = "SCMDownloaderCLI.sh";
