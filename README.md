@@ -26,31 +26,7 @@ The following are required to use this plugin:
 
 In order to download Endevor, PDS, and ISPW members you will need to point to an installed Topaz Workbench Command Line Interface (CLI). The Topaz Workbench CLI will work with host connection(s) you also need to configure to download Endevor, PDS, and ISPW members.
 
-Navigate to Manage Jenkins / Configure System and go to Compuware Configurations section.
-
-- **Windows Topaz Workbench CLI home** : Point to the Windows installation location of the CLI. If necessary, change the default values given to match the correct installation location.
-
-- **Linux Topaz Workbench CLI home** : Point to the Linux installation location of the CLI. If necessary, change the default values given to match the correct installation location.
-
-![](docs/images/info.svg) The Topaz Workbench CLI must be installed on the machine that is configured to run the job.
-
-**Host connections**
-
-![](docs/images/info.svg) If no host connection appears in the Host Connections section, click Add Host Connection.
-
-- **Description** : Enter a description of the connection.
-
-- **Host:port** : Enter the z/OS host and port to connect to.
-
-- **Encryption protocol** : Select the desired encryption protocol to be used for this connection. The encryption protocol is used to encrypt data sent to and from the host. The default is \'None\'.
-
-- **Code page** : Select the desired code page to be used for this connection. The code page is used to translate data sent to and from the host. The default is 1047.
-
-- **Read/write timeout (minutes)** : Enter the number of minutes for the plugin to wait for a response from the host before timing out.
-
-- **CES URL** : Optionally, enter a URL for Compuware Enterprise Services (CES). This URL is used by other Compuware plugins that leverage REST APIs hosted by CES, for example Compuware's ISPW.
-
-<img src="docs/images/compuware.config.png" height="400"/>
+- See [Configuring for Topaz Workbench CLI & Host Connections](https://github.com/jenkinsci/compuware-common-configuration-plugin/blob/master/README.md#user-content-configuring-for-topaz-workbench-cli--host-connections)
 
 ### Downloading Endevor or PDS members
 
