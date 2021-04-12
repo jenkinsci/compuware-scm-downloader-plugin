@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
+ * (c) Copyright 2015-2019, 2021 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -22,11 +23,14 @@ package com.compuware.jenkins.scm;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.security.KeyStoreException;
 import java.util.Properties;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.cloudbees.plugins.credentials.common.StandardCertificateCredentials;
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
@@ -98,10 +102,24 @@ public class EndevorDownloader extends AbstractDownloader
 		String protocol = connection.getProtocol();
 		String codePage = connection.getCodePage();
 		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
-		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
+		StandardCredentials  credentials = globalConfig.getUserLoginInformation(build.getParent(),
 				endevorConfig.getCredentialsId());
-		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
-		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
+		String password = null;
+		String userId = null;
+		String  certificateStr = null;
+		if (credentials instanceof StandardUsernamePasswordCredentials ) {
+			userId = ArgumentUtils.escapeForScript(((StandardUsernamePasswordCredentials) credentials).getUsername());
+			password = ArgumentUtils.escapeForScript(((StandardUsernamePasswordCredentials) credentials).getPassword().getPlainText());	
+		}
+		if(credentials instanceof StandardCertificateCredentials){
+			StandardCertificateCredentials credentialsCer = (StandardCertificateCredentials)credentials;
+			try {
+				certificateStr = globalConfig.getCertificate(credentialsCer);
+			} catch (KeyStoreException e) {
+				throw new AbortException(String.format("Unable to get the certificate Exception: %s", e.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			password = ArgumentUtils.escapeForScript(credentialsCer.getPassword().getPlainText());
+		}
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
 		String sourceLocation = endevorConfig.getTargetFolder();
@@ -123,7 +141,17 @@ public class EndevorDownloader extends AbstractDownloader
 		args.add(cliScriptFileRemote);
 		args.add(CommonConstants.HOST_PARM, host);
 		args.add(CommonConstants.PORT_PARM, port);
-		args.add(CommonConstants.USERID_PARM, userId);
+		if(userId != null)
+		{
+			args.add(CommonConstants.USERID_PARM, userId);
+		}
+		if(certificateStr!= null)
+		{
+			args.add(CommonConstants.CERT_PARM, certificateStr);
+		}
+		else {
+			args.add(CommonConstants.CERT_PARM, "");
+		}
 		args.add(CommonConstants.PW_PARM);
 		args.add(password, true);
 
