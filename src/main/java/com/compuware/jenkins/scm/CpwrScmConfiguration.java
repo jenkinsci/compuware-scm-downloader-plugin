@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2018 Compuware Corporation
+ * (c) Copyright 2015 - 2018, 2021 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -19,20 +20,17 @@ package com.compuware.jenkins.scm;
 import java.io.PrintStream;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-import com.cloudbees.plugins.credentials.matchers.IdMatcher;
+
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
+
 import hudson.Launcher;
 import hudson.model.Item;
 import hudson.model.TaskListener;
 import hudson.scm.ChangeLogParser;
-import hudson.security.ACL;
 
 /**
  * Abstract class containing common data and methods for SCM configurations.
@@ -129,33 +127,6 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 	}
 
 	/**
-	 * Retrieves login information given a credential ID.
-	 * 
-	 * @param project
-	 *            the Jenkins project
-	 *
-	 * @return a Jenkins credential with login information
-	 */
-	protected StandardUsernamePasswordCredentials getLoginInformation(Item project)
-	{
-		StandardUsernamePasswordCredentials credential = null;
-
-		List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider.lookupCredentials(
-				StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM, Collections.<DomainRequirement> emptyList());
-
-		IdMatcher matcher = new IdMatcher(getCredentialsId());
-		for (StandardUsernamePasswordCredentials c : credentials)
-		{
-			if (matcher.matches(c))
-			{
-				credential = c;
-			}
-		}
-
-		return credential;
-	}
-
-	/**
 	 * Validates the configuration parameters.
 	 * 
 	 * @param launcher
@@ -173,17 +144,17 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
 		if (connection != null)
 		{
-			logger.println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort());
 		}
 		else
 		{
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.hostConnection()));
 		}
 
-		StandardUsernamePasswordCredentials credentials = getLoginInformation(project);
+		StandardCredentials credentials = globalConfig.getLoginCredentials(project, getCredentialsId());
 		if (credentials != null)
 		{
-			logger.println(Messages.username() + " = " + credentials.getUsername()); //$NON-NLS-1$
+			logger.println(Messages.username() + " = " + globalConfig.getCredentialsUser(credentials));
 		}
 		else
 		{

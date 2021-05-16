@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
+ * (c) Copyright 2015 - 2019, 2021 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -20,13 +21,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
+
 import org.apache.commons.lang.StringUtils;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
-import com.compuware.jenkins.common.configuration.HostConnection;
 import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -82,19 +84,6 @@ public class IspwDownloader extends AbstractDownloader
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
 
-		ArgumentListBuilder args = new ArgumentListBuilder();
-		
-		// server args
-		HostConnection connection = globalConfig.getHostConnection(ispwConfiguration.getConnectionId());
-		String host = ArgumentUtils.escapeForScript(connection.getHost());
-		String port = ArgumentUtils.escapeForScript(connection.getPort());
-		String protocol = connection.getProtocol();
-		String codePage = connection.getCodePage();
-		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
-		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
-				ispwConfiguration.getCredentialsId());
-		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
-		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 		String topazCliWorkspace = workspaceFilePath.getRemote() + remoteFileSeparator + CommonConstants.TOPAZ_CLI_WORKSPACE;
 		logger.println("TopazCliWorkspace: " + topazCliWorkspace); //$NON-NLS-1$
@@ -142,13 +131,11 @@ public class IspwDownloader extends AbstractDownloader
 				logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
 			}
 		}
-		else if (ispwConfiguration instanceof IspwContainerConfiguration)
-		{
+		else if (ispwConfiguration instanceof IspwContainerConfiguration) {
 			ispwContainerConfig = (IspwContainerConfiguration) ispwConfiguration;
 			
 			String sourceLocation = ispwContainerConfig.getTargetFolder();
-			if (StringUtils.isNotEmpty(sourceLocation))
-			{
+			if (StringUtils.isNotEmpty(sourceLocation)) {
 				targetFolder = ArgumentUtils.resolvePath(sourceLocation, workspaceFilePath.getRemote());
 				targetFolder = targetFolder.replaceAll("'", StringUtils.EMPTY); //$NON-NLS-1$
 				logger.println("Source download folder: " + targetFolder); //$NON-NLS-1$
@@ -162,15 +149,7 @@ public class IspwDownloader extends AbstractDownloader
 			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadIncl()));
 		}
 		// build the list of arguments to pass to the CLI
-		args.add(cliScriptFileRemote);
-		args.add(CommonConstants.HOST_PARM, host);
-		args.add(CommonConstants.PORT_PARM, port);
-		args.add(CommonConstants.USERID_PARM, userId);
-		args.add(CommonConstants.PW_PARM);
-		args.add(password, true);
-		args.add(CommonConstants.PROTOCOL_PARM, protocol);
-		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
-		args.add(CommonConstants.TIMEOUT_PARM, timeout);
+		ArgumentListBuilder args = globalConfig.getArgumentBuilder(cliScriptFileRemote, null, build.getParent(), ispwConfiguration.getCredentialsId(), ispwConfiguration.getConnectionId());
 		args.add(CommonConstants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(CommonConstants.DATA_PARM, topazCliWorkspace);
 
