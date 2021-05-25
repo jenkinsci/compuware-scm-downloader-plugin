@@ -80,14 +80,14 @@ public class CpwrScmConfigurationTest
 			// Test passing a null project and still find credentials
 			StandardCredentials credential = cfgGlobal.getLoginCredentials(project, scmConfig.getCredentialsId());
 
-			assertNotNull(credential); // NOSONAR
+			assertNotNull(credential);
 			assertThat(String.format("Expected getId() to return %s", TestConstants.EXPECTED_CREDENTIALS_ID), credential.getId(),
 					is(equalTo(TestConstants.EXPECTED_CREDENTIALS_ID)));
 
 			// Test pass the project and find credentials
 			credential = cfgGlobal.getLoginCredentials(project, scmConfig.getCredentialsId());
 
-			assertNotNull(credential); // NOSONAR
+			assertNotNull(credential);
 			assertThat(String.format("Expected getId() to return %s", TestConstants.EXPECTED_CREDENTIALS_ID), credential.getId(),
 					is(equalTo(TestConstants.EXPECTED_CREDENTIALS_ID)));
 
@@ -97,12 +97,12 @@ public class CpwrScmConfigurationTest
 			project.setScm(scmConfig2);
 
 			credential = cfgGlobal.getLoginCredentials(project, scmConfig2.getCredentialsId());
-			assertNull(credential); // NOSONAR
+			assertNull(credential);
 		} catch (Exception e) {
 			// Add the print of the stack trace because the exception message is not enough to troubleshoot the root issue. For
 			// example, if the exception is constructed without a message, you get no information from executing fail().
 			e.printStackTrace();
-			fail(e.getMessage()); // NOSONAR
+			fail(e.getMessage());
 		}
 	}
 
