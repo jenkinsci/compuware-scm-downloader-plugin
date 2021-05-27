@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2018 Compuware Corporation
+ * (c) Copyright 2015 - 2018, 2021 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -22,14 +23,18 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
+import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.scm.util.ScmTestUtils;
 import com.compuware.jenkins.scm.util.TestConstants;
+
 import hudson.model.FreeStyleProject;
 
 /**
@@ -64,41 +69,36 @@ public class CpwrScmConfigurationTest
 	 * Test retrieval of a project's login information.
 	 */
 	@Test
-	public void testGetLoginInformation()
-	{
-		try
-		{
+	public void testGetLoginInformation() {
+		try {
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
-			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
-					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION,
-					TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
+			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_FILTER_PATTERN,
+					TestConstants.EXPECTED_FILE_EXTENSION, TestConstants.EXPECTED_CREDENTIALS_ID, TestConstants.EXPECTED_TARGET_FOLDER);
 			project.setScm(scmConfig);
 
+			CpwrGlobalConfiguration cfgGlobal = CpwrGlobalConfiguration.get();
 			// Test passing a null project and still find credentials
-			StandardUsernamePasswordCredentials credential = scmConfig.getLoginInformation(null);
+			StandardCredentials credential = cfgGlobal.getLoginCredentials(project, scmConfig.getCredentialsId());
 
 			assertNotNull(credential);
-			assertThat(String.format("Expected getId() to return %s", TestConstants.EXPECTED_CREDENTIALS_ID),
-					credential.getId(), is(equalTo(TestConstants.EXPECTED_CREDENTIALS_ID)));
+			assertThat(String.format("Expected getId() to return %s", TestConstants.EXPECTED_CREDENTIALS_ID), credential.getId(),
+					is(equalTo(TestConstants.EXPECTED_CREDENTIALS_ID)));
 
 			// Test pass the project and find credentials
-			credential = scmConfig.getLoginInformation(project);
+			credential = cfgGlobal.getLoginCredentials(project, scmConfig.getCredentialsId());
 
 			assertNotNull(credential);
-			assertThat(String.format("Expected getId() to return %s", TestConstants.EXPECTED_CREDENTIALS_ID),
-					credential.getId(), is(equalTo(TestConstants.EXPECTED_CREDENTIALS_ID)));
+			assertThat(String.format("Expected getId() to return %s", TestConstants.EXPECTED_CREDENTIALS_ID), credential.getId(),
+					is(equalTo(TestConstants.EXPECTED_CREDENTIALS_ID)));
 
 			// Test unable to find credentials
-			PdsConfiguration scmConfig2 = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
-					TestConstants.EXPECTED_FILTER_PATTERN, TestConstants.EXPECTED_FILE_EXTENSION, "blah", TestConstants.EXPECTED_TARGET_FOLDER);
+			PdsConfiguration scmConfig2 = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_FILTER_PATTERN,
+					TestConstants.EXPECTED_FILE_EXTENSION, "blah", TestConstants.EXPECTED_TARGET_FOLDER);
 			project.setScm(scmConfig2);
 
-			credential = scmConfig2.getLoginInformation(project);
-
+			credential = cfgGlobal.getLoginCredentials(project, scmConfig2.getCredentialsId());
 			assertNull(credential);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			// Add the print of the stack trace because the exception message is not enough to troubleshoot the root issue. For
 			// example, if the exception is constructed without a message, you get no information from executing fail().
 			e.printStackTrace();

@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
+ * (c) Copyright 2015 - 2019, 2021 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -26,10 +27,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
-
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
-import com.compuware.jenkins.common.configuration.HostConnection;
 import com.compuware.jenkins.common.utils.ArgumentUtils;
 import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
@@ -92,16 +90,6 @@ public class PdsDownloader extends AbstractDownloader
 		logger.println("cliScriptFile: " + cliScriptFile); //$NON-NLS-1$
 		String cliScriptFileRemote = new FilePath(vChannel, cliScriptFile).getRemote();
 		logger.println("cliScriptFileRemote: " + cliScriptFileRemote); //$NON-NLS-1$
-		HostConnection connection = globalConfig.getHostConnection(pdsConfig.getConnectionId());
-		String host = ArgumentUtils.escapeForScript(connection.getHost());
-		String port = ArgumentUtils.escapeForScript(connection.getPort());
-		String protocol = connection.getProtocol();
-		String codePage = connection.getCodePage();
-		String timeout = ArgumentUtils.escapeForScript(connection.getTimeout());
-		StandardUsernamePasswordCredentials credentials = globalConfig.getLoginInformation(build.getParent(),
-				pdsConfig.getCredentialsId());
-		String userId = ArgumentUtils.escapeForScript(credentials.getUsername());
-		String password = ArgumentUtils.escapeForScript(credentials.getPassword().getPlainText());
 		String targetFolder = ArgumentUtils.escapeForScript(workspaceFilePath.getRemote());
 
 		String sourceLocation = pdsConfig.getTargetFolder();
@@ -120,22 +108,7 @@ public class PdsDownloader extends AbstractDownloader
 		String fileExtension = ArgumentUtils.escapeForScript(pdsConfig.getFileExtension());
 
 		// build the list of arguments to pass to the CLI
-		ArgumentListBuilder args = new ArgumentListBuilder();
-		args.add(cliScriptFileRemote);
-		args.add(CommonConstants.HOST_PARM, host);
-		args.add(CommonConstants.PORT_PARM, port);
-		args.add(CommonConstants.USERID_PARM, userId);
-		args.add(CommonConstants.PW_PARM);
-		args.add(password, true);
-
-		// do not pass protocol on command line if null, empty, blank, or 'None'
-		if (StringUtils.isNotBlank(protocol) && !StringUtils.equalsIgnoreCase(protocol, "none")) { //$NON-NLS-1$
-			CLIVersionUtils.checkProtocolSupported(cliVersion);
-			args.add(CommonConstants.PROTOCOL_PARM, protocol);
-		}
-
-		args.add(CommonConstants.CODE_PAGE_PARM, codePage);
-		args.add(CommonConstants.TIMEOUT_PARM, timeout);
+		ArgumentListBuilder args = globalConfig.getArgumentBuilder(cliScriptFileRemote, cliVersion, build.getParent(), pdsConfig.getCredentialsId(), pdsConfig.getConnectionId());
 		args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.PDS);
 		args.add(CommonConstants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(CommonConstants.DATA_PARM, topazCliWorkspace);

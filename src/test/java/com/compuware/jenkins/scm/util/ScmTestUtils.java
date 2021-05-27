@@ -19,6 +19,8 @@ package com.compuware.jenkins.scm.util;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import java.io.IOException;
+import java.net.URL;
+
 import org.jvnet.hudson.test.JenkinsRule;
 import org.kohsuke.stapler.Stapler;
 import com.cloudbees.plugins.credentials.CredentialsScope;
@@ -65,7 +67,9 @@ public class ScmTestUtils
 		JSONObject json = new JSONObject();
 		json.put("hostConn", hostConnections);
 		json.put(TestConstants.TOPAZ_CLI_LOCATION_LINUX, "/opt/Compuware/TopazCLI");
-		json.put(TestConstants.TOPAZ_CLI_LOCATION_WINDOWS, "C:\\Program Files\\Compuware\\Topaz Workbench CLI");
+
+		URL cliUrl = ScmTestUtils.class.getResource("fake_cli");
+		json.put(TestConstants.TOPAZ_CLI_LOCATION_WINDOWS, cliUrl.getPath());
 
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
 		globalConfig.configure(Stapler.getCurrentRequest(), json);

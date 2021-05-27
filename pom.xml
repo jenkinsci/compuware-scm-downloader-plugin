@@ -70,7 +70,7 @@
     <dependency>
       <groupId>com.compuware.jenkins</groupId>
       <artifactId>compuware-common-configuration</artifactId>
-      <version>1.0.10</version>
+      <version>1.0.12</version>
     </dependency>
     
 	<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -79,6 +79,5 @@
 	    <artifactId>commons-lang3</artifactId>
 	    <version>3.7</version>
 	</dependency>
-
   </dependencies>
 </project>
