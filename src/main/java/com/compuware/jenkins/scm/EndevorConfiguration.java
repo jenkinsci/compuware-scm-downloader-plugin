@@ -39,7 +39,6 @@ import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
@@ -150,7 +149,7 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 	 * job.
 	 */
 	@Extension
-	public static class EndevorDescriptorImpl extends SCMDescriptor<EndevorConfiguration>
+	public static class EndevorDescriptorImpl extends AbstractConfigurationImpl<EndevorConfiguration>
 	{
 		/**
 		 * Constructor.

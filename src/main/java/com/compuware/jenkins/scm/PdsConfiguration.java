@@ -39,7 +39,6 @@ import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
@@ -149,7 +148,7 @@ public class PdsConfiguration extends CpwrScmConfiguration
 	 * options as fields, just like the <code>PdsConfiguration</code> contains the configuration options for a job
 	 */
 	@Extension
-	public static class PdsDescriptorImpl extends SCMDescriptor<PdsConfiguration>
+	public static class PdsDescriptorImpl extends AbstractConfigurationImpl<PdsConfiguration>
 	{
 		/**
 		 * Constructor.

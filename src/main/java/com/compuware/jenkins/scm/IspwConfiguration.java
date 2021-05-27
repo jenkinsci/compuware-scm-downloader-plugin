@@ -36,7 +36,6 @@ import hudson.model.Item;
 import hudson.model.Items;
 import hudson.model.Job;
 import hudson.model.TaskListener;
-import hudson.scm.SCMDescriptor;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
@@ -330,7 +329,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	 * options as fields, just like the <code>IspwConfiguration</code> contains the configuration options for a job
 	 */
 	@Extension
-	public static class DescriptorImpl extends SCMDescriptor<IspwConfiguration>
+	public static class DescriptorImpl extends AbstractConfigurationImpl<IspwConfiguration>
 	{
 		public static final boolean ispwDownloadIncl = false;
 		public static final boolean ispwDownloadWithCompileOnly = false;
@@ -534,5 +533,4 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	public static void xStreamCompatibility() {
 		Items.XSTREAM2.aliasField("ispwDownloadIncl", IspwConfiguration.class, "ispwDownloadIncl"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-
 }

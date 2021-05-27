@@ -38,7 +38,9 @@ import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.AbstractProject;
 import hudson.model.Item;
+import hudson.scm.RepositoryBrowser;
 import hudson.scm.SCM;
+import hudson.scm.SCMDescriptor;
 import hudson.security.ACL;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
@@ -60,6 +62,74 @@ public abstract class AbstractConfiguration extends SCM
 	protected transient boolean m_isMigrated = false;
 
 	private static final Object lock = new Object();
+
+	/**
+	 * Abstract configuration implementation.
+	 *
+	 * @param <T>
+	 *            the SCM configuration this is an implementation for
+	 */
+	public abstract static class AbstractConfigurationImpl<T extends SCM> extends SCMDescriptor<T> {
+		/**
+		 * Constructor.
+		 * 
+		 * @param clazz
+		 *            the configuration class
+		 * @param repositoryBrowser
+		 *            the repository browser
+		 */
+		protected AbstractConfigurationImpl(Class<T> clazz, Class<? extends RepositoryBrowser<?>> repositoryBrowser) {
+			super(clazz, repositoryBrowser);
+		}
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param repositoryBrowser
+		 *            the repository browser
+		 */
+		protected AbstractConfigurationImpl(Class<? extends RepositoryBrowser<?>> repositoryBrowser) {
+			super(repositoryBrowser);
+		}
+
+		/**
+		 * Fills in the Login Credentials selection box with applicable connections.
+		 * 
+		 * @param context
+		 *            filter for login credentials
+		 * @param credentialsId
+		 *            existing login credentials; can be null
+		 * @param project
+		 *            the Jenkins project
+		 * 
+		 * @return login credentials selection
+		 */
+		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId,
+				@AncestorInPath Item project) {
+			List<StandardCredentials> creds = CredentialsProvider.lookupCredentials(StandardCredentials.class, project, ACL.SYSTEM,
+					Collections.<DomainRequirement>emptyList());
+
+			ListBoxModel model = new ListBoxModel();
+			model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
+
+			for (StandardCredentials c : creds) {
+				boolean isSelected = false;
+				if (credentialsId != null) {
+					isSelected = credentialsId.matches(c.getId());
+				}
+
+				String description = Util.fixEmptyAndTrim(c.getDescription());
+				try {
+					model.add(new Option(CpwrGlobalConfiguration.get().getCredentialsUser(c)
+							+ (description != null ? (" (" + description + ')') : StringUtils.EMPTY), c.getId(), isSelected)); //$NON-NLS-1$
+				} catch (AbortException e) {
+					LOGGER.log(Level.WARNING, e.getMessage());
+				}
+			}
+
+			return model;
+		}
+	}
 
 	/**
 	 * Return true if the configuration is migrated.
@@ -156,43 +226,5 @@ public abstract class AbstractConfiguration extends SCM
 				LOGGER.log(Level.SEVERE, String.format("Failed to upgrade job %s", project.getFullName()), e); //$NON-NLS-1$
 			}
 		}
-	}
-
-	/**
-	 * Fills in the Login Credentials selection box with applicable connections.
-	 * 
-	 * @param context
-	 *            filter for login credentials
-	 * @param credentialsId
-	 *            existing login credentials; can be null
-	 * @param project
-	 *            the Jenkins project
-	 * 
-	 * @return login credentials selection
-	 */
-	public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId,
-			@AncestorInPath Item project) {
-		List<StandardCredentials> creds = CredentialsProvider.lookupCredentials(StandardCredentials.class, project, ACL.SYSTEM,
-				Collections.<DomainRequirement>emptyList());
-
-		ListBoxModel model = new ListBoxModel();
-		model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
-
-		for (StandardCredentials c : creds) {
-			boolean isSelected = false;
-			if (credentialsId != null) {
-				isSelected = credentialsId.matches(c.getId());
-			}
-
-			String description = Util.fixEmptyAndTrim(c.getDescription());
-			try {
-				model.add(new Option(CpwrGlobalConfiguration.get().getCredentialsUser(c)
-						+ (description != null ? (" (" + description + ')') : StringUtils.EMPTY), c.getId(), isSelected)); //$NON-NLS-1$
-			} catch (AbortException e) {
-				LOGGER.log(Level.WARNING, e.getMessage());
-			}
-		}
-
-		return model;
 	}
 }
