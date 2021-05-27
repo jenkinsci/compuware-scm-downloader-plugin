@@ -159,9 +159,11 @@ public abstract class AbstractIspwConfiguration extends AbstractConfiguration
 	 *            Build listener
 	 * @param project
 	 *            the Jenkins project
+	 * @throws AbortException
+	 *             if an error occurs getting the credentials user
 	 */
 	public void validateServerParameters(CpwrGlobalConfiguration globalConfig, Launcher launcher, TaskListener listener,
-			Item project)
+			Item project) throws AbortException
 	{
 		StandardCredentials userCredentials = globalConfig.getLoginCredentials(project, getCredentialsId());
 		if (userCredentials != null)
@@ -238,8 +240,10 @@ public abstract class AbstractIspwConfiguration extends AbstractConfiguration
 	 *            Build listener
 	 * @param project
 	 *            the Jenkins project
+	 * @throws AbortException
+	 *             if an error occurs validating the parameters
 	 */
-	public abstract void validateParameters(Launcher launcher, TaskListener listener, Item project);
+	public abstract void validateParameters(Launcher launcher, TaskListener listener, Item project) throws AbortException;
 
 	/**
 	 * Plugin does not support polling. We handle file changes in the CLI.

@@ -21,8 +21,6 @@ package com.compuware.jenkins.scm;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
@@ -30,10 +28,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardCredentials;
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
 
@@ -41,14 +35,12 @@ import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.Util;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
-import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
@@ -325,41 +317,6 @@ public class EndevorConfiguration extends CpwrScmConfiguration
 			}
 
 			return FormValidation.ok();
-		}
-
-		/**
-		 * Fills in the Login Credentials selection box with applicable Jenkins credentials.
-		 * 
-		 * @param context
-		 *            filter for credentials
-		 * @param credentialsId
-		 *            existing login credentials; can be null
-		 * @param project
-		 *            the Jenkins project
-		 * 
-		 * @return credential selections
-		 */
-		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId,
-				@AncestorInPath Item project) {
-			
-			List<StandardCredentials> creds = CredentialsProvider.lookupCredentials(StandardCredentials.class, project, ACL.SYSTEM,
-					Collections.<DomainRequirement>emptyList());
-
-			StandardListBoxModel model = new StandardListBoxModel();
-			model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
-
-			for (StandardCredentials c : creds) {
-				boolean isSelected = false;
-				if (credentialsId != null) {
-					isSelected = credentialsId.matches(c.getId());
-				}
-
-				String description = Util.fixEmptyAndTrim(c.getDescription());
-				model.add(new Option(CpwrGlobalConfiguration.get().getCredentialsUser(c) + (description != null ? (" (" + description + ')') : StringUtils.EMPTY), //$NON-NLS-1$
-						c.getId(), isSelected));
-			}
-
-			return model;
 		}
 	}
 }

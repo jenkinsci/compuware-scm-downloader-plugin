@@ -17,14 +17,31 @@
 package com.compuware.jenkins.scm;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.AncestorInPath;
+import org.kohsuke.stapler.QueryParameter;
+
+import com.cloudbees.plugins.credentials.CredentialsProvider;
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
+import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
+
+import hudson.AbortException;
+import hudson.Util;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.AbstractProject;
+import hudson.model.Item;
 import hudson.scm.SCM;
+import hudson.security.ACL;
+import hudson.util.ListBoxModel;
+import hudson.util.ListBoxModel.Option;
 import jenkins.model.Jenkins;
 
 /**
@@ -32,7 +49,7 @@ import jenkins.model.Jenkins;
  */
 public abstract class AbstractConfiguration extends SCM
 {
-	private static Logger m_logger = Logger.getLogger("hudson.AbstractConfiguration"); //$NON-NLS-1$
+	private static final Logger LOGGER = Logger.getLogger("hudson.AbstractConfiguration"); //$NON-NLS-1$
 
 	protected String m_connectionId;
 
@@ -118,7 +135,7 @@ public abstract class AbstractConfiguration extends SCM
 	@Initializer(before = InitMilestone.COMPLETED, after = InitMilestone.JOB_LOADED)
 	public static void jobLoaded() throws IOException
 	{
-		m_logger.fine("Initialization milestone: All jobs have been loaded"); //$NON-NLS-1$
+		LOGGER.fine("Initialization milestone: All jobs have been loaded"); //$NON-NLS-1$
 		Jenkins jenkins = Jenkins.getInstance();
 		for (AbstractProject<?, ?> project : jenkins.getAllItems(AbstractProject.class))
 		{
@@ -129,15 +146,53 @@ public abstract class AbstractConfiguration extends SCM
 				{
 					project.save();
 
-					m_logger.info(String.format(
+					LOGGER.info(String.format(
 									"Project %s has been migrated.", //$NON-NLS-1$
 									project.getFullName()));
 				}
 			}
 			catch (IOException e)
 			{
-				m_logger.log(Level.SEVERE, String.format("Failed to upgrade job %s", project.getFullName()), e); //$NON-NLS-1$
+				LOGGER.log(Level.SEVERE, String.format("Failed to upgrade job %s", project.getFullName()), e); //$NON-NLS-1$
 			}
 		}
+	}
+
+	/**
+	 * Fills in the Login Credentials selection box with applicable connections.
+	 * 
+	 * @param context
+	 *            filter for login credentials
+	 * @param credentialsId
+	 *            existing login credentials; can be null
+	 * @param project
+	 *            the Jenkins project
+	 * 
+	 * @return login credentials selection
+	 */
+	public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId,
+			@AncestorInPath Item project) {
+		List<StandardCredentials> creds = CredentialsProvider.lookupCredentials(StandardCredentials.class, project, ACL.SYSTEM,
+				Collections.<DomainRequirement>emptyList());
+
+		ListBoxModel model = new ListBoxModel();
+		model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
+
+		for (StandardCredentials c : creds) {
+			boolean isSelected = false;
+			if (credentialsId != null) {
+				isSelected = credentialsId.matches(c.getId());
+			}
+
+			String description = Util.fixEmptyAndTrim(c.getDescription());
+			try {
+				model.add(new Option(CpwrGlobalConfiguration.get().getCredentialsUser(c)
+						+ (description != null ? (" (" + description + ')') : StringUtils.EMPTY), c.getId(), isSelected)); //$NON-NLS-1$
+			} catch (AbortException e) {
+				LOGGER.log(Level.WARNING, e.getMessage());
+			}
+		}
+
+		return model;
 	}
 }

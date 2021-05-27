@@ -18,22 +18,18 @@
  */
 package com.compuware.jenkins.scm;
 
-import java.util.Collections;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.cloudbees.plugins.credentials.common.StandardCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
+
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
+
+import hudson.AbortException;
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.Util;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Item;
@@ -41,7 +37,6 @@ import hudson.model.Items;
 import hudson.model.Job;
 import hudson.model.TaskListener;
 import hudson.scm.SCMDescriptor;
-import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
@@ -182,8 +177,10 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	 *            Build listener
 	 * @param project
 	 *            the Jenkins project
+	 * @throws AbortException
+	 *             if an error occurs validating the parameters
 	 */
-	public void validateParameters(Launcher launcher, TaskListener listener, Item project)
+	public void validateParameters(Launcher launcher, TaskListener listener, Item project) throws AbortException
 	{
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
 
@@ -395,38 +392,6 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 		}
 
 		/**
-		 * Fills in the Login Credential selection box with applicable Jenkins credentials
-		 * 
-		 * @param context
-		 *            filter for credentials
-		 * 
-		 * @return credential selections
-		 */
-		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId,
-				@AncestorInPath Item project) {
-			List<StandardCredentials> creds = CredentialsProvider.lookupCredentials(StandardCredentials.class, project, ACL.SYSTEM,
-					Collections.<DomainRequirement>emptyList());
-
-			StandardListBoxModel model = new StandardListBoxModel();
-
-			model.add(new Option(StringUtils.EMPTY, StringUtils.EMPTY, false));
-
-			for (StandardCredentials c : creds) {
-				boolean isSelected = false;
-
-				if (credentialsId != null) {
-					isSelected = credentialsId.matches(c.getId());
-				}
-
-				String description = Util.fixEmptyAndTrim(c.getDescription());
-				model.add(new Option(CpwrGlobalConfiguration.get().getCredentialsUser(c) + (description != null ? (" (" + description + ")") : StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
-						c.getId(), isSelected));
-			}
-
-			return model;
-		}
-
-		/**
 		 * Fills in the Container type selection box with ISPW container types
 		 *
 		 * @return container type selections
@@ -445,7 +410,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	
 	@Initializer(before = InitMilestone.PLUGINS_STARTED)
 	public static void xStreamCompatibility() {
-		Items.XSTREAM2.aliasField("ispwDownloadIncl", IspwContainerConfiguration.class, "ispwDownloadIncl");		
+		Items.XSTREAM2.aliasField("ispwDownloadIncl", IspwContainerConfiguration.class, "ispwDownloadIncl"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

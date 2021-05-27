@@ -27,6 +27,7 @@ import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
 
+import hudson.AbortException;
 import hudson.Launcher;
 import hudson.model.Item;
 import hudson.model.TaskListener;
@@ -135,8 +136,10 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 	 *            build listener
 	 * @param project
 	 *            the Jenkins project
+	 * @throws AbortException
+	 *             if an error occurs getting the credentials user
 	 */
-	protected void validateParameters(Launcher launcher, TaskListener listener, Item project)
+	protected void validateParameters(Launcher launcher, TaskListener listener, Item project) throws AbortException
 	{
 		PrintStream logger = listener.getLogger();
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
@@ -144,7 +147,7 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 		HostConnection connection = globalConfig.getHostConnection(m_connectionId);
 		if (connection != null)
 		{
-			logger.println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort());
+			logger.println(Messages.hostConnection() + " = " + connection.getHost() + ":" + connection.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else
 		{
@@ -154,7 +157,7 @@ public abstract class CpwrScmConfiguration extends AbstractConfiguration
 		StandardCredentials credentials = globalConfig.getLoginCredentials(project, getCredentialsId());
 		if (credentials != null)
 		{
-			logger.println(Messages.username() + " = " + globalConfig.getCredentialsUser(credentials));
+			logger.println(Messages.username() + " = " + globalConfig.getCredentialsUser(credentials)); //$NON-NLS-1$
 		}
 		else
 		{

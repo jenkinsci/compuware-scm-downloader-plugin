@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.utils.ArgumentUtils;
+import com.compuware.jenkins.common.utils.CLIVersionUtils;
 import com.compuware.jenkins.common.utils.CommonConstants;
 import com.compuware.jenkins.scm.utils.ScmConstants;
 
@@ -148,8 +149,12 @@ public class IspwDownloader extends AbstractDownloader
 			ispwDownloadInclBool = ispwContainerConfig.getIspwDownloadIncl();
 			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadIncl()));
 		}
+
+        FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
+		String cliVersion = CLIVersionUtils.getCLIVersion(cliDirectory, ScmConstants.DOWNLOADER_MINIMUM_CLI_VERSION);
+
 		// build the list of arguments to pass to the CLI
-		ArgumentListBuilder args = globalConfig.getArgumentBuilder(cliScriptFileRemote, null, build.getParent(), ispwConfiguration.getCredentialsId(), ispwConfiguration.getConnectionId());
+		ArgumentListBuilder args = globalConfig.getArgumentBuilder(cliScriptFileRemote, cliVersion, build.getParent(), ispwConfiguration.getCredentialsId(), ispwConfiguration.getConnectionId());
 		args.add(CommonConstants.TARGET_FOLDER_PARM, targetFolder);
 		args.add(CommonConstants.DATA_PARM, topazCliWorkspace);
 
