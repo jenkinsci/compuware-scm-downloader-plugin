@@ -2,7 +2,8 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2018 Compuware Corporation
- * 
+ * (c) Copyright 2015-2018, 2022 BMC Software, Inc.
+ *  
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
@@ -16,28 +17,18 @@
  */
 package com.compuware.jenkins.scm;
 
-import hudson.remoting.Callable;
 import java.util.Properties;
-import org.jenkinsci.remoting.RoleChecker;
+
+import jenkins.security.MasterToSlaveCallable;
 
 /**
  * Get remote system properties
  */
-public class RemoteSystemProperties implements Callable<Properties, RuntimeException>
-{
+public class RemoteSystemProperties extends MasterToSlaveCallable<Properties, RuntimeException> {
+
 	private static final long serialVersionUID = -8859580651709239685L;
 
-	public Properties call()
-	{
+	public Properties call() {
 		return System.getProperties();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.jenkinsci.remoting.RoleSensitive#checkRoles(org.jenkinsci.remoting.RoleChecker)
-	 */
-	@Override
-	public void checkRoles(RoleChecker checker)
-	{
-		// Implementation required by interface, but not using
 	}
 }
