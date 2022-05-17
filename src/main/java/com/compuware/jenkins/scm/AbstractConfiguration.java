@@ -106,6 +106,12 @@ public abstract class AbstractConfiguration extends SCM
 		 */
 		public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Jenkins context, @QueryParameter String credentialsId,
 				@AncestorInPath Item project) {
+			if (project == null) {
+				Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+			} else {
+				project.checkPermission(Item.CONFIGURE);
+			}
+		
 			List<StandardCredentials> creds = CredentialsProvider.lookupCredentials(StandardCredentials.class, project, ACL.SYSTEM,
 					Collections.<DomainRequirement>emptyList());
 

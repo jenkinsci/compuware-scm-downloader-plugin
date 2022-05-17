@@ -416,6 +416,12 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		public ListBoxModel doFillConnectionIdItems(@AncestorInPath Jenkins context, @QueryParameter String connectionId,
 				@AncestorInPath Item project)
 		{
+			if (project == null) {
+				Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+			} else {
+				project.checkPermission(Item.CONFIGURE);
+			}
+
 			CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
 			HostConnection[] hostConnections = globalConfig.getHostConnections();
 
