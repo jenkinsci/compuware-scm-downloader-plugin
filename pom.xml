@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.compuware.jenkins</groupId>
   <artifactId>compuware-scm-downloader</artifactId>
-  <version>2.0.14-SNAPSHOT</version>
+  <version>2.0.13-SNAPSHOT</version>
   <packaging>hpi</packaging>
   
   <properties>
