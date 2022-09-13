@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2018 Compuware Corporation
- * (c) Copyright 2015 - 2018, 2021 BMC Software, Inc.
+ * (c) Copyright 2015 - 2018, 2021, 2022 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.scm.util.ScmTestUtils;
 import com.compuware.jenkins.scm.util.TestConstants;
 
+import hudson.Functions;
 import hudson.model.FreeStyleProject;
 
 /**
@@ -113,6 +115,7 @@ public class CpwrScmConfigurationTest
 	public void validateTargetFolderTest()
 	{
 		// valid folder
+		assumeTrue(Functions.isWindows());
 		try
 		{
 			PdsConfiguration scmConfig = new PdsConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
