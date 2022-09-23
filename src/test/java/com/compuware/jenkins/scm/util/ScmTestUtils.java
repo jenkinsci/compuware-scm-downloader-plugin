@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
+ * (c) Copyright 2022 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -65,10 +66,10 @@ public class ScmTestUtils
 		hostConnections.add(hostConnection);
 
 		JSONObject json = new JSONObject();
-		json.put("hostConn", hostConnections);
-		json.put(TestConstants.TOPAZ_CLI_LOCATION_LINUX, "/opt/Compuware/TopazCLI");
+		json.put("hostConn", hostConnections);		
 
 		URL cliUrl = ScmTestUtils.class.getResource("fake_cli");
+		json.put(TestConstants.TOPAZ_CLI_LOCATION_LINUX, cliUrl.getPath());
 		json.put(TestConstants.TOPAZ_CLI_LOCATION_WINDOWS, cliUrl.getPath());
 
 		CpwrGlobalConfiguration globalConfig = CpwrGlobalConfiguration.get();
