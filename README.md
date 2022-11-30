@@ -13,7 +13,7 @@ The BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin allows 
 The following are required to use this plugin:
 - Jenkins
 - Jenkins Credentials Plugin
-- Topaz Workbench CLI. Refer to the [Topaz Workbench Install Guide](https://docs.compuware.com/kb/KB2001/PDF/TopazWorkbench_Install.pdf) for instructions.
+- Topaz Workbench CLI. Refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html) for instructions.
 - For PDS and Endevor downloads, a Topaz for Program Analysis license is required
 - Host Communications Interface
 
@@ -24,7 +24,7 @@ The following are required to use this plugin:
 ## Installing in a Jenkins Instance
 
 1. Install the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin according to the Jenkins instructions for installing plugins. Dependent plugins will automatically be installed.
-2. Install the Topaz Workbench CLI on the Jenkins instances that will execute the plugin. The Topaz Workbench CLI is available in the Topaz Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Topaz Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.compuware.com/kb/KB2001/PDF/TopazWorkbench_Install.pdf).
+2. Install the Topaz Workbench CLI on the Jenkins instances that will execute the plugin. The Topaz Workbench CLI is available in the Topaz Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Topaz Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html).
 
 ## Configuring for Topaz Workbench CLI & Host Connections
 
