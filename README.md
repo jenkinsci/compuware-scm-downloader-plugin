@@ -1,26 +1,30 @@
-# Compuware Source Code Download for Endevor, PDS, and ISPW
+# BMC Compuware Source Code Download for Endevor, PDS, and ISPW
 
 [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/compuware-scm-downloader.svg)](https://plugins.jenkins.io/compuware-scm-downloader) [![GitHub release](https://img.shields.io/github/v/release/jenkinsci/compuware-scm-downloader.svg?label=release)](https://github.com/jenkinsci/compuware-scm-downloader-plugin/releases) [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/compuware-scm-downloader.svg?color=blue)](https://plugins.jenkins.io/compuware-scm-downloader)
 
-![](docs/images/compuware.topaz.png)![](docs/images/compuware.ispw.png)
+<!-- ![](docs/images/compuware.topaz.png)![](docs/images/compuware.ispw.png) -->
 
 ## Overview
 
-The Compuware Source Code Download for Endevor, PDS, and ISPW plugin allows users to download Endevor, PDS, and ISPW members from the mainframe to the PC. Source can then be accessed on the PC, for example, for SonarQube analysis and reporting.
+The BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin allows users to download Endevor, PDS, and ISPW members from the mainframe to the PC. Source can then be accessed on the PC, for example, for SonarQube analysis and reporting.
 
 ## Prerequisites
 
 The following are required to use this plugin:
 - Jenkins
 - Jenkins Credentials Plugin
-- Topaz Workbench CLI. Refer to the [Topaz Workbench Install Guide](https://docs.compuware.com/kb/KB2001/PDF/TopazWorkbench_Install.pdf) for instructions.
+- Topaz Workbench CLI. Refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html) for instructions.
 - For PDS and Endevor downloads, a Topaz for Program Analysis license is required
 - Host Communications Interface
 
+#### See also
+* [License](LICENSE.txt)
+* [Change Log](https://github.com/jenkinsci/compuware-scm-downloader-plugin/releases)
+
 ## Installing in a Jenkins Instance
 
-1. Install the Compuware Source Code Download for Endevor, PDS, and ISPW plugin according to the Jenkins instructions for installing plugins. Dependent plugins will automatically be installed.
-2. Install the Topaz Workbench CLI on the Jenkins instances that will execute the plugin. The Topaz Workbench CLI is available in the Topaz Workbench installation package. If you do not have the installation package, please visit [support.compuware.com](https://support.compuware.com/). For Topaz Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.compuware.com/kb/KB2001/PDF/TopazWorkbench_Install.pdf).
+1. Install the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin according to the Jenkins instructions for installing plugins. Dependent plugins will automatically be installed.
+2. Install the Topaz Workbench CLI on the Jenkins instances that will execute the plugin. The Topaz Workbench CLI is available in the Topaz Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Topaz Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html).
 
 ## Configuring for Topaz Workbench CLI & Host Connections
 
@@ -166,7 +170,7 @@ Run the job, which by default the following occurs:
 
 - Complete the remaining fields for the selected SCM.
 
-- Click **Generate Pipeline Script**. The Groovy script to invoke the Compuware Source Code Download for Endevor, PDS, and ISPW plugin appears. The script can be added to the Pipeline section when configuring a Pipeline job. A sample script is shown below:
+- Click **Generate Pipeline Script**. The Groovy script to invoke the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin appears. The script can be added to the Pipeline section when configuring a Pipeline job. A sample script is shown below:
 
 ~~~
 stage("Download PDS") {
@@ -180,45 +184,31 @@ stage("Download PDS") {
 }
 ~~~
 
-![](docs/images/info.svg) The **Include in polling?** and **Include in changelog?** check boxes have no effect in the Compuware Source Code Download for Endevor, PDS, and ISPW plugin.
+![](docs/images/info.svg) The **Include in polling?** and **Include in changelog?** check boxes have no effect in the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin.
 
 ## Product Assistance
 
-Compuware provides assistance for customers with its documentation, the Compuware Support Center web site, and telephone customer support.
+BMC Compuware provides assistance for customers with its documentation and the support web site.
 
 ### Compuware Support Center
 
-You can access online information for Compuware products via our Support Center site at [https://support.compuware.com](https://support.compuware.com/). Support Center provides access to critical information about your Compuware products. You can review frequently asked questions, read or download documentation, access product fixes, or e-mail your questions or comments. The first time you access Support Center, you must register and obtain a password. Registration is free.
+You can access online information for BMC products via our Support Center site at [https://support.bmc.com](https://support.bmc.com/). Support Center provides access to critical information about your BMC products. You can review frequently asked questions, read or download documentation, access product fixes, or e-mail your questions or comments. The first time you access Support Center, you must register and obtain a password. Registration is free.
 
 ### Contacting Customer Support
 
-At Compuware, we strive to make our products and documentation the best in the industry. Feedback from our customers helps us maintain our quality standards. If you need support services, please obtain the following information before calling Compuware\'s 24-hour telephone support:
+At BMC Compuware, we strive to make our products and documentation the best in the industry. Feedback from our customers helps us maintain our quality standards. If you need support services, please obtain the following information :
 
 - The Jenkins job console output that contains any error messages or pertinent information.
 
-- The name, release number, and build number of your product. This information is displayed in the Jenkins / Plugin Manager and go to the Installed tab. Apply filter: Compuware in order to display all of the installed Compuware plugins.
+- The name, release number, and build number of your product. This information is displayed in the Jenkins / Plugin Manager and go to the Installed tab. Apply filter: BMC Compuware in order to display all of the installed BMC Compuware plugins.
 
 - Job information, whether the job uses Pipeline script or Freestyle project.
 
 - Environment information, such as the operating system and release on which the Topaz CLI is installed.
 
-You can contact Compuware in one of the following ways:
-
-#### Phone
-
-- USA and Canada: 1-800-538-7822 or 1-313-227-5444.
-
-- All other countries: Contact your local Compuware office. Contact information is available at [https://support.compuware.com](https://support.compuware.com/).
-
 #### Web
 
-You can report issues via Compuware Support Center: [https://support.compuware.com](https://support.compuware.com/).
+You can report issues via BMC Support Center: [https://support.bmc.com](https://support.bmc.com/).
+## Corporate Web Site
 
-Note: Please report all high-priority issues by phone.
-
-### Corporate Web Site
-
-To access Compuware\'s site on the Web, go to [https://www.compuware.com](https://www.compuware.com/). The Compuware site provides a variety of product and support information.
-
-## Change Log
-See [Change Log](https://github.com/jenkinsci/compuware-scm-downloader-plugin/blob/master/CHANGELOG.md)
+To access BMC site on the Web, go to [https://www.bmc.com/](https://www.bmc.com/). The BMC site provides a variety of product and support information.
