@@ -51,6 +51,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private static final String FALSE = "false"; //$NON-NLS-1$
 	private String m_serverStream;
 	private String m_serverApplication;
+	private String m_serverSubAppl;
 	private String m_serverLevel;
 	private String m_levelOption;
 	private String m_componentType = StringUtils.EMPTY;
@@ -76,6 +77,8 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	 *            - selected ispw stream
 	 * @param serverApplication
 	 *            - selected ispw application
+	 * @param serverSubAppl
+	 *            - selected ispw subAppl
 	 * @param serverLevel
 	 *            - selected ispw level
 	 * @param levelOption
@@ -93,13 +96,19 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	 */
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
-			String serverApplication, String serverLevel, String levelOption, String componentType, String folderName,
+			String serverApplication, String serverSubAppl, String serverLevel, String levelOption, String componentType, String folderName,
 			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean ispwDownloadWithCompileOnly)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
 		m_serverStream = getTrimmedValue(serverStream);
 		m_serverApplication = getTrimmedValue(serverApplication);
+		
+		if(serverSubAppl!=null)
+		{
+			m_serverSubAppl= getTrimmedValue(serverSubAppl);
+		}
+		
 		m_serverLevel = getTrimmedValue(serverLevel);
 		m_levelOption = getTrimmedValue(levelOption);
 		m_targetFolder = getTrimmedValue(targetFolder);
@@ -138,6 +147,16 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	public String getServerApplication()
 	{
 		return m_serverApplication;
+	}
+	
+	/**
+	 * Gets the value of the 'SubAppl'
+	 * 
+	 * @return <code>String</code> value of m_serverSubAppl
+	 */
+	public String getServerSubAppl()
+	{
+		return m_serverSubAppl;
 	}
 
 	/**
@@ -285,7 +304,16 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		{
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerApp()));
 		}
-
+		
+		if (!getServerSubAppl().isEmpty())
+		{
+			listener.getLogger().println(Messages.ispwServerSubAppl() + " = " + getServerSubAppl()); //$NON-NLS-1$
+		}
+		else
+		{
+			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerSubAppl()));
+		}
+		
 		if (!getServerLevel().isEmpty())
 		{
 			listener.getLogger().println(Messages.ispwServerLevel() + " = " + getServerLevel()); //$NON-NLS-1$
@@ -495,6 +523,25 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 			if (tempValue.isEmpty())
 			{
 				return FormValidation.error(Messages.checkIspwServerAppError());
+			}
+
+			return FormValidation.ok();
+		}
+		
+		/**
+		 * Validator for the 'SubAppl' text field.
+		 * 
+		 * @param value
+		 *            value passed from the "serverSubAppl" field//NEw code
+		 * 
+		 * @return validation message
+		 */
+		public FormValidation doCheckServerSubAppl(@QueryParameter String value)
+		{
+			String tempValue = StringUtils.trimToEmpty(value);
+			if (tempValue.isEmpty())
+			{
+				return FormValidation.error(Messages.checkIspwServerSubApplError());
 			}
 
 			return FormValidation.ok();

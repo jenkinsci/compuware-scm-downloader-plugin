@@ -92,6 +92,7 @@ public class IspwDownloader extends AbstractDownloader
 		// filter args
 		String serverStream = StringUtils.EMPTY;
 		String serverApp = StringUtils.EMPTY;
+		String serverSubAppl = StringUtils.EMPTY;
 		String serverLevel = StringUtils.EMPTY;
 		String levelOption = StringUtils.EMPTY;
 		String filterFiles = StringUtils.EMPTY;
@@ -112,6 +113,7 @@ public class IspwDownloader extends AbstractDownloader
 			
 			serverStream = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerStream());
 			serverApp = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerApplication());
+			serverSubAppl = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerSubAppl());
 			serverLevel = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerLevel());
 			levelOption = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getLevelOption());
 			filterFiles = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFiles());
@@ -173,6 +175,7 @@ public class IspwDownloader extends AbstractDownloader
 			args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.ISPW);
 			args.add(ScmConstants.ISPW_SERVER_STREAM_PARAM, serverStream);
 			args.add(ScmConstants.ISPW_SERVER_APP_PARAM, serverApp);
+			args.add(ScmConstants.ISPW_SERVER_SUBAPPL_PARAM, serverSubAppl);
 			args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
 			args.add(ScmConstants.ISPW_LEVEL_OPTION_PARAM, levelOption);
 			args.add(ScmConstants.ISPW_FILTER_FILES_PARAM, filterFiles);
