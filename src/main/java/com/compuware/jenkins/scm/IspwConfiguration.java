@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
- * (c) Copyright 2019, 2020-2021 BMC Software, Inc.
+ * (c) Copyright 2019, 2020-2021,2023 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -305,15 +305,6 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerApp()));
 		}
 		
-		if (!getServerSubAppl().isEmpty())
-		{
-			listener.getLogger().println(Messages.ispwServerSubAppl() + " = " + getServerSubAppl()); //$NON-NLS-1$
-		}
-		else
-		{
-			throw new IllegalArgumentException(Messages.checkoutMissingParameterError(Messages.ispwServerSubAppl()));
-		}
-		
 		if (!getServerLevel().isEmpty())
 		{
 			listener.getLogger().println(Messages.ispwServerLevel() + " = " + getServerLevel()); //$NON-NLS-1$
@@ -523,25 +514,6 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 			if (tempValue.isEmpty())
 			{
 				return FormValidation.error(Messages.checkIspwServerAppError());
-			}
-
-			return FormValidation.ok();
-		}
-		
-		/**
-		 * Validator for the 'SubAppl' text field.
-		 * 
-		 * @param value
-		 *            value passed from the "serverSubAppl" field//NEw code
-		 * 
-		 * @return validation message
-		 */
-		public FormValidation doCheckServerSubAppl(@QueryParameter String value)
-		{
-			String tempValue = StringUtils.trimToEmpty(value);
-			if (tempValue.isEmpty())
-			{
-				return FormValidation.error(Messages.checkIspwServerSubApplError());
 			}
 
 			return FormValidation.ok();

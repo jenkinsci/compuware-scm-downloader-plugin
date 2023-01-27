@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
+ * (c) Copyright 2023 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -40,6 +41,7 @@ public class IspwConfigurationTest
 	private static final String EXPECTED_SERVER_CONFIG = "TPZP";
 	private static final String EXPECTED_SERVER_STREAM = "PLAY";
 	private static final String EXPECTED_SERVER_APPLICATION = "PLAY";
+	private static final String EXPECTED_SERVER_SUBAPPL = "PLAY";
 	private static final String EXPECTED_SERVER_LEVEL = "DEV1";
 	private static final String EXPECTED_LEVEL_OPTION = "Selected level only";
 	private static final String EXPECTED_COMPONENT_TYPE = "COB";
@@ -75,7 +77,7 @@ public class IspwConfigurationTest
 	{
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
+				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_SUBAPPL, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
 				EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false);
 
 		assertThat(
@@ -96,6 +98,9 @@ public class IspwConfigurationTest
 
 		assertThat(String.format("Expected IspwConfiguration.getServerApplication() to return %s", EXPECTED_SERVER_APPLICATION),
 				scm.getServerApplication(), is(equalTo(EXPECTED_SERVER_APPLICATION)));
+		
+		assertThat(String.format("Expected IspwConfiguration.getServerSubAppl() to return %s", EXPECTED_SERVER_SUBAPPL),
+				scm.getServerSubAppl(), is(equalTo(EXPECTED_SERVER_SUBAPPL)));
 
 		assertThat(String.format("Expected IspwConfiguration.getServerLevel() to return %s", EXPECTED_SERVER_LEVEL),
 				scm.getServerLevel(), is(equalTo(EXPECTED_SERVER_LEVEL)));
@@ -129,7 +134,7 @@ public class IspwConfigurationTest
 		{
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
-					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL,
+					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_SUBAPPL, EXPECTED_SERVER_LEVEL,
 					EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false));
 
 			// don't expect the build to succeed since no CLI exists
@@ -170,6 +175,9 @@ public class IspwConfigurationTest
 
 				assertThat(String.format("Expected log to contain server application: \"%s\".", EXPECTED_SERVER_APPLICATION),
 						logFileOutput, containsString(EXPECTED_SERVER_APPLICATION));
+				
+				assertThat(String.format("Expected log to contain server subappl: \"%s\".", EXPECTED_SERVER_SUBAPPL),
+						logFileOutput, containsString(EXPECTED_SERVER_SUBAPPL));
 
 				assertThat(String.format("Expected log to contain server level: \"%s\".", EXPECTED_SERVER_LEVEL), logFileOutput,
 						containsString(EXPECTED_SERVER_LEVEL));
@@ -212,10 +220,10 @@ public class IspwConfigurationTest
 		{
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
-					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
+					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_SUBAPPL, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
 					EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
-					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverLevel,levelOption,filterFiles,filterFolders,ispwDownloadAll,targetFolder");
+					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverSubAppl,serverLevel,levelOption,filterFiles,filterFolders,ispwDownloadAll,targetFolder");
 		}
 		catch (Exception e)
 		{
