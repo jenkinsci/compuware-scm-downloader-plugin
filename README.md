@@ -134,6 +134,7 @@ Do the following in the **Filter** section to identify ISPW members to be downlo
 
 - **Stream** : Enter the two- to eight-character code that defines the application structure with which the application is associated.
 - ** Application** : Enter the container's primary application code. Containers may include components from multiple applications.
+- ** SubAppl** : Enter the container's primary subapplication code. Containers may include components from multiple subapplications.
 - ** Level** : Enter the life cycle level.
 - **Level option** list (do one of the following):
      - **Selected level only** : Select to display only components at the selected life cycle level in the view.
