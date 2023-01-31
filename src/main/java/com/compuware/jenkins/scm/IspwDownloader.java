@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
- * (c) Copyright 2015 - 2019, 2021 BMC Software, Inc.
+ * (c) Copyright 2015 - 2019, 2021, 2023 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -92,6 +92,7 @@ public class IspwDownloader extends AbstractDownloader
 		// filter args
 		String serverStream = StringUtils.EMPTY;
 		String serverApp = StringUtils.EMPTY;
+		String serverSubAppl = StringUtils.EMPTY;
 		String serverLevel = StringUtils.EMPTY;
 		String levelOption = StringUtils.EMPTY;
 		String filterFiles = StringUtils.EMPTY;
@@ -112,6 +113,7 @@ public class IspwDownloader extends AbstractDownloader
 			
 			serverStream = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerStream());
 			serverApp = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerApplication());
+			serverSubAppl = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerSubAppl());
 			serverLevel = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getServerLevel());
 			levelOption = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getLevelOption());
 			filterFiles = ArgumentUtils.escapeForScript(ispwRepositoryConfig.getFilterFiles());
@@ -173,6 +175,10 @@ public class IspwDownloader extends AbstractDownloader
 			args.add(ScmConstants.SCM_TYPE_PARM, ScmConstants.ISPW);
 			args.add(ScmConstants.ISPW_SERVER_STREAM_PARAM, serverStream);
 			args.add(ScmConstants.ISPW_SERVER_APP_PARAM, serverApp);
+			if(serverSubAppl!= null && !serverSubAppl.isEmpty() )
+			{
+				args.add(ScmConstants.ISPW_SERVER_SUBAPPL_PARAM, serverSubAppl);
+			}
 			args.add(ScmConstants.ISPW_SERVER_LEVEL_PARAM, serverLevel);
 			args.add(ScmConstants.ISPW_LEVEL_OPTION_PARAM, levelOption);
 			args.add(ScmConstants.ISPW_FILTER_FILES_PARAM, filterFiles);

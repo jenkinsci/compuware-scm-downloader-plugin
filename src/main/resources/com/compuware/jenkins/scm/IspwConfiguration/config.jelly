@@ -26,6 +26,9 @@
 			<f:entry title="${%serverApplication}" field="serverApplication" help="/plugin/compuware-scm-downloader/ispw/help-serverApplication.html">
 				<f:textbox/>
 			</f:entry>
+			<f:entry title="${%serverSubAppl}" field="serverSubAppl" help="/plugin/compuware-scm-downloader/ispw/help-serverSubAppl.html">
+				<f:textbox/>
+			</f:entry>
 			<f:entry title="${%serverLevel}" field="serverLevel" help="/plugin/compuware-scm-downloader/ispw/help-serverLevel.html">
 				<f:textbox/>
 			</f:entry>
@@ -53,4 +56,3 @@
 		<hr size="1" color="Gainsboro"/>
 	</f:block>
 </j:jelly>
-
