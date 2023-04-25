@@ -1,0 +1,8 @@
+#Ignore following folders as they contain build specific files
+target
+work
+.settings
+
+#Ignore auto-generated files
+**/*.project
+**/*.classpath
