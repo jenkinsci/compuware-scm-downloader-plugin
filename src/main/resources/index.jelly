@@ -3,5 +3,5 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin allow users to download Endevor, PDS, or ISPW members from the mainframe to the PC
+  This plugin allow users to download Endevor, PDS, or Code Pipeline members from the mainframe to the PC
 </div>
