@@ -48,7 +48,7 @@ This source code management action has following parameters:
 
 - **Login credentials** : Select the stored credentials to use for logging onto the z/OS host.
 
-![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
+![](docs/images/info.svg) Alternatively, click **Add** to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
 Do the following:
 
@@ -86,7 +86,7 @@ This source code management action has following parameters:
 
 - **Login credentials** : Select the stored credentials to use for logging onto the z/OS host.
 
-![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
+![](docs/images/info.svg) Alternatively, click **Add** to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
 Do the following in the **Filter** section to identify Code Pipeline members to be downloaded:
 
@@ -128,14 +128,14 @@ This source code management action has following parameters:
 
 - **Login credentials** : Select the stored credentials to use for logging onto the z/OS host.
 
-![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
+![](docs/images/info.svg) Alternatively, click **Add** to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
 Do the following in the **Filter** section to identify Code Pipeline members to be downloaded:
 
 - **Stream** : Enter the two- to eight-character code that defines the application structure with which the application is associated.
-- ** Application** : Enter the container's primary application code. Containers may include components from multiple applications.
-- ** SubAppl** : Enter the container's primary subapplication code. Containers may include components from multiple subapplications.
-- ** Level** : Enter the life cycle level.
+- **Application** : Enter the container's primary application code. Containers may include components from multiple applications.
+- **SubAppl** : Enter the container's primary subapplication code. Containers may include components from multiple subapplications.
+- **Level** : Enter the life cycle level.
 - **Level option** list (do one of the following):
      - **Selected level only** : Select to display only components at the selected life cycle level in the view.
      - **First found in level and above** : Select to display the first version found of each component at the selected level and above. In other words, if there are multiple versions in the life cycle, display one version of the component that is the first one found at the selected level and any levels in the path above it.
@@ -163,7 +163,7 @@ Run the job, which by default the following occurs:
 
     - When working with an existing Pipeline job, click the **Pipeline Syntax** link in the left panel. The **Snippet Generator** appears.
 
-    - When configuring a Pipeline job, click the **Pipeline Syntax** link at the bottom of the **Pipeline **configuration section. The **Snippet Generator** appears.
+    - When configuring a Pipeline job, click the **Pipeline Syntax** link at the bottom of the **Pipeline** configuration section. The **Snippet Generator** appears.
 
 - **Sample Step** : Select **checkout: General SCM** .
 
