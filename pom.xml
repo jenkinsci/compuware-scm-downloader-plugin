@@ -20,8 +20,8 @@
     <java.level>8</java.level>
   </properties>
 
-  <name>BMC Compuware Source Code Download for Endevor, PDS, and ISPW</name>
-  <description>BMC Compuware Source Code Download for Endevor, PDS, and ISPW</description>
+  <name>BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline</name>
+  <description>BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline</description>
   <url>https://github.com/jenkinsci/compuware-scm-downloader-plugin</url>
   <licenses>
     <license>

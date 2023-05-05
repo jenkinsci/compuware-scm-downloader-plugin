@@ -1,4 +1,4 @@
-# BMC Compuware Source Code Download for Endevor, PDS, and ISPW
+# BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline
 
 [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/compuware-scm-downloader.svg)](https://plugins.jenkins.io/compuware-scm-downloader) [![GitHub release](https://img.shields.io/github/v/release/jenkinsci/compuware-scm-downloader.svg?label=release)](https://github.com/jenkinsci/compuware-scm-downloader-plugin/releases) [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/compuware-scm-downloader.svg?color=blue)](https://plugins.jenkins.io/compuware-scm-downloader)
 
@@ -6,14 +6,14 @@
 
 ## Overview
 
-The BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin allows users to download Endevor, PDS, and ISPW members from the mainframe to the PC. Source can then be accessed on the PC, for example, for SonarQube analysis and reporting.
+The BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin allows users to download Endevor, PDS, and Code Pipeline members from the mainframe to the PC. Source can then be accessed on the PC, for example, for SonarQube analysis and reporting.
 
 ## Prerequisites
 
 The following are required to use this plugin:
 - Jenkins
 - Jenkins Credentials Plugin
-- Topaz Workbench CLI. Refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html) for instructions.
+- Workbench CLI. Refer to the [Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html) for instructions.
 - For PDS and Endevor downloads, a Topaz for Program Analysis license is required
 - Host Communications Interface
 
@@ -23,14 +23,14 @@ The following are required to use this plugin:
 
 ## Installing in a Jenkins Instance
 
-1. Install the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin according to the Jenkins instructions for installing plugins. Dependent plugins will automatically be installed.
-2. Install the Topaz Workbench CLI on the Jenkins instances that will execute the plugin. The Topaz Workbench CLI is available in the Topaz Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Topaz Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html).
+1. Install the BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin according to the Jenkins instructions for installing plugins. Dependent plugins will automatically be installed.
+2. Install the Workbench CLI on the Jenkins instances that will execute the plugin. The Workbench CLI is available in the Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html).
 
-## Configuring for Topaz Workbench CLI & Host Connections
+## Configuring for Workbench CLI & Host Connections
 
-In order to download Endevor, PDS, and ISPW members you will need to point to an installed Topaz Workbench Command Line Interface (CLI). The Topaz Workbench CLI will work with host connection(s) you also need to configure to download Endevor, PDS, and ISPW members.
+In order to download Endevor, PDS, and Code Pipeline members you will need to point to an installed Workbench Command Line Interface (CLI). The Workbench CLI will work with host connection(s) you also need to configure to download Endevor, PDS, and Code Pipeline members.
 
-- See [Configuring for Topaz Workbench CLI & Host Connections](https://github.com/jenkinsci/compuware-common-configuration-plugin/blob/master/README.md#user-content-configuring-for-topaz-workbench-cli--host-connections)
+- See [Configuring for Workbench CLI & Host Connections](https://github.com/jenkinsci/compuware-common-configuration-plugin/blob/master/README.md#user-content-configuring-for-topaz-workbench-cli--host-connections)
 
 ### Downloading Endevor or PDS members
 
@@ -48,7 +48,7 @@ This source code management action has following parameters:
 
 - **Login credentials** : Select the stored credentials to use for logging onto the z/OS host.
 
-![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
+![](docs/images/info.svg) Alternatively, click **Add** to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
 Do the following:
 
@@ -70,11 +70,11 @@ Run the job, which downloads files to the location in the **Source download loca
 
 <img src="docs/images/download.pds.members.png" height="250"/>
 
-### Downloading ISPW Container members
+### Downloading Code Pipeline Container members
 
-This integration allows downloading of ISPW Container members from the mainframe to the PC.
+This integration allows downloading of Code Pipeline Container members from the mainframe to the PC.
 
-On the **Configuration** page of the job or project, select **ISPW Container** from the **Source Code Management** section.
+On the **Configuration** page of the job or project, select **Code Pipeline Container** from the **Source Code Management** section.
 
 This source code management action has following parameters:
 
@@ -86,9 +86,9 @@ This source code management action has following parameters:
 
 - **Login credentials** : Select the stored credentials to use for logging onto the z/OS host.
 
-![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
+![](docs/images/info.svg) Alternatively, click **Add** to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
-Do the following in the **Filter** section to identify ISPW members to be downloaded:
+Do the following in the **Filter** section to identify Code Pipeline members to be downloaded:
 
 - **Container name** : Enter the name of the container to target for the download.
 
@@ -112,11 +112,11 @@ Run the job, which by default the following occurs:
 
 <img src="docs/images/download.ispw.container.members.png" height="350"/>
 
-### Downloading ISPW Repository members
+### Downloading Code Pipeline Repository members
 
-This integration allows downloading of ISPW Repository members from the mainframe to the PC.
+This integration allows downloading of Code Pipeline Repository members from the mainframe to the PC.
 
-On the Configuration page of the job or project, select ISPW Repository from the Source Code Management section.
+On the Configuration page of the job or project, select Code Pipeline Repository from the Source Code Management section.
 
 This source code management action has following parameters:
 
@@ -128,14 +128,14 @@ This source code management action has following parameters:
 
 - **Login credentials** : Select the stored credentials to use for logging onto the z/OS host.
 
-![](docs/images/info.svg) Alternatively, click **Add **to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
+![](docs/images/info.svg) Alternatively, click **Add** to add credentials using the [Credentials Plugin](https://plugins.jenkins.io/credentials/). Refer to the Jenkins documentation for the Credentials Plugin.
 
-Do the following in the **Filter** section to identify ISPW members to be downloaded:
+Do the following in the **Filter** section to identify Code Pipeline members to be downloaded:
 
 - **Stream** : Enter the two- to eight-character code that defines the application structure with which the application is associated.
-- ** Application** : Enter the container's primary application code. Containers may include components from multiple applications.
-- ** SubAppl** : Enter the container's primary subapplication code. Containers may include components from multiple subapplications.
-- ** Level** : Enter the life cycle level.
+- **Application** : Enter the container's primary application code. Containers may include components from multiple applications.
+- **SubAppl** : Enter the container's primary subapplication code. Containers may include components from multiple subapplications.
+- **Level** : Enter the life cycle level.
 - **Level option** list (do one of the following):
      - **Selected level only** : Select to display only components at the selected life cycle level in the view.
      - **First found in level and above** : Select to display the first version found of each component at the selected level and above. In other words, if there are multiple versions in the life cycle, display one version of the component that is the first one found at the selected level and any levels in the path above it.
@@ -163,15 +163,15 @@ Run the job, which by default the following occurs:
 
     - When working with an existing Pipeline job, click the **Pipeline Syntax** link in the left panel. The **Snippet Generator** appears.
 
-    - When configuring a Pipeline job, click the **Pipeline Syntax** link at the bottom of the **Pipeline **configuration section. The **Snippet Generator** appears.
+    - When configuring a Pipeline job, click the **Pipeline Syntax** link at the bottom of the **Pipeline** configuration section. The **Snippet Generator** appears.
 
 - **Sample Step** : Select **checkout: General SCM** .
 
-- **SCM** : Select **Endevor**, **ISPW Container**, **ISPW Repository**, or **PDS** as the version control system from which to get the code.
+- **SCM** : Select **Endevor**, **Code Pipeline Container**, **Code Pipeline Repository**, or **PDS** as the version control system from which to get the code.
 
 - Complete the remaining fields for the selected SCM.
 
-- Click **Generate Pipeline Script**. The Groovy script to invoke the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin appears. The script can be added to the Pipeline section when configuring a Pipeline job. A sample script is shown below:
+- Click **Generate Pipeline Script**. The Groovy script to invoke the BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin appears. The script can be added to the Pipeline section when configuring a Pipeline job. A sample script is shown below:
 
 ~~~
 stage("Download PDS") {
@@ -185,27 +185,27 @@ stage("Download PDS") {
 }
 ~~~
 
-![](docs/images/info.svg) The **Include in polling?** and **Include in changelog?** check boxes have no effect in the BMC Compuware Source Code Download for Endevor, PDS, and ISPW plugin.
+![](docs/images/info.svg) The **Include in polling?** and **Include in changelog?** check boxes have no effect in the BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin.
 
 ## Product Assistance
 
-BMC Compuware provides assistance for customers with its documentation and the support web site.
+BMC provides assistance for customers with its documentation and the support web site.
 
-### Compuware Support Center
+### BMC Support Center
 
 You can access online information for BMC products via our Support Center site at [https://support.bmc.com](https://support.bmc.com/). Support Center provides access to critical information about your BMC products. You can review frequently asked questions, read or download documentation, access product fixes, or e-mail your questions or comments. The first time you access Support Center, you must register and obtain a password. Registration is free.
 
 ### Contacting Customer Support
 
-At BMC Compuware, we strive to make our products and documentation the best in the industry. Feedback from our customers helps us maintain our quality standards. If you need support services, please obtain the following information :
+At BMC, we strive to make our products and documentation the best in the industry. Feedback from our customers helps us maintain our quality standards. If you need support services, please obtain the following information :
 
 - The Jenkins job console output that contains any error messages or pertinent information.
 
-- The name, release number, and build number of your product. This information is displayed in the Jenkins / Plugin Manager and go to the Installed tab. Apply filter: BMC Compuware in order to display all of the installed BMC Compuware plugins.
+- The name, release number, and build number of your product. This information is displayed in the Jenkins / Plugin Manager and go to the Installed tab. Apply filter: BMC in order to display all of the installed BMC plugins.
 
 - Job information, whether the job uses Pipeline script or Freestyle project.
 
-- Environment information, such as the operating system and release on which the Topaz CLI is installed.
+- Environment information, such as the operating system and release on which the Workbench CLI is installed.
 
 #### Web
 
