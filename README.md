@@ -13,8 +13,8 @@ The BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin
 The following are required to use this plugin:
 - Jenkins
 - Jenkins Credentials Plugin
-- Workbench CLI. Refer to the [Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html) for instructions.
-- For PDS and Endevor downloads, a Topaz for Program Analysis license is required
+- Workbench CLI. Refer to the [Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html) for instructions
+- For PDS and Endevor downloads, BMC AMI DevX Code Analysis license is required
 - Host Communications Interface
 
 #### See also
@@ -24,7 +24,7 @@ The following are required to use this plugin:
 ## Installing in a Jenkins Instance
 
 1. Install the BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin according to the Jenkins instructions for installing plugins. Dependent plugins will automatically be installed.
-2. Install the Workbench CLI on the Jenkins instances that will execute the plugin. The Workbench CLI is available in the Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Workbench CLI installation instructions, please refer to the [Topaz Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html).
+2. Install the Workbench CLI on the Jenkins instances that will execute the plugin. The Workbench CLI is available in the Workbench installation package. If you do not have the installation package, please visit [https://support.bmc.com](https://support.bmc.com). For Workbench CLI installation instructions, please refer to the [Workbench Install Guide](https://docs.bmc.com/docs/bctwb/2007/topaz-workbench-installation-guide-1010112445.html).
 
 ## Configuring for Workbench CLI & Host Connections
 
