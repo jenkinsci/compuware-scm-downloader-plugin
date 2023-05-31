@@ -6,7 +6,7 @@
 
 ## Overview
 
-The BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin allows users to download Endevor, PDS, and Code Pipeline members from the mainframe to the PC. Source can then be accessed on the PC, for example, for SonarQube analysis and reporting.
+The BMC AMI DevX Source Code Download for Endevor, PDS, and Code Pipeline plugin allows users to download Endevor, PDS, and BMC AMI DevX Code Pipeline members from the mainframe. Downloaded Source can then be accessed for example, for SonarQube analysis and reporting or to populate a Git repository.
 
 ## Prerequisites
 
