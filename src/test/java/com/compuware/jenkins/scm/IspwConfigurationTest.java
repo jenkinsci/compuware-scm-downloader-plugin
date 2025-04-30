@@ -78,7 +78,7 @@ public class IspwConfigurationTest
 		IspwConfiguration scm = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 				EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_SUBAPPL, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
-				EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false);
+				EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false, false);
 
 		assertThat(
 				String.format("Expected IspwConfiguration.getConnectionId() to return %s",
@@ -135,7 +135,7 @@ public class IspwConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID, TestConstants.EXPECTED_CREDENTIALS_ID,
 					EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM, EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_SUBAPPL, EXPECTED_SERVER_LEVEL,
-					EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false));
+					EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE, EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false, false));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -221,7 +221,7 @@ public class IspwConfigurationTest
 			IspwConfiguration scmConfig = new IspwConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_SERVER_STREAM,
 					EXPECTED_SERVER_APPLICATION, EXPECTED_SERVER_SUBAPPL, EXPECTED_SERVER_LEVEL, EXPECTED_LEVEL_OPTION, EXPECTED_COMPONENT_TYPE,
-					EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false);
+					EXPECTED_FOLDER_NAME, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false, false);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
 					"connectionId,credentialsId,serverConfig,serverStream,serverApplication,serverSubAppl,serverLevel,levelOption,filterFiles,filterFolders,ispwDownloadAll,targetFolder");
 		}

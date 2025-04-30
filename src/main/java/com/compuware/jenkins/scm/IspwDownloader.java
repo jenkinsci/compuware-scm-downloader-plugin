@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
- * (c) Copyright 2015 - 2019, 2021, 2023 BMC Software, Inc.
+ * (c) Copyright 2015 - 2025 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -106,6 +106,9 @@ public class IspwDownloader extends AbstractDownloader
 		
 		boolean ispwDownloadWithCompileOnlyBool = false;
 		String ispwDownloadWithCompileOnly = StringUtils.EMPTY;
+		
+		boolean cpCategorizeOnComponentTypeBool = false;
+		String cpCategorizeOnComponentType = StringUtils.EMPTY;
 
 		if (ispwConfiguration instanceof IspwConfiguration)
 		{
@@ -125,6 +128,9 @@ public class IspwDownloader extends AbstractDownloader
 			
 			ispwDownloadWithCompileOnlyBool = ispwRepositoryConfig.getIspwDownloadWithCompileOnly();
 			ispwDownloadWithCompileOnly = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getIspwDownloadWithCompileOnly()));
+			
+			cpCategorizeOnComponentTypeBool = ispwRepositoryConfig.getCpCategorizeOnComponentType();
+			cpCategorizeOnComponentType = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getCpCategorizeOnComponentType()));
 			
 			String sourceLocation = ispwRepositoryConfig.getTargetFolder();
 			if (StringUtils.isNotEmpty(sourceLocation))
@@ -150,6 +156,9 @@ public class IspwDownloader extends AbstractDownloader
 			
 			ispwDownloadInclBool = ispwContainerConfig.getIspwDownloadIncl();
 			ispwDownloadIncl = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getIspwDownloadIncl()));
+			
+			cpCategorizeOnComponentTypeBool = ispwContainerConfig.getCpCategorizeOnComponentType();
+			cpCategorizeOnComponentType = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getCpCategorizeOnComponentType()));
 		}
 
         FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
@@ -203,6 +212,11 @@ public class IspwDownloader extends AbstractDownloader
 			{
 				args.add(ScmConstants.ISPW_DOWNLOAD_WITH_COMPILE_ONLY, ispwDownloadWithCompileOnly);
 			}
+						
+			if (cpCategorizeOnComponentTypeBool)
+			{
+				args.add(ScmConstants.CP_CATEGORIZE_ON_COMPONENT_TYPE, cpCategorizeOnComponentType);
+			}
 		}
 		else if (ispwContainerConfig != null)
 		{
@@ -233,6 +247,11 @@ public class IspwDownloader extends AbstractDownloader
 		if(ispwDownloadInclBool)
 		{
 			args.add(ScmConstants.ISPW_DOWNLOAD_INCL_PARM, ispwDownloadIncl);
+		}
+		
+		if (cpCategorizeOnComponentTypeBool)
+		{
+			args.add(ScmConstants.CP_CATEGORIZE_ON_COMPONENT_TYPE, cpCategorizeOnComponentType);
 		}
 		
 		// create the CLI workspace (in case it doesn't already exist)
