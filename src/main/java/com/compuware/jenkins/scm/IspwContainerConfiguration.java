@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
- * (c) Copyright 2015 - 2019, 2021 BMC Software, Inc.
+ * (c) Copyright 2015 - 2025 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -26,7 +26,6 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import com.compuware.jenkins.common.configuration.CpwrGlobalConfiguration;
 import com.compuware.jenkins.common.configuration.HostConnection;
-
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.Launcher;
@@ -53,6 +52,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private String ispwComponentType = StringUtils.EMPTY;
 	private boolean ispwDownloadAll = false;
 	private boolean ispwDownloadIncl = DescriptorImpl.ispwDownloadIncl;
+	private boolean cpCategorizeOnComponentType = DescriptorImpl.cpCategorizeOnComponentType;
 	private String ispwTargetFolder;
 
 	/**
@@ -79,11 +79,13 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	 *            - source download location
 	 * @param ispwDownloadIncl
 	 *            - whether to download the INCL impacts
+	 * @param cpCategorizeOnComponentType
+	 * 			  - whether to categorize the source files to different folders according to Component Type
 	 */
 	@DataBoundConstructor
 	public IspwContainerConfiguration(String connectionId, String credentialsId, String serverConfig, String containerName,
 			String containerType, String serverLevel, String componentType, 
-			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl)
+			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean cpCategorizeOnComponentType)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -94,6 +96,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 		ispwTargetFolder = getTrimmedValue(targetFolder);
 		this.ispwDownloadAll = ispwDownloadAll;
 		this.ispwDownloadIncl = ispwDownloadIncl;
+		this.cpCategorizeOnComponentType = cpCategorizeOnComponentType;
 	}
 
 	/**
@@ -166,6 +169,16 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	{
 		return ispwDownloadIncl;
 	}
+		
+	/**
+	 * Categorize the source files to different folders according to Component Type
+	 * 
+	 * @return true if categorize on component type
+	 */
+	public boolean getCpCategorizeOnComponentType() 
+	{
+		return cpCategorizeOnComponentType;
+	}
 	
 	/**
 	 * Validates the configuration parameters
@@ -229,6 +242,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	public static class DescriptorImpl extends AbstractConfigurationImpl<IspwContainerConfiguration>
 	{
 		public static final boolean ispwDownloadIncl = true;
+		public static final boolean cpCategorizeOnComponentType = false;
 		
 		public DescriptorImpl()
 		{

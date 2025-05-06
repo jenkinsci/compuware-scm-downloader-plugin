@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2015 - 2019 Compuware Corporation
- * (c) Copyright 2019, 2020-2021,2023 BMC Software, Inc.
+ * (c) Copyright 2019-2025 BMC Software, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -61,6 +61,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private boolean ispwDownloadAll = false;
 	private  boolean ispwDownloadIncl = DescriptorImpl.ispwDownloadIncl;
 	private boolean ispwDownloadWithCompileOnly = DescriptorImpl.ispwDownloadWithCompileOnly;
+	private boolean cpCategorizeOnComponentType = DescriptorImpl.cpCategorizeOnComponentType;
 	private String m_targetFolder;
 
 	/**
@@ -93,11 +94,13 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	 *            - source download location
 	 * @param ispwDownloadIncl
 	 *            - whether to download the INCL impacts
+	 * @param cpCategorizeOnComponentType
+	 * 			  - whether to categorize the source files to different folders according to Component Type
 	 */
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
 			String serverApplication, String serverSubAppl, String serverLevel, String levelOption, String componentType, String folderName,
-			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean ispwDownloadWithCompileOnly)
+			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean ispwDownloadWithCompileOnly, boolean cpCategorizeOnComponentType)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -127,6 +130,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		this.ispwDownloadAll = ispwDownloadAll;
 		this.ispwDownloadIncl = ispwDownloadIncl;
 		this.ispwDownloadWithCompileOnly = ispwDownloadWithCompileOnly;
+		this.cpCategorizeOnComponentType = cpCategorizeOnComponentType;
 	}
 
 	/**
@@ -261,6 +265,16 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	}
 	
 	/**
+	 * Categorize the source files to different folders according to Component Type
+	 * 
+	 * @return true if categorize on component type
+	 */
+	public boolean getCpCategorizeOnComponentType() 
+	{
+		return cpCategorizeOnComponentType;
+	}	
+	
+	/**
 	 * Validates the configuration parameters.
 	 *
 	 * @param launcher
@@ -352,6 +366,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	{
 		public static final boolean ispwDownloadIncl = false;
 		public static final boolean ispwDownloadWithCompileOnly = false;
+		public static final boolean cpCategorizeOnComponentType = false;
 		
 		public DescriptorImpl()
 		{
