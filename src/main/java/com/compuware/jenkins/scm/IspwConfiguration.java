@@ -62,6 +62,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	private  boolean ispwDownloadIncl = DescriptorImpl.ispwDownloadIncl;
 	private boolean ispwDownloadWithCompileOnly = DescriptorImpl.ispwDownloadWithCompileOnly;
 	private boolean cpCategorizeOnComponentType = DescriptorImpl.cpCategorizeOnComponentType;
+	private boolean cpCategorizeOnSubAppl = DescriptorImpl.cpCategorizeOnSubAppl;
 	private String m_targetFolder;
 
 	/**
@@ -100,7 +101,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	@DataBoundConstructor
 	public IspwConfiguration(String connectionId, String credentialsId, String serverConfig, String serverStream,
 			String serverApplication, String serverSubAppl, String serverLevel, String levelOption, String componentType, String folderName,
-			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean ispwDownloadWithCompileOnly, boolean cpCategorizeOnComponentType)
+			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean ispwDownloadWithCompileOnly, boolean cpCategorizeOnComponentType, boolean cpCategorizeOnSubAppl)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -131,6 +132,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		this.ispwDownloadIncl = ispwDownloadIncl;
 		this.ispwDownloadWithCompileOnly = ispwDownloadWithCompileOnly;
 		this.cpCategorizeOnComponentType = cpCategorizeOnComponentType;
+		this.cpCategorizeOnSubAppl = cpCategorizeOnSubAppl;
 	}
 
 	/**
@@ -272,7 +274,17 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 	public boolean getCpCategorizeOnComponentType() 
 	{
 		return cpCategorizeOnComponentType;
-	}	
+	}
+	
+	/**
+	 * Categorize the source files to different folders according to Sub Appl
+	 * 
+	 * @return true if categorize on sub appl
+	 */
+	public boolean getCpCategorizeOnSubAppl() 
+	{
+		return cpCategorizeOnSubAppl;
+	}
 	
 	/**
 	 * Validates the configuration parameters.
@@ -367,6 +379,7 @@ public class IspwConfiguration extends AbstractIspwConfiguration
 		public static final boolean ispwDownloadIncl = false;
 		public static final boolean ispwDownloadWithCompileOnly = false;
 		public static final boolean cpCategorizeOnComponentType = false;
+		public static final boolean cpCategorizeOnSubAppl = false;
 		
 		public DescriptorImpl()
 		{

@@ -60,6 +60,7 @@ public class ScmConstants
 	public static final String ISPW_DOWNLOAD_INCL_PARM = "-ispwDownloadIncl";
 	public static final String ISPW_DOWNLOAD_WITH_COMPILE_ONLY = "-ispwDownloadWithCompileOnly";
 	public static final String CP_CATEGORIZE_ON_COMPONENT_TYPE = "-cpCategorizeOnComponentType";
+	public static final String CP_CATEGORIZE_ON_SUB_APPL = "-cpCategorizeOnSubAppl";
 
 	public static final String SCM_DOWNLOADER_CLI_BAT = "SCMDownloaderCLI.bat";
 	public static final String SCM_DOWNLOADER_CLI_SH = "SCMDownloaderCLI.sh";
