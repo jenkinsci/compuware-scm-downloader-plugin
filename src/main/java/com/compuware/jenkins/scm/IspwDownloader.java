@@ -109,6 +109,9 @@ public class IspwDownloader extends AbstractDownloader
 		
 		boolean cpCategorizeOnComponentTypeBool = false;
 		String cpCategorizeOnComponentType = StringUtils.EMPTY;
+		
+		boolean cpCategorizeOnSubApplTypeBool = false;
+		String cpCategorizeOnSubAppl = StringUtils.EMPTY;
 
 		if (ispwConfiguration instanceof IspwConfiguration)
 		{
@@ -131,6 +134,9 @@ public class IspwDownloader extends AbstractDownloader
 			
 			cpCategorizeOnComponentTypeBool = ispwRepositoryConfig.getCpCategorizeOnComponentType();
 			cpCategorizeOnComponentType = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getCpCategorizeOnComponentType()));
+			
+			cpCategorizeOnSubApplTypeBool = ispwRepositoryConfig.getCpCategorizeOnSubAppl();
+			cpCategorizeOnSubAppl = ArgumentUtils.escapeForScript(Boolean.toString(ispwRepositoryConfig.getCpCategorizeOnSubAppl()));
 			
 			String sourceLocation = ispwRepositoryConfig.getTargetFolder();
 			if (StringUtils.isNotEmpty(sourceLocation))
@@ -159,6 +165,9 @@ public class IspwDownloader extends AbstractDownloader
 			
 			cpCategorizeOnComponentTypeBool = ispwContainerConfig.getCpCategorizeOnComponentType();
 			cpCategorizeOnComponentType = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getCpCategorizeOnComponentType()));
+			
+			cpCategorizeOnSubApplTypeBool = ispwContainerConfig.getCpCategorizeOnSubAppl();
+			cpCategorizeOnSubAppl = ArgumentUtils.escapeForScript(Boolean.toString(ispwContainerConfig.getCpCategorizeOnSubAppl()));
 		}
 
         FilePath cliDirectory = new FilePath(vChannel, globalConfig.getTopazCLILocation(launcher));
@@ -212,11 +221,6 @@ public class IspwDownloader extends AbstractDownloader
 			{
 				args.add(ScmConstants.ISPW_DOWNLOAD_WITH_COMPILE_ONLY, ispwDownloadWithCompileOnly);
 			}
-						
-			if (cpCategorizeOnComponentTypeBool)
-			{
-				args.add(ScmConstants.CP_CATEGORIZE_ON_COMPONENT_TYPE, cpCategorizeOnComponentType);
-			}
 		}
 		else if (ispwContainerConfig != null)
 		{
@@ -252,6 +256,11 @@ public class IspwDownloader extends AbstractDownloader
 		if (cpCategorizeOnComponentTypeBool)
 		{
 			args.add(ScmConstants.CP_CATEGORIZE_ON_COMPONENT_TYPE, cpCategorizeOnComponentType);
+		}
+		
+		if (cpCategorizeOnSubApplTypeBool)
+		{
+			args.add(ScmConstants.CP_CATEGORIZE_ON_SUB_APPL, cpCategorizeOnSubAppl);
 		}
 		
 		// create the CLI workspace (in case it doesn't already exist)

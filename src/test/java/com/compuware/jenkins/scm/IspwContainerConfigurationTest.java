@@ -73,7 +73,7 @@ public class IspwContainerConfigurationTest
 	{
 		IspwContainerConfiguration scm = new IspwContainerConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 				TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_CONTAINER_NAME, EXPECTED_CONTAINER_TYPE,
-				EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false);
+				EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false, false);
 
 		assertThat(
 				String.format("Expected IspwContainerConfiguration.getConnectionId() to return %s",
@@ -124,7 +124,7 @@ public class IspwContainerConfigurationTest
 			FreeStyleProject project = m_jenkinsRule.createFreeStyleProject("TestProject");
 			project.setScm(new IspwContainerConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_CONTAINER_NAME,
-					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false));
+					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false, false));
 
 			// don't expect the build to succeed since no CLI exists
 			if (project.scheduleBuild(null))
@@ -200,7 +200,7 @@ public class IspwContainerConfigurationTest
 		{
 			IspwContainerConfiguration scmConfig = new IspwContainerConfiguration(TestConstants.EXPECTED_CONNECTION_ID,
 					TestConstants.EXPECTED_CREDENTIALS_ID, EXPECTED_SERVER_CONFIG, EXPECTED_CONTAINER_NAME,
-					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false);
+					EXPECTED_CONTAINER_TYPE, EXPECTED_SERVER_LEVEL, EXPECTED_COMPONENT_TYPE, EXPECTED_DOWNLOAD_ALL, EXPECTED_TARGET_FOLDER, false, false, false);
 			ScmTestUtils.roundTripTest(m_jenkinsRule, scmConfig,
 					"connectionId,credentialsId,serverConfig,containerName,containerType,serverLevel,componentType,ispwDownloadAll,targetFolder");
 		}

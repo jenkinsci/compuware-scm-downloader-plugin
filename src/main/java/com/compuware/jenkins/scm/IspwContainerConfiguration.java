@@ -53,6 +53,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	private boolean ispwDownloadAll = false;
 	private boolean ispwDownloadIncl = DescriptorImpl.ispwDownloadIncl;
 	private boolean cpCategorizeOnComponentType = DescriptorImpl.cpCategorizeOnComponentType;
+	private boolean cpCategorizeOnSubAppl = DescriptorImpl.cpCategorizeOnSubAppl;
 	private String ispwTargetFolder;
 
 	/**
@@ -85,7 +86,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	@DataBoundConstructor
 	public IspwContainerConfiguration(String connectionId, String credentialsId, String serverConfig, String containerName,
 			String containerType, String serverLevel, String componentType, 
-			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean cpCategorizeOnComponentType)
+			boolean ispwDownloadAll, String targetFolder, boolean ispwDownloadIncl, boolean cpCategorizeOnComponentType, boolean cpCategorizeOnSubAppl)
 	{
 		super(connectionId, credentialsId, serverConfig);
 
@@ -97,6 +98,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 		this.ispwDownloadAll = ispwDownloadAll;
 		this.ispwDownloadIncl = ispwDownloadIncl;
 		this.cpCategorizeOnComponentType = cpCategorizeOnComponentType;
+		this.cpCategorizeOnSubAppl = cpCategorizeOnSubAppl;
 	}
 
 	/**
@@ -181,6 +183,16 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	}
 	
 	/**
+	 * Categorize the source files to different folders according to Sub Appl
+	 * 
+	 * @return true if categorize on sub appl
+	 */
+	public boolean getCpCategorizeOnSubAppl() 
+	{
+		return cpCategorizeOnSubAppl;
+	}
+	
+	/**
 	 * Validates the configuration parameters
 	 * 
 	 * @param launcher
@@ -243,6 +255,7 @@ public class IspwContainerConfiguration extends AbstractIspwConfiguration
 	{
 		public static final boolean ispwDownloadIncl = true;
 		public static final boolean cpCategorizeOnComponentType = false;
+		public static final boolean cpCategorizeOnSubAppl = false;
 		
 		public DescriptorImpl()
 		{

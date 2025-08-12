@@ -43,6 +43,9 @@
 	<f:entry title="${%categorizeOnComponentType}" field="cpCategorizeOnComponentType" help="/plugin/compuware-scm-downloader/ispw/help-categorizeOnComponentType.html">
     	<f:checkbox checked="${cpCategorizeOnComponentType}"/>
 	</f:entry>
+	<f:entry title="${%categorizeOnSubAppl}" field="cpCategorizeOnSubAppl" help="/plugin/compuware-scm-downloader/ispw/help-categorizeOnSubAppl.html">
+    	<f:checkbox checked="${cpCategorizeOnSubAppl}"/>
+	</f:entry>
 	<f:block>
 		<hr size="1" color="Gainsboro"/>
 	</f:block>
