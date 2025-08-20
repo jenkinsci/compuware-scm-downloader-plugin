@@ -101,6 +101,9 @@ Do the following in the **Filter** section to identify Code Pipeline members to 
 - **Level** : Optionally use to identify components at a specific level in the life cycle to download (such as DEV1, STG1, or PRD).
 - **Component type** : Optionally use to identify components of a specific type to download (such as COB, COPY, or JOB).
 - **Force download of unchanged source** : Optionally use to indicate that all source matching the current filter should be downloaded, regardless of whether it has been changed recently or not. If this box is left unchecked, it will delete any files in the workspace that no longer match the filter specified above. Leaving it unchecked will also only download source that has been changed since the last time the job was run.
+- **Download related includes**: Optionally use to download all files matching the filter, along with their impacts.
+- **Categorize On Component Type**: Optionally enable to categorize downloaded source files into folders based on Component Type.
+- **Categorize On Sub Application**: Optionally enable to categorize downloaded source files into folders based on Sub Application.
 
 Click **Save**.
 
